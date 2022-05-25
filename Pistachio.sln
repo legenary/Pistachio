@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32516.85
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sandbox", "Sandbox\Sandbox.vcxproj", "{B894C7AA-C69A-4F67-9210-87787DEFA2A3}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Pistachio", "Pistachio\Pistachio.vcxproj", "{A6E5548C-A5F6-4771-A7EC-ED9B65EA7AE0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A6E5548C-A5F6-4771-A7EC-ED9B65EA7AE0}.Debug|x64.ActiveCfg = Debug|x64
+		{A6E5548C-A5F6-4771-A7EC-ED9B65EA7AE0}.Debug|x64.Build.0 = Debug|x64
+		{A6E5548C-A5F6-4771-A7EC-ED9B65EA7AE0}.Release|x64.ActiveCfg = Release|x64
+		{A6E5548C-A5F6-4771-A7EC-ED9B65EA7AE0}.Release|x64.Build.0 = Release|x64
+		{B894C7AA-C69A-4F67-9210-87787DEFA2A3}.Debug|x64.ActiveCfg = Debug|x64
+		{B894C7AA-C69A-4F67-9210-87787DEFA2A3}.Debug|x64.Build.0 = Debug|x64
+		{B894C7AA-C69A-4F67-9210-87787DEFA2A3}.Release|x64.ActiveCfg = Release|x64
+		{B894C7AA-C69A-4F67-9210-87787DEFA2A3}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CBA9B06F-8844-4D73-9337-3763AE8D293E}
+	EndGlobalSection
+EndGlobal
