@@ -2,6 +2,7 @@
 
 #include "Core.h"
 
+
 namespace Pistachio {
 
 	class PISTACHIO_API Application
