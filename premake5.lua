@@ -19,6 +19,9 @@ project "Pistachio"
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
+	pchheader "ptcpch.h"
+	pchsource "Pistachio/src/ptcpch.cpp"
+
 	files
 	{
 		"%{prj.name}/src/**.h",

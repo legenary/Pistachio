@@ -1,3 +1,4 @@
+#include "ptcpch.h"
 #include "Log.h"
 
 namespace Pistachio {

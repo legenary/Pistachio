@@ -2,9 +2,6 @@
 
 #include "Pistachio/Core.h"
 
-#include <string>
-#include <functional>
-
 namespace Pistachio {
 
 	// Events are currently blocking, meaning when an event occurs it 
@@ -19,7 +16,6 @@ namespace Pistachio {
 		KeyPressed, KeyReleased,
 		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
 	};
-
 
 	enum EventCategory {
 		None = 0,

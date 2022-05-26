@@ -4,8 +4,8 @@
     <Filter Include="Pistachio">
       <UniqueIdentifier>{A93913EA-15A4-C760-5EE2-7806CA8BA5B5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Pistachio\Event">
-      <UniqueIdentifier>{BA95D1E7-2621-3FAC-2F32-C2A09B3C9BAC}</UniqueIdentifier>
+    <Filter Include="Pistachio\Events">
+      <UniqueIdentifier>{6D4D04E2-5946-2334-8278-08B96ED00240}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -20,20 +20,21 @@
       <Filter>Pistachio</Filter>
     </ClInclude>
     <ClInclude Include="src\Pistachio\Events\ApplicationEvent.h">
-      <Filter>Pistachio\Event</Filter>
+      <Filter>Pistachio\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\Pistachio\Events\Event.h">
-      <Filter>Pistachio\Event</Filter>
+      <Filter>Pistachio\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\Pistachio\Events\KeyEvent.h">
-      <Filter>Pistachio\Event</Filter>
+      <Filter>Pistachio\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\Pistachio\Events\MouseEvent.h">
-      <Filter>Pistachio\Event</Filter>
+      <Filter>Pistachio\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\Pistachio\Log.h">
       <Filter>Pistachio</Filter>
     </ClInclude>
+    <ClInclude Include="src\ptcpch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pistachio\Application.cpp">
@@ -42,5 +43,6 @@
     <ClCompile Include="src\Pistachio\Log.cpp">
       <Filter>Pistachio</Filter>
     </ClCompile>
+    <ClCompile Include="src\ptcpch.cpp" />
   </ItemGroup>
 </Project>
