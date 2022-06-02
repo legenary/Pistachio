@@ -11,6 +11,8 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include "Pistachio/Log.h"
+
 
 
 #ifdef PTC_PLATFORM_WINDOWS

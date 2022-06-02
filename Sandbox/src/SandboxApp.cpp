@@ -12,6 +12,5 @@ public:
 };
 
 Pistachio::Application* Pistachio::CreateApplication() {
-	printf("CreateApplication: sandbox.\n");
 	return new Sandbox();
 }

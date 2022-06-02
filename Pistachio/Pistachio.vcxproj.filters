@@ -7,6 +7,12 @@
     <Filter Include="Pistachio\Events">
       <UniqueIdentifier>{6D4D04E2-5946-2334-8278-08B96ED00240}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Platform">
+      <UniqueIdentifier>{7134b2b8-b75a-4f47-acc2-11a85534642b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform\Windows">
+      <UniqueIdentifier>{a005735c-b210-4408-bbf0-63f2bf8e13a9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pistachio.h" />
@@ -35,6 +41,12 @@
       <Filter>Pistachio</Filter>
     </ClInclude>
     <ClInclude Include="src\ptcpch.h" />
+    <ClInclude Include="src\Pistachio\Window.h">
+      <Filter>Pistachio</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Pistachio\WindowsWindow.h">
+      <Filter>Platform\Windows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pistachio\Application.cpp">
@@ -44,5 +56,8 @@
       <Filter>Pistachio</Filter>
     </ClCompile>
     <ClCompile Include="src\ptcpch.cpp" />
+    <ClCompile Include="src\Pistachio\WindowsWindow.cpp">
+      <Filter>Platform\Windows</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

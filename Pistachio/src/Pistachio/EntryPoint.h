@@ -5,7 +5,6 @@
 extern Pistachio::Application* Pistachio::CreateApplication();
 
 void main(int argc, char** argv) {
-	printf("Pistachio Engine started.\n");
 
 	Pistachio::Log::Init();
 	PTC_CORE_WARN("Initialized Log!");
