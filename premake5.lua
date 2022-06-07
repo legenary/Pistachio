@@ -14,8 +14,12 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 --include directories relative to root folder (solution directories)
 IncludeDir = {}
 IncludeDir["GLFW"] = "Pistachio/vendor/GLFW/include"
+IncludeDir["Glad"] = "Pistachio/vendor/Glad/include"
+IncludeDir["ImGui"] = "Pistachio/vendor/imgui"
 
 include "Pistachio/vendor/GLFW"
+include "Pistachio/vendor/Glad"
+include "Pistachio/vendor/imgui"
 
 project "Pistachio"
 	location "Pistachio"
@@ -38,13 +42,17 @@ project "Pistachio"
 	{
 		"%{prj.name}/src",
 		"%{prj.name}/vendor/spdlog/include",
-		"%{IncludeDir.GLFW}"
+		"%{IncludeDir.GLFW}",
+		"%{IncludeDir.Glad}",
+		"%{IncludeDir.ImGui}"
 	}
 
 	links
 	{
 		"GLFW",
-		"opengl32.lib" 
+		"Glad",
+		"ImGui",
+		"opengl32.lib"
 	}
 
 	filter "system:windows"
@@ -55,7 +63,8 @@ project "Pistachio"
 		defines
 		{
 			"PTC_PLATFORM_WINDOWS",
-			"PTC_BUILD_DLL"
+			"PTC_BUILD_DLL",
+			"GLFW_INCLUDE_NONE"
 		}
 
 		postbuildcommands

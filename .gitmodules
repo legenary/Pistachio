@@ -4,3 +4,6 @@
 [submodule "Pistachio/vendor/GLFW"]
 	path = Pistachio/vendor/GLFW
 	url = https://github.com/thecherno/glfw
+[submodule "Pistachio/vendor/imgui"]
+	path = Pistachio/vendor/imgui
+	url = https://github.com/thecherno/imgui
