@@ -65,14 +65,17 @@ project "Pistachio"
 
 	filter "configurations:Debug"
 		defines "PTC_DEBUG"
+		buildoptions "/MDd"
 		symbols "On"
 
 	filter "configurations:Release"
 		defines "PTC_RELEASE"
+		buildoptions "/MD"
 		optimize "On"
 
 	filter "configurations:Dist"
 		defines "PTC_DIST"
+		buildoptions "/MD"
 		optimize "On"
 
 
@@ -115,13 +118,16 @@ project "Sandbox"
 
 	filter "configurations:Debug"
 		defines "PTC_DEBUG"
+		buildoptions "/MDd"
 		symbols "On"
 
 	filter "configurations:Release"
 		defines "PTC_RELEASE"
+		buildoptions "/MD"
 		optimize "On"
 
 	filter "configurations:Dist"
 		defines "PTC_DIST"
+		buildoptions "/MD"
 		optimize "On"
 
