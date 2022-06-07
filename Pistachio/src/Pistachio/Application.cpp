@@ -1,7 +1,6 @@
 #include "ptcpch.h"
 #include "Application.h"
 
-#include "Events/ApplicationEvent.h"
 #include "GLFW/glfw3.h"
 
 namespace Pistachio {
@@ -19,6 +18,10 @@ namespace Pistachio {
 
 	void Application::OnEvent(Event& e) {
 		PTC_CORE_INFO("{0}", e);
+
+		EventDispatcher dispatcher(e);
+		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(Application::OnWindowClose));
+
 	}
 
 	void Application::Run() {
@@ -31,4 +34,8 @@ namespace Pistachio {
 		}
 	}
 
+	bool Application::OnWindowClose(WindowCloseEvent& e) {
+		m_Running = false;
+		return true;
+	}
 }

@@ -2,8 +2,8 @@
 
 #include "ptcpch.h"
 
-#include "Pistachio/Core.h"
-#include "Pistachio/Events/Event.h"
+#include "Core.h"
+#include "Events/Event.h"
 
 namespace Pistachio {
 
