@@ -1,6 +1,7 @@
 
 #include <Pistachio.h>
 
+#include "Pistachio/ImGui/ImGuiLayer.h"
 
 class ExampleLayer : public Pistachio::Layer {
 public: 
@@ -9,8 +10,8 @@ public:
 	}
 
 	void OnUpdate() override {
-		if (Pistachio::Input::IsKeyPressed(PTC_KEY_TAB))
-			PTC_TRACE("Tab key");
+		//if (Pistachio::Input::IsKeyPressed(PTC_KEY_TAB))
+		//	PTC_TRACE("Tab key");
 	}
 	
 	void OnEvent(Pistachio::Event& event) override {
@@ -24,7 +25,6 @@ class Sandbox : public Pistachio::Application {
 public:
 	Sandbox() {
 		PushLayer(new ExampleLayer());
-		PushOverlay(new Pistachio::ImGuiLayer());
 	}
 	~Sandbox() {
 

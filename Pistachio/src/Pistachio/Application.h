@@ -5,6 +5,8 @@
 #include "Events/ApplicationEvent.h"
 #include "LayerStack.h"
 
+#include "Pistachio/ImGui/ImGuiLayer.h"
+
 namespace Pistachio {
 
 	class PISTACHIO_API Application
@@ -26,6 +28,7 @@ namespace Pistachio {
 		bool OnWindowClose(WindowCloseEvent& e);
 
 		std::unique_ptr<Window> m_Window;
+		ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
 		LayerStack m_LayerStack;
 		static Application* s_Instance;
