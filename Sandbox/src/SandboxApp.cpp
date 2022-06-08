@@ -8,11 +8,11 @@ public:
 	}
 
 	void OnUpdate() override {
-		PTC_INFO("ExampleLayer::Update()");
+		//PTC_INFO("ExampleLayer::Update()");
 	}
 	
 	void OnEvent(Pistachio::Event& event) override {
-		PTC_TRACE("{0}", event);
+		//PTC_TRACE("{0}", event);
 	}
 
 };

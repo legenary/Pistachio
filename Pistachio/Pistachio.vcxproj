@@ -158,6 +158,7 @@
     <ClInclude Include="src\Pistachio\Events\KeyEvent.h" />
     <ClInclude Include="src\Pistachio\Events\MouseEvent.h" />
     <ClInclude Include="src\Pistachio\ImGui\ImGuiLayer.h" />
+    <ClInclude Include="src\Pistachio\Input.h" />
     <ClInclude Include="src\Pistachio\Layer.h" />
     <ClInclude Include="src\Pistachio\LayerStack.h" />
     <ClInclude Include="src\Pistachio\Log.h" />
@@ -165,6 +166,7 @@
     <ClInclude Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.h" />
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\ptcpch.h" />
+    <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pistachio\Application.cpp" />
@@ -177,6 +179,7 @@
     <ClCompile Include="src\ptcpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="vendor\GLFW\GLFW.vcxproj">
