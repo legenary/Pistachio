@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core.h"
+#include "Pistachio/Core.h"
 
 namespace Pistachio {
 
@@ -13,7 +13,7 @@ namespace Pistachio {
 		None = 0,
 		WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
 		AppTick, AppUpdate, AppRender,
-		KeyPressed, KeyReleased,
+		KeyPressed, KeyReleased, KeyTyped,
 		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
 	};
 

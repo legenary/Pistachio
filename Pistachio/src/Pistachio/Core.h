@@ -11,6 +11,11 @@
 
 #endif
 
+#ifdef PTC_DEBUG
+#define PTC_ENABLE_ASSERTS
+#endif
+
+
 #ifdef PTC_ENABLE_ASSERTS
 #define PTC_ASSERT(x, ...) {if(!(x)) {PTC_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak();}}
 #define PTC_CORE_ASSERT(x, ...) {if(!(x)) {PTC_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak();}}
@@ -20,3 +25,5 @@
 #endif
 
 #define BIT(x) (1 << x)
+
+#define PTC_BIND_EVENT_FN(fn) std::bind(&fn, this, std::placeholders::_1)
