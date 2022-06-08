@@ -67,6 +67,8 @@
     <ClInclude Include="src\ptcpch.h" />
     <ClInclude Include="src\Pistachio\Input.h" />
     <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
+    <ClInclude Include="src\Pistachio\Keycodes.h" />
+    <ClInclude Include="src\Pistachio\MouseButtonCodes.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pistachio\Application.cpp">

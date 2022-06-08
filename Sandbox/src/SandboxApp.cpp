@@ -8,7 +8,8 @@ public:
 	}
 
 	void OnUpdate() override {
-		//PTC_INFO("ExampleLayer::Update()");
+		if (Pistachio::Input::IsKeyPressed(PTC_KEY_TAB))
+			PTC_TRACE("Tab key");
 	}
 	
 	void OnEvent(Pistachio::Event& event) override {

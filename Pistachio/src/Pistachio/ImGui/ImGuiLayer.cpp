@@ -1,6 +1,7 @@
 #include "ptcpch.h"
 #include "ImGuiLayer.h"
 
+#include "Pistachio/Keycodes.h"
 #include "imgui.h"
 #include "Platform/OpenGL/ImGuiOpenGLRenderer.h"
 
@@ -28,27 +29,27 @@ namespace Pistachio {
 		io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
 		io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
 
-		io.KeyMap[ImGuiKey_Tab] = GLFW_KEY_TAB;
-		io.KeyMap[ImGuiKey_LeftArrow] = GLFW_KEY_LEFT;
-		io.KeyMap[ImGuiKey_RightArrow] = GLFW_KEY_RIGHT;
-		io.KeyMap[ImGuiKey_UpArrow] = GLFW_KEY_UP;
-		io.KeyMap[ImGuiKey_DownArrow] = GLFW_KEY_DOWN;
-		io.KeyMap[ImGuiKey_PageUp] = GLFW_KEY_PAGE_UP;
-		io.KeyMap[ImGuiKey_PageDown] = GLFW_KEY_PAGE_DOWN;
-		io.KeyMap[ImGuiKey_Home] = GLFW_KEY_HOME;
-		io.KeyMap[ImGuiKey_End] = GLFW_KEY_END;
-		io.KeyMap[ImGuiKey_Insert] = GLFW_KEY_INSERT;
-		io.KeyMap[ImGuiKey_Delete] = GLFW_KEY_DELETE;
-		io.KeyMap[ImGuiKey_Backspace] = GLFW_KEY_BACKSPACE;
-		io.KeyMap[ImGuiKey_Space] = GLFW_KEY_SPACE;
-		io.KeyMap[ImGuiKey_Enter] = GLFW_KEY_ENTER;
-		io.KeyMap[ImGuiKey_Escape] = GLFW_KEY_ESCAPE;
-		io.KeyMap[ImGuiKey_A] = GLFW_KEY_A;
-		io.KeyMap[ImGuiKey_C] = GLFW_KEY_C;
-		io.KeyMap[ImGuiKey_V] = GLFW_KEY_V;
-		io.KeyMap[ImGuiKey_X] = GLFW_KEY_X;
-		io.KeyMap[ImGuiKey_Y] = GLFW_KEY_V;
-		io.KeyMap[ImGuiKey_Z] = GLFW_KEY_Z;
+		io.KeyMap[ImGuiKey_Tab] = PTC_KEY_TAB;
+		io.KeyMap[ImGuiKey_LeftArrow] = PTC_KEY_LEFT;
+		io.KeyMap[ImGuiKey_RightArrow] = PTC_KEY_RIGHT;
+		io.KeyMap[ImGuiKey_UpArrow] = PTC_KEY_UP;
+		io.KeyMap[ImGuiKey_DownArrow] = PTC_KEY_DOWN;
+		io.KeyMap[ImGuiKey_PageUp] = PTC_KEY_PAGE_UP;
+		io.KeyMap[ImGuiKey_PageDown] = PTC_KEY_PAGE_DOWN;
+		io.KeyMap[ImGuiKey_Home] = PTC_KEY_HOME;
+		io.KeyMap[ImGuiKey_End] = PTC_KEY_END;
+		io.KeyMap[ImGuiKey_Insert] = PTC_KEY_INSERT;
+		io.KeyMap[ImGuiKey_Delete] = PTC_KEY_DELETE;
+		io.KeyMap[ImGuiKey_Backspace] = PTC_KEY_BACKSPACE;
+		io.KeyMap[ImGuiKey_Space] = PTC_KEY_SPACE;
+		io.KeyMap[ImGuiKey_Enter] = PTC_KEY_ENTER;
+		io.KeyMap[ImGuiKey_Escape] = PTC_KEY_ESCAPE;
+		io.KeyMap[ImGuiKey_A] = PTC_KEY_A;
+		io.KeyMap[ImGuiKey_C] = PTC_KEY_C;
+		io.KeyMap[ImGuiKey_V] = PTC_KEY_V;
+		io.KeyMap[ImGuiKey_X] = PTC_KEY_X;
+		io.KeyMap[ImGuiKey_Y] = PTC_KEY_V;
+		io.KeyMap[ImGuiKey_Z] = PTC_KEY_Z;
 
 		ImGui_ImplOpenGL3_Init("#version 410");
 	}
@@ -131,10 +132,10 @@ namespace Pistachio {
 		ImGuiIO& io = ImGui::GetIO();
 		io.KeysDown[e.GetKeyCode()] = true;
 
-		io.KeyCtrl = io.KeysDown[GLFW_KEY_LEFT_CONTROL] || io.KeysDown[GLFW_KEY_RIGHT_CONTROL];
-		io.KeyShift = io.KeysDown[GLFW_KEY_LEFT_SHIFT] || io.KeysDown[GLFW_KEY_RIGHT_SHIFT];
-		io.KeyAlt = io.KeysDown[GLFW_KEY_LEFT_ALT] || io.KeysDown[GLFW_KEY_RIGHT_ALT];
-		io.KeySuper = io.KeysDown[GLFW_KEY_LEFT_SUPER] || io.KeysDown[GLFW_KEY_RIGHT_SUPER];
+		io.KeyCtrl = io.KeysDown[PTC_KEY_LEFT_CONTROL] || io.KeysDown[PTC_KEY_RIGHT_CONTROL];
+		io.KeyShift = io.KeysDown[PTC_KEY_LEFT_SHIFT] || io.KeysDown[PTC_KEY_RIGHT_SHIFT];
+		io.KeyAlt = io.KeysDown[PTC_KEY_LEFT_ALT] || io.KeysDown[PTC_KEY_RIGHT_ALT];
+		io.KeySuper = io.KeysDown[PTC_KEY_LEFT_SUPER] || io.KeysDown[PTC_KEY_RIGHT_SUPER];
 		return false;
 	}
 
