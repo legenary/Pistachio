@@ -7,3 +7,6 @@
 [submodule "Pistachio/vendor/imgui"]
 	path = Pistachio/vendor/imgui
 	url = https://github.com/thecherno/imgui
+[submodule "Pistachio/vendor/glm"]
+	path = Pistachio/vendor/glm
+	url = https://github.com/g-truc/glm.git
