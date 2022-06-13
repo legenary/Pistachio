@@ -1,14 +1,17 @@
 #pragma once
 
 #ifdef PTC_PLATFORM_WINDOWS
-#ifdef  PTC_BUILD_DLL
-#define PISTACHIO_API __declspec(dllexport)
+	#if PTC_DYNAMIC_LINK
+		#ifdef  PTC_BUILD_DLL
+			#define PISTACHIO_API __declspec(dllexport)
+		#else
+			#define PISTACHIO_API __declspec(dllimport)
+		#endif
+	#else
+		#define PISTACHIO_API
+	#endif
 #else
-#define PISTACHIO_API __declspec(dllimport)
-#endif
-#else
-#error Only support Windows!
-
+	#error Only support Windows!
 #endif
 
 #ifdef PTC_DEBUG
