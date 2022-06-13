@@ -18,6 +18,7 @@ namespace Pistachio {
 		glfwMakeContextCurrent(m_WindowHandle);
 		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		PTC_CORE_ASSERT(status, "Failed to initialize Glad!");
+
 	}
 
 	void OpenGLContext::SwapBuffers()
