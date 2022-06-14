@@ -140,7 +140,10 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Pistachio\Renderer\Buffer.h" />
+    <ClInclude Include="src\Pistachio\Renderer\Renderer.h" />
     <ClInclude Include="src\Pistachio\Renderer\Shader.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
     <ClInclude Include="src\Pistachio.h" />
     <ClInclude Include="src\Pistachio\Application.h" />
@@ -579,7 +582,10 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Pistachio\Renderer\Buffer.cpp" />
+    <ClCompile Include="src\Pistachio\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Pistachio\Renderer\Shader.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
     <ClCompile Include="src\Pistachio\Application.cpp" />
     <ClCompile Include="src\Pistachio\ImGui\ImGuiBuild.cpp" />
