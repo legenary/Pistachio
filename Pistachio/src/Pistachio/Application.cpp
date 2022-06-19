@@ -8,24 +8,6 @@ namespace Pistachio {
 
 	Application* Application::s_Instance = nullptr;
 
-	static GLenum ShaderDataTypeToOpenGLBaseType(ShaderDataType type) {
-		switch (type) {
-			case ShaderDataType::Float:		return GL_FLOAT;
-			case ShaderDataType::Float2:	return GL_FLOAT;
-			case ShaderDataType::Float3:	return GL_FLOAT;
-			case ShaderDataType::Float4:	return GL_FLOAT;
-			case ShaderDataType::Mat3:		return GL_FLOAT;
-			case ShaderDataType::Mat4:		return GL_FLOAT;
-			case ShaderDataType::Int:		return GL_INT;
-			case ShaderDataType::Int2:		return GL_INT;
-			case ShaderDataType::Int3:		return GL_INT;
-			case ShaderDataType::Int4:		return GL_INT;
-			case ShaderDataType::Bool:		return GL_BOOL;
-		}
-		PTC_CORE_ASSERT(false, "Unknown ShaderDataType!");
-		return 0;
-	}
-
 	Application::Application() {
 		PTC_CORE_ASSERT(!s_Instance, "Application already exist!");
 		s_Instance = this;
@@ -35,42 +17,31 @@ namespace Pistachio {
 
 		m_ImGuiLayer = new ImGuiLayer();
 		PushOverlay(m_ImGuiLayer);
+		
+		m_VertexArray.reset(VertexArray::Create());
 
-		glGenVertexArrays(1, &m_VertexArray);
-		glBindVertexArray(m_VertexArray);
-
+		// vertex buffer //////////////////////////////////////////////////////////////////
 		float vertices[3 * 7] = {
 			-0.5f,	-0.5f,	0.0f,	1.0f, 0.0f, 1.0f, 1.0f,
 			0.5f,	-0.5f,	0.0f,	0.0f, 0.0f, 1.0f, 1.0f,
 			0.0f,	0.5f,	0.0F,	1.0f, 1.0f, 0.0f, 1.0f
 		};
-
 		m_VertexBuffer.reset(VertexBuffer::Create(vertices, sizeof(vertices)));
-		
 		{
 			BufferLayout layout = {
-			{ ShaderDataType::Float3, "a_Position" },
-			{ ShaderDataType::Float4, "a_Color"}
+				{ ShaderDataType::Float3, "a_Position" },
+				{ ShaderDataType::Float4, "a_Color"}
 			};
 			m_VertexBuffer->SetLayout(layout);
 		}
+		m_VertexArray->AddVertexBuffer(m_VertexBuffer);
 
-		uint32_t index = 0;
-		const auto& layout = m_VertexBuffer->GetLayout();
-		for (const auto& element : layout) {
-			glEnableVertexAttribArray(index);
-			glVertexAttribPointer(index, 
-				element.GetComponentCount(),
-				ShaderDataTypeToOpenGLBaseType(element.Type), 
-				element.Normalized? GL_TRUE: GL_FALSE, 
-				layout.GetStride(),
-				(const void*) element.Offset);
-			index++;
-		}
-
+		// index buffer //////////////////////////////////////////////////////////////////
 		unsigned int indices[3] = { 0, 1, 2 };
 		m_IndexBuffer.reset(IndexBuffer::Create(indices, sizeof(indices)/sizeof(uint32_t)));
+		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
 
+		// shader ////////////////////////////////////////////////////////////////////////
 		std::string vertexSrc = R"(
 			#version 330 core
 
@@ -104,6 +75,57 @@ namespace Pistachio {
 
 		m_Shader.reset(new Shader(vertexSrc, fragmentSrc));
 
+		// now do a second square
+		m_SquareVA.reset(VertexArray::Create());
+		// vertex buffer
+		float SquareVertices[4 * 3] = {
+			-0.75f,	-0.75f,	0.0f,
+			0.75f,	-0.75f,	0.0f,
+			0.75f,	0.75f,	0.0F,
+			-0.75f,	0.75f,	0.0F
+		};
+		std::shared_ptr<VertexBuffer> SquareVB;
+		SquareVB.reset(VertexBuffer::Create(SquareVertices, sizeof(SquareVertices)));
+		// vertex buffer layout
+		BufferLayout squareLayout = {
+			{ ShaderDataType::Float3, "a_Position" },
+		};
+		SquareVB->SetLayout(squareLayout);
+		m_SquareVA->AddVertexBuffer(SquareVB);
+		// index buffer
+		unsigned int SquareIndices[6] = { 0, 1, 2, 2, 3, 0 };
+		std::shared_ptr<IndexBuffer> SquareIB;
+		SquareIB.reset(IndexBuffer::Create(SquareIndices, sizeof(SquareIndices) / sizeof(uint32_t)));
+		m_SquareVA->SetIndexBuffer(SquareIB);
+		// shader
+		std::string SquareVertexSrc = R"(
+			#version 330 core
+
+			layout(location=0) in vec3 a_Position;
+
+			out vec3 v_Position;
+
+			void main() {
+				v_Position = a_Position;
+				gl_Position = vec4(a_Position, 1.0);
+			}
+
+		)";
+
+		std::string SquareFragmentSrc = R"(
+			#version 330 core
+
+			layout(location=0) out vec4 color;
+
+			in vec3 v_Position;
+
+			void main() {
+				color = vec4(0.2, 0.3, 0.8, 1.0);
+			}
+
+		)";
+
+		m_SquareShader.reset(new Shader(SquareVertexSrc, SquareFragmentSrc));
 	}
 
 	Application::~Application() {
@@ -139,9 +161,14 @@ namespace Pistachio {
 			glClearColor(0.1f, 0.1f, 0.1f, 1);
 			glClear(GL_COLOR_BUFFER_BIT);
 
+			m_SquareShader->Bind();
+			m_SquareVA->Bind();
+			glDrawElements(GL_TRIANGLES, m_SquareVA->GetIndexBuffers()->GetCount(), GL_UNSIGNED_INT, nullptr);
+
 			m_Shader->Bind();
-			glBindVertexArray(m_VertexArray);
+			m_VertexArray->Bind();
 			glDrawElements(GL_TRIANGLES, m_IndexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);
+
 
 			for (Layer* layer : m_LayerStack)
 				layer->OnUpdate();
