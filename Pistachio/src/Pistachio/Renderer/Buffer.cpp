@@ -6,6 +6,8 @@
 
 namespace Pistachio {
 
+
+
 	VertexBuffer* VertexBuffer::Create(float* vertices, uint32_t size) {
 		switch (Renderer::GetAPI()) {
 		case RendererAPI::None: 
