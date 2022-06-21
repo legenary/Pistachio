@@ -3,6 +3,7 @@
 #include "Input.h"
 
 #include <glad/glad.h>
+#include "Pistachio/Renderer/Renderer.h"
 
 namespace Pistachio {
 
@@ -18,7 +19,7 @@ namespace Pistachio {
 		m_ImGuiLayer = new ImGuiLayer();
 		PushOverlay(m_ImGuiLayer);
 		
-		m_VertexArray.reset(VertexArray::Create());
+		m_TriVA.reset(VertexArray::Create());
 
 		// vertex buffer //////////////////////////////////////////////////////////////////
 		float vertices[3 * 7] = {
@@ -26,20 +27,22 @@ namespace Pistachio {
 			0.5f,	-0.5f,	0.0f,	0.0f, 0.0f, 1.0f, 1.0f,
 			0.0f,	0.5f,	0.0F,	1.0f, 1.0f, 0.0f, 1.0f
 		};
-		m_VertexBuffer.reset(VertexBuffer::Create(vertices, sizeof(vertices)));
+		std::shared_ptr<VertexBuffer> vertexBuffer;
+		vertexBuffer.reset(VertexBuffer::Create(vertices, sizeof(vertices)));
 		{
 			BufferLayout layout = {
 				{ ShaderDataType::Float3, "a_Position" },
 				{ ShaderDataType::Float4, "a_Color"}
 			};
-			m_VertexBuffer->SetLayout(layout);
+			vertexBuffer->SetLayout(layout);
 		}
-		m_VertexArray->AddVertexBuffer(m_VertexBuffer);
+		m_TriVA->AddVertexBuffer(vertexBuffer);
 
 		// index buffer //////////////////////////////////////////////////////////////////
+		std::shared_ptr<IndexBuffer> indexBuffer;
 		unsigned int indices[3] = { 0, 1, 2 };
-		m_IndexBuffer.reset(IndexBuffer::Create(indices, sizeof(indices)/sizeof(uint32_t)));
-		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
+		indexBuffer.reset(IndexBuffer::Create(indices, sizeof(indices)/sizeof(uint32_t)));
+		m_TriVA->SetIndexBuffer(indexBuffer);
 
 		// shader ////////////////////////////////////////////////////////////////////////
 		std::string vertexSrc = R"(
@@ -73,7 +76,7 @@ namespace Pistachio {
 
 		)";
 
-		m_Shader.reset(new Shader(vertexSrc, fragmentSrc));
+		m_TriShader.reset(new Shader(vertexSrc, fragmentSrc));
 
 		// now do a second square
 		m_SquareVA.reset(VertexArray::Create());
@@ -158,18 +161,23 @@ namespace Pistachio {
 	void Application::Run() {
 
 		while (m_Running) {
-			glClearColor(0.1f, 0.1f, 0.1f, 1);
-			glClear(GL_COLOR_BUFFER_BIT);
+
+			RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
+			RenderCommand::Clear();
+
+			Renderer::BeginScene();
 
 			m_SquareShader->Bind();
-			m_SquareVA->Bind();
-			glDrawElements(GL_TRIANGLES, m_SquareVA->GetIndexBuffers()->GetCount(), GL_UNSIGNED_INT, nullptr);
+			Renderer::Submit(m_SquareVA);
+			
+			m_TriShader->Bind();
+			Renderer::Submit(m_TriVA);
 
-			m_Shader->Bind();
-			m_VertexArray->Bind();
-			glDrawElements(GL_TRIANGLES, m_IndexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);
+			Renderer::EndScene();
 
+			//Renderer::Flush();
 
+			
 			for (Layer* layer : m_LayerStack)
 				layer->OnUpdate();
 

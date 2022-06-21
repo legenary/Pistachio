@@ -38,11 +38,11 @@ namespace Pistachio {
 		bool m_Running = true;
 		LayerStack m_LayerStack;
 
-		std::shared_ptr<Shader> m_Shader;
-		std::shared_ptr<VertexArray> m_VertexArray;
-		std::shared_ptr<VertexBuffer> m_VertexBuffer;
-		std::shared_ptr<IndexBuffer> m_IndexBuffer;
+		// first triangle
+		std::shared_ptr<Shader> m_TriShader;
+		std::shared_ptr<VertexArray> m_TriVA;
 
+		// second square
 		std::shared_ptr<Shader> m_SquareShader;
 		std::shared_ptr<VertexArray> m_SquareVA;
 
