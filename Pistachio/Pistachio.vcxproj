@@ -140,6 +140,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Pistachio\Core\Timestep.h" />
     <ClInclude Include="src\Pistachio\Renderer\OrthographicCamera.h" />
     <ClInclude Include="src\Pistachio\Renderer\RenderCommand.h" />
     <ClInclude Include="src\Pistachio\Renderer\RendererAPI.h" />

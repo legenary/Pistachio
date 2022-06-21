@@ -9,6 +9,7 @@
 #include "Pistachio/Layer.h"
 #include "Pistachio/Log.h"
 #include "Pistachio/ImGui/ImGuiLayer.h"
+#include "Pistachio/Core/Timestep.h"
 
 // renderer
 #include "Pistachio/Renderer/Renderer.h"

@@ -10,13 +10,14 @@
 #include "Pistachio/Renderer/Shader.h"
 #include "Pistachio/Renderer/Buffer.h"
 #include "Pistachio/Renderer/VertexArray.h"
+#include "Pistachio/Core/Timestep.h"
 
 #include "Pistachio/Renderer/OrthographicCamera.h"
 
 namespace Pistachio {
 
 
-	class PISTACHIO_API Application
+	class Application
 	{
 	public:
 		Application();
@@ -39,6 +40,7 @@ namespace Pistachio {
 		ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
 		LayerStack m_LayerStack;
+		float m_LastFrameTime = 0.0f;
 
 	private:
 		static Application* s_Instance;

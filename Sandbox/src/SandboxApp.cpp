@@ -2,6 +2,8 @@
 
 #include "Pistachio/ImGui/ImGuiLayer.h"
 
+#include <glm/gtc/matrix_transform.hpp>
+
 class ExampleLayer : public Pistachio::Layer {
 public: 
 	ExampleLayer()
@@ -42,6 +44,7 @@ public:
 			layout(location=1) in vec4 a_Color;	
 
 			uniform mat4 u_ViewProjection;
+			uniform mat4 u_Transform;
 
 			out vec3 v_Position;
 			out vec4 v_Color;
@@ -49,7 +52,7 @@ public:
 			void main() {
 				v_Position = a_Position;
 				v_Color = a_Color;
-				gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
+				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
 			}
 
 		)";
@@ -74,10 +77,10 @@ public:
 		m_SquareVA.reset(Pistachio::VertexArray::Create());
 		// vertex buffer
 		float SquareVertices[4 * 3] = {
-			-0.75f,	-0.75f,	0.0f,
-			0.75f,	-0.75f,	0.0f,
-			0.75f,	0.75f,	0.0F,
-			-0.75f,	0.75f,	0.0F
+			-0.5f,	-0.5f,	0.0f,
+			0.5f,	-0.5f,	0.0f,
+			0.5f,	0.5f,	0.0F,
+			-0.5f,	0.5f,	0.0F
 		};
 		std::shared_ptr<Pistachio::VertexBuffer> SquareVB;
 		SquareVB.reset(Pistachio::VertexBuffer::Create(SquareVertices, sizeof(SquareVertices)));
@@ -99,12 +102,13 @@ public:
 			layout(location=0) in vec3 a_Position;
 
 			uniform mat4 u_ViewProjection;
+			uniform mat4 u_Transform;
 
 			out vec3 v_Position;
 
 			void main() {
 				v_Position = a_Position;
-				gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
+				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
 			}
 
 		)";
@@ -126,23 +130,24 @@ public:
 
 	}
 
-	void OnUpdate() override {
-
-		if (Pistachio::Input::IsKeyPressed(PTC_KEY_LEFT)) {
-			m_CameraPosition.x -= m_CameraMoveSpeed;
-		} else if (Pistachio::Input::IsKeyPressed(PTC_KEY_RIGHT)) {
-			m_CameraPosition.x += m_CameraMoveSpeed;
-		}
-		if (Pistachio::Input::IsKeyPressed(PTC_KEY_UP)) {
-			m_CameraPosition.y += m_CameraMoveSpeed;
-		} else if (Pistachio::Input::IsKeyPressed(PTC_KEY_DOWN)) {
-			m_CameraPosition.y -= m_CameraMoveSpeed;
-		}
+	void OnUpdate(Pistachio::Timestep ts) override {
+		PTC_TRACE("Delta time: {0}s", ts.GetSeconds());
+		//camera
 		if (Pistachio::Input::IsKeyPressed(PTC_KEY_A)) {
-			m_CameraRotation += m_CameraRotationSpeed;
+			m_CameraPosition.x -= m_CameraMoveSpeed * ts;
+		} else if (Pistachio::Input::IsKeyPressed(PTC_KEY_D)) {
+			m_CameraPosition.x += m_CameraMoveSpeed * ts;
 		}
-		else if (Pistachio::Input::IsKeyPressed(PTC_KEY_D)) {
-			m_CameraRotation -= m_CameraRotationSpeed;
+		if (Pistachio::Input::IsKeyPressed(PTC_KEY_W)) {
+			m_CameraPosition.y += m_CameraMoveSpeed * ts;
+		} else if (Pistachio::Input::IsKeyPressed(PTC_KEY_S)) {
+			m_CameraPosition.y -= m_CameraMoveSpeed * ts;
+		}
+		if (Pistachio::Input::IsKeyPressed(PTC_KEY_Q)) {
+			m_CameraRotation += m_CameraRotationSpeed * ts;
+		}
+		else if (Pistachio::Input::IsKeyPressed(PTC_KEY_E)) {
+			m_CameraRotation -= m_CameraRotationSpeed * ts;
 		}
 
 		Pistachio::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
@@ -153,8 +158,17 @@ public:
 
 		Pistachio::Renderer::BeginScene(m_Camera);
 
-		Pistachio::Renderer::Submit(m_SquareShader, m_SquareVA);
-		Pistachio::Renderer::Submit(m_TriShader, m_TriVA);
+		static glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
+		int nX = 10, nY = 10;
+		for (int x = 0; x < nX; x++) {
+			for (int y = 0; y < nY; y++) {
+				glm::vec3 pos = { (x - nX / 2) * 0.11f , (y - nY / 2) * 0.11f, 0.0f };
+				glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
+				Pistachio::Renderer::Submit(m_SquareShader, m_SquareVA, transform);
+			}
+		}
+
+		//Pistachio::Renderer::Submit(m_TriShader, m_TriVA);
 
 		Pistachio::Renderer::EndScene();
 
@@ -175,9 +189,10 @@ private:
 
 	Pistachio::OrthographicCamera m_Camera;
 	glm::vec3 m_CameraPosition;
-	float m_CameraMoveSpeed = 0.01f;
+	float m_CameraMoveSpeed = 3.0f;
 	float m_CameraRotation;
-	float m_CameraRotationSpeed = 0.1f;
+	float m_CameraRotationSpeed = 90.0f;
+
 };
 
 
