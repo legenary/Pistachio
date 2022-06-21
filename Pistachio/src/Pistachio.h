@@ -10,5 +10,16 @@
 #include "Pistachio/Log.h"
 #include "Pistachio/ImGui/ImGuiLayer.h"
 
+// renderer
+#include "Pistachio/Renderer/Renderer.h"
+#include "Pistachio/Renderer/RenderCommand.h"
+
+#include "Pistachio/Renderer/Buffer.h"
+#include "Pistachio/Renderer/Shader.h"
+#include "Pistachio/Renderer/VertexArray.h"
+
+#include "Pistachio/Renderer/OrthographicCamera.h"
+
+
 // entry-point
 #include "Pistachio/EntryPoint.h"
