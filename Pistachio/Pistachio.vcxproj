@@ -140,6 +140,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Pistachio\Renderer\OrthographicCamera.h" />
     <ClInclude Include="src\Pistachio\Renderer\RenderCommand.h" />
     <ClInclude Include="src\Pistachio\Renderer\RendererAPI.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLRendererAPI.h" />
@@ -587,6 +588,7 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Pistachio\Renderer\OrthographicCamera.cpp" />
     <ClCompile Include="src\Pistachio\Renderer\RenderCommand.cpp" />
     <ClCompile Include="src\Pistachio\Renderer\RendererAPI.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.cpp" />

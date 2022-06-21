@@ -11,8 +11,10 @@
 #include "Pistachio/Renderer/Buffer.h"
 #include "Pistachio/Renderer/VertexArray.h"
 
+#include "Pistachio/Renderer/OrthographicCamera.h"
 
 namespace Pistachio {
+
 
 	class PISTACHIO_API Application
 	{
@@ -45,6 +47,8 @@ namespace Pistachio {
 		// second square
 		std::shared_ptr<Shader> m_SquareShader;
 		std::shared_ptr<VertexArray> m_SquareVA;
+
+		OrthographicCamera m_Camera;
 
 	private:
 		static Application* s_Instance;

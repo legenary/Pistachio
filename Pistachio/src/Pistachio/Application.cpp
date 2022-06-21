@@ -5,11 +5,14 @@
 #include <glad/glad.h>
 #include "Pistachio/Renderer/Renderer.h"
 
+#include "Pistachio/Renderer/OrthographicCamera.h"
+
 namespace Pistachio {
 
 	Application* Application::s_Instance = nullptr;
 
-	Application::Application() {
+	Application::Application()
+		: m_Camera(-1.6f, 1.6f, -0.9f, 0.9f) /* aspecto ratio 16:9 */ {
 		PTC_CORE_ASSERT(!s_Instance, "Application already exist!");
 		s_Instance = this;
 
@@ -51,13 +54,15 @@ namespace Pistachio {
 			layout(location=0) in vec3 a_Position;
 			layout(location=1) in vec4 a_Color;	
 
+			uniform mat4 u_ViewProjection;
+
 			out vec3 v_Position;
 			out vec4 v_Color;
 
 			void main() {
 				v_Position = a_Position;
 				v_Color = a_Color;
-				gl_Position = vec4(a_Position, 1.0);
+				gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
 			}
 
 		)";
@@ -106,11 +111,13 @@ namespace Pistachio {
 
 			layout(location=0) in vec3 a_Position;
 
+			uniform mat4 u_ViewProjection;
+
 			out vec3 v_Position;
 
 			void main() {
 				v_Position = a_Position;
-				gl_Position = vec4(a_Position, 1.0);
+				gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
 			}
 
 		)";
@@ -155,7 +162,6 @@ namespace Pistachio {
 			if (e.Handled)
 				break;
 		}
-
 	}
 
 	void Application::Run() {
@@ -165,18 +171,18 @@ namespace Pistachio {
 			RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 			RenderCommand::Clear();
 
-			Renderer::BeginScene();
-
-			m_SquareShader->Bind();
-			Renderer::Submit(m_SquareVA);
+			m_Camera.SetPosition({ -1.0f, 0.0f, 0.0f });
+			m_Camera.SetRotation(89.0f);
 			
-			m_TriShader->Bind();
-			Renderer::Submit(m_TriVA);
+
+			Renderer::BeginScene(m_Camera);
+
+			Renderer::Submit(m_SquareShader, m_SquareVA);
+			Renderer::Submit(m_TriShader, m_TriVA);
 
 			Renderer::EndScene();
 
 			//Renderer::Flush();
-
 			
 			for (Layer* layer : m_LayerStack)
 				layer->OnUpdate();
