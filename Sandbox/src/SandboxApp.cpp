@@ -171,6 +171,8 @@ public:
 
 		// texture
 		m_Texture = Pistachio::Texture2D::Create("assets/textures/Checkerboard.png");
+		m_EmojiTexture = Pistachio::Texture2D::Create("assets/textures/emoji.png");
+
 		std::dynamic_pointer_cast<Pistachio::OpenGLShader>(m_TextureShader)->Bind();
 		std::dynamic_pointer_cast<Pistachio::OpenGLShader>(m_TextureShader)->UploadUniformInt("u_Texture", 0);
 
@@ -223,6 +225,10 @@ public:
 		Pistachio::Renderer::Submit(m_TextureShader, m_SquareVA, 
 			glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
+		m_EmojiTexture->Bind(/*slot 0 by default*/);
+		Pistachio::Renderer::Submit(m_TextureShader, m_SquareVA, 
+			glm::scale(glm::mat4(1.0f), glm::vec3(0.8f)));
+
 
 		//triangle
 		//Pistachio::Renderer::Submit(m_TriShader, m_TriVA);
@@ -250,7 +256,7 @@ private:
 	Pistachio::Ref<Pistachio::Shader> m_FlatColorShader, m_TextureShader;
 	Pistachio::Ref<Pistachio::VertexArray> m_SquareVA;
 
-	Pistachio::Ref<Pistachio::Texture2D> m_Texture;
+	Pistachio::Ref<Pistachio::Texture2D> m_Texture, m_EmojiTexture;
 
 	Pistachio::OrthographicCamera m_Camera;
 	glm::vec3 m_CameraPosition;

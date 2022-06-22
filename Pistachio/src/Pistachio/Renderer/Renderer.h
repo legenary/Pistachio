@@ -11,6 +11,10 @@ namespace Pistachio {
 
 	class Renderer {
 	public:
+		static void Init() {
+			RenderCommand::Init();
+		}
+
 		static void BeginScene(OrthographicCamera& camera);
 		static void EndScene();
 
