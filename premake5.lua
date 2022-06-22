@@ -114,6 +114,7 @@ project "Sandbox"
 	{
 		"Pistachio/vendor/spdlog/include",
 		"Pistachio/src",
+		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.glm}"
 	}
 
