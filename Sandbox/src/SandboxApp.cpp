@@ -14,8 +14,8 @@ public:
 		, Layer("Example")
 		, m_CameraPosition(0.0f), m_CameraRotation(0.0f) {
 
-		m_TriVA.reset(Pistachio::VertexArray::Create());
-
+		/*
+		// triangle primitive
 		// vertex buffer //////////////////////////////////////////////////////////////////
 		float vertices[3 * 7] = {
 			-0.5f,	-0.5f,	0.0f,	1.0f, 0.0f, 1.0f, 1.0f,
@@ -75,21 +75,23 @@ public:
 		)";
 
 		m_TriShader.reset(Pistachio::Shader::Create(vertexSrc, fragmentSrc));
+		*/
 
-		// now do a second square
+		// square primitive
 		m_SquareVA.reset(Pistachio::VertexArray::Create());
 		// vertex buffer
-		float SquareVertices[4 * 3] = {
-			-0.5f,	-0.5f,	0.0f,
-			0.5f,	-0.5f,	0.0f,
-			0.5f,	0.5f,	0.0F,
-			-0.5f,	0.5f,	0.0F
+		float SquareVertices[4 * 5] = {
+			-0.5f,	-0.5f,	0.0f,	0.0f, 0.0f,
+			0.5f,	-0.5f,	0.0f,	1.0f, 0.0f,
+			0.5f,	0.5f,	0.0f,	1.0f, 1.0f,
+			-0.5f,	0.5f,	0.0f,	0.0f, 1.0f
 		};
 		Pistachio::Ref<Pistachio::VertexBuffer> SquareVB;
 		SquareVB.reset(Pistachio::VertexBuffer::Create(SquareVertices, sizeof(SquareVertices)));
 		// vertex buffer layout
 		Pistachio::BufferLayout squareLayout = {
 			{ Pistachio::ShaderDataType::Float3, "a_Position" },
+			{ Pistachio::ShaderDataType::Float2, "a_TexCoord" }
 		};
 		SquareVB->SetLayout(squareLayout);
 		m_SquareVA->AddVertexBuffer(SquareVB);
@@ -131,6 +133,46 @@ public:
 		)";
 
 		m_FlatColorShader.reset(Pistachio::Shader::Create(flatColorShaderVertexSrc, flatColorShaderFragmentSrc));
+
+		// texture shader
+		std::string textureShaderVertexSrc = R"(
+			#version 330 core
+
+			layout(location=0) in vec3 a_Position;
+			layout(location=1) in vec2 a_TexCoord;
+
+			uniform mat4 u_ViewProjection;
+			uniform mat4 u_Transform;
+
+			out vec2 v_TexCoord;
+
+			void main() {
+				v_TexCoord = a_TexCoord;
+				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
+			}
+
+		)";
+
+		std::string textureShaderFragmentSrc = R"(
+			#version 330 core
+
+			layout(location=0) out vec4 color;
+
+			in vec2 v_TexCoord;
+			uniform sampler2D u_Texture;
+
+			void main() {
+				color = texture(u_Texture, v_TexCoord);
+			}
+
+		)";
+
+		m_TextureShader.reset(Pistachio::Shader::Create(textureShaderVertexSrc, textureShaderFragmentSrc));
+
+		// texture
+		m_Texture = Pistachio::Texture2D::Create("assets/textures/Checkerboard.png");
+		std::dynamic_pointer_cast<Pistachio::OpenGLShader>(m_TextureShader)->Bind();
+		std::dynamic_pointer_cast<Pistachio::OpenGLShader>(m_TextureShader)->UploadUniformInt("u_Texture", 0);
 
 	}
 
@@ -177,6 +219,12 @@ public:
 			}
 		}
 
+		m_Texture->Bind(/*slot 0 by default*/);
+		Pistachio::Renderer::Submit(m_TextureShader, m_SquareVA, 
+			glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+
+
+		//triangle
 		//Pistachio::Renderer::Submit(m_TriShader, m_TriVA);
 
 		Pistachio::Renderer::EndScene();
@@ -199,8 +247,10 @@ private:
 	Pistachio::Ref<Pistachio::VertexArray> m_TriVA;
 
 	// second square
-	Pistachio::Ref<Pistachio::Shader> m_FlatColorShader;
+	Pistachio::Ref<Pistachio::Shader> m_FlatColorShader, m_TextureShader;
 	Pistachio::Ref<Pistachio::VertexArray> m_SquareVA;
+
+	Pistachio::Ref<Pistachio::Texture2D> m_Texture;
 
 	Pistachio::OrthographicCamera m_Camera;
 	glm::vec3 m_CameraPosition;
