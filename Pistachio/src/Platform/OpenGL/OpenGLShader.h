@@ -10,8 +10,10 @@ namespace Pistachio {
 	class OpenGLShader : public Shader {
 	public:
 		OpenGLShader(const std::string& filepath);
-		OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc);
+		OpenGLShader(const std::string& name,  const std::string& vertexSrc, const std::string& fragmentSrc);
 		virtual ~OpenGLShader();
+
+		virtual const std::string& GetName() override { return m_Name; };
 
 		void Bind() const override;
 		void Unbind() const override;
@@ -30,6 +32,8 @@ namespace Pistachio {
 		std::string ReadFile(const std::string& filepath);
 		std::unordered_map<GLenum, std::string> Preprocess(const std::string& source);
 		void Compile(const std::unordered_map<GLenum, std::string>& shaderSources);
+
+		std::string m_Name;
 
 	};
 

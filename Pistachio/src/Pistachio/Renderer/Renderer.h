@@ -7,8 +7,6 @@
 
 namespace Pistachio {
 
-	
-
 	class Renderer {
 	public:
 		static void Init() {
