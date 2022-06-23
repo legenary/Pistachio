@@ -136,11 +136,7 @@ public:
 
 
 
-
-
-
-
-		m_TextureShader.reset(Pistachio::Shader::Create(textureShaderVertexSrc, textureShaderFragmentSrc));
+		m_TextureShader.reset(Pistachio::Shader::Create("assets/shaders/Texture.glsl"));
 
 		// texture
 		m_Texture = Pistachio::Texture2D::Create("assets/textures/Checkerboard.png");

@@ -25,8 +25,10 @@ namespace Pistachio {
 	}
 
 	OpenGLShader::OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc) {
-
-		
+		std::unordered_map<GLenum, std::string> shaderSources;
+		shaderSources[GL_VERTEX_SHADER] = vertexSrc;
+		shaderSources[GL_FRAGMENT_SHADER] = fragmentSrc;
+		Compile(shaderSources);
 	}
 
 	OpenGLShader::~OpenGLShader() {
@@ -151,7 +153,7 @@ namespace Pistachio {
 
 		// Always detach shaders after a successful link.
 		for (auto id : glShaderIDs) {
-			glDetachShader(id);
+			glDetachShader(m_RendererID, id);
 		}
 	}
 

@@ -2,6 +2,9 @@
 
 #include <Pistachio/Renderer/Shader.h>
 
+// TODO: remove!
+typedef unsigned int GLenum;
+
 namespace Pistachio {
 
 	class OpenGLShader : public Shader {
