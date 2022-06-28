@@ -10,9 +10,8 @@
 class ExampleLayer : public Pistachio::Layer {
 public: 
 	ExampleLayer()
-		: m_Camera(-1.6f, 1.6f, -0.9f, 0.9f) /* aspecto ratio 16:9 */
-		, Layer("Example")
-		, m_CameraPosition(0.0f), m_CameraRotation(0.0f) {
+		: Layer("Example")
+		, m_CameraController(1280, 720) {
 
 		
 		/// triangle primitive
@@ -83,32 +82,17 @@ public:
 	}
 
 	void OnUpdate(Pistachio::Timestep ts) override {
+		//PTC_TRACE("Delta time: {0}s", ts.GetSeconds());
+
+		// Update
+		m_CameraController.OnUpdate(ts);
+
+		// Render
 		Pistachio::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 		Pistachio::RenderCommand::Clear();
 
-		PTC_TRACE("Delta time: {0}s", ts.GetSeconds());
-		//camera
-		if (Pistachio::Input::IsKeyPressed(PTC_KEY_A)) {
-			m_CameraPosition.x -= m_CameraMoveSpeed * ts;
-		} else if (Pistachio::Input::IsKeyPressed(PTC_KEY_D)) {
-			m_CameraPosition.x += m_CameraMoveSpeed * ts;
-		}
-		if (Pistachio::Input::IsKeyPressed(PTC_KEY_W)) {
-			m_CameraPosition.y += m_CameraMoveSpeed * ts;
-		} else if (Pistachio::Input::IsKeyPressed(PTC_KEY_S)) {
-			m_CameraPosition.y -= m_CameraMoveSpeed * ts;
-		}
-		if (Pistachio::Input::IsKeyPressed(PTC_KEY_Q)) {
-			m_CameraRotation += m_CameraRotationSpeed * ts;
-		}
-		else if (Pistachio::Input::IsKeyPressed(PTC_KEY_E)) {
-			m_CameraRotation -= m_CameraRotationSpeed * ts;
-		}
-		m_Camera.SetPosition(m_CameraPosition);
-		m_Camera.SetRotation(m_CameraRotation);
-
 		// draw calls
-		Pistachio::Renderer::BeginScene(m_Camera);
+		Pistachio::Renderer::BeginScene(m_CameraController.GetCamera());
 
 		auto textureShader = m_ShaderLibrary.Get("Texture");
 		auto flatColorShader = m_ShaderLibrary.Get("FlatColor");
@@ -154,6 +138,7 @@ public:
 	}
 
 	void OnEvent(Pistachio::Event& event) override {
+		m_CameraController.OnEvent(event);
 	}
 
 private:
@@ -167,11 +152,7 @@ private:
 	// third texture
 	Pistachio::Ref<Pistachio::Texture2D> m_Texture, m_EmojiTexture;
 
-	Pistachio::OrthographicCamera m_Camera;
-	glm::vec3 m_CameraPosition;
-	float m_CameraMoveSpeed = 3.0f;
-	float m_CameraRotation;
-	float m_CameraRotationSpeed = 90.0f;
+	Pistachio::OrthographicCameraController m_CameraController;
 
 	glm::vec3 m_SquareColor = { 0.2f, 0.3f, 0.8f };
 

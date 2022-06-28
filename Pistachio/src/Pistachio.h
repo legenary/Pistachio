@@ -21,6 +21,7 @@
 #include "Pistachio/Renderer/VertexArray.h"
 
 #include "Pistachio/Renderer/OrthographicCamera.h"
+#include "Pistachio/OrthographicCameraController.h"
 
 
 // entry-point

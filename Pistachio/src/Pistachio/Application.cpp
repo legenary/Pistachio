@@ -43,6 +43,7 @@ namespace Pistachio {
 
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(PTC_BIND_EVENT_FN(Application::OnWindowClose));
+		dispatcher.Dispatch<WindowResizeEvent>(PTC_BIND_EVENT_FN(Application::OnWindowResize));
 
 		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin(); ) {
 			// query which layer can handle the event
@@ -60,14 +61,16 @@ namespace Pistachio {
 			Timestep timestep = time - m_LastFrameTime;
 			m_LastFrameTime = time;
 
-			for (Layer* layer : m_LayerStack)
-				layer->OnUpdate(timestep);
+			if (!m_Minimized) {
+				for (Layer* layer : m_LayerStack)
+					layer->OnUpdate(timestep);
+			}
 
+			// we still want ImGui active when main rendering window is minimized
 			m_ImGuiLayer->Begin();
 			for (Layer* layer : m_LayerStack)
 				layer->OnImGuiRender();
 			m_ImGuiLayer->End();
-
 
 			m_Window->OnUpdate();
 		}
@@ -77,4 +80,19 @@ namespace Pistachio {
 		m_Running = false;
 		return true;
 	}
+
+	bool Application::OnWindowResize(WindowResizeEvent& e) {
+		// if minimized (|| and && both fine)
+		if (e.GetHeight() == 0 || e.GetWidth() == 0) {
+			m_Minimized = true;
+			return false;
+		}
+		m_Minimized = false;
+
+		Renderer::OnWindoeResize(e.GetWidth(), e.GetHeight());
+			
+		return false;
+	}
+
+
 }
