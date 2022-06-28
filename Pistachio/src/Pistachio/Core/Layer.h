@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Core.h"
-#include "Events/Event.h"
-#include "Core/Timestep.h"
+#include "Pistachio/Events/Event.h"
+#include "Pistachio/Core/Timestep.h"
 
 namespace Pistachio {
 

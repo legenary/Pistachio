@@ -1,13 +1,13 @@
 #include "ptcpch.h"
 #include "ImGuiLayer.h"
 
-#include "Pistachio/Keycodes.h"
+#include "Pistachio/Core/Keycodes.h"
 #include "imgui.h"
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
 
 
-#include "Pistachio/Application.h"
+#include "Pistachio/Core/Application.h"
 
 // temporary
 #include <GLFW/glfw3.h>

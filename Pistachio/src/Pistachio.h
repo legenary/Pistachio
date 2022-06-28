@@ -2,12 +2,12 @@
 
 // For use by Pistachio applications
 #include <stdio.h>
-#include "Pistachio/Application.h"
-#include "Pistachio/Input.h"
-#include "Pistachio/MouseButtonCodes.h"
-#include "Pistachio/Keycodes.h"
-#include "Pistachio/Layer.h"
-#include "Pistachio/Log.h"
+#include "Pistachio/Core/Application.h"
+#include "Pistachio/Core/Input.h"
+#include "Pistachio/Core/MouseButtonCodes.h"
+#include "Pistachio/Core/Keycodes.h"
+#include "Pistachio/Core/Layer.h"
+#include "Pistachio/Core/Log.h"
 #include "Pistachio/ImGui/ImGuiLayer.h"
 #include "Pistachio/Core/Timestep.h"
 
@@ -21,8 +21,4 @@
 #include "Pistachio/Renderer/VertexArray.h"
 
 #include "Pistachio/Renderer/OrthographicCamera.h"
-#include "Pistachio/OrthographicCameraController.h"
-
-
-// entry-point
-#include "Pistachio/EntryPoint.h"
+#include "Pistachio/Renderer/OrthographicCameraController.h"

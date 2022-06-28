@@ -1,15 +1,15 @@
 #include "ptcpch.h"
 #include "OrthographicCameraController.h"
 
-#include "Pistachio/Input.h"
-#include "Pistachio/Keycodes.h"
+#include "Pistachio/Core/Input.h"
+#include "Pistachio/Core/Keycodes.h"
 
 
 namespace Pistachio {
 
 	
 	OrthographicCameraController::OrthographicCameraController(unsigned int width, unsigned int height, bool rotation)
-		: m_Width(width), m_Height(height)
+		: m_WindowWidth(width), m_WindowHeight(height)
 		, m_AspectRatio((float)width/(float)height)
 		, m_Camera(-m_AspectRatio * m_ZoomLevel, m_AspectRatio* m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel)
 		, m_Rotation(rotation) {
@@ -60,9 +60,9 @@ namespace Pistachio {
 	}
 
 	bool OrthographicCameraController::OnWindowResized(WindowResizeEvent& e) {
-		m_Width = e.GetWidth();
-		m_Height = e.GetHeight();
-		m_AspectRatio = (float)m_Width / (float)m_Height;
+		m_WindowWidth = e.GetWidth();
+		m_WindowHeight = e.GetHeight();
+		m_AspectRatio = (float)m_WindowWidth / (float)m_WindowHeight;
 		m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
 		return false;
 	}
@@ -70,8 +70,8 @@ namespace Pistachio {
 	bool OrthographicCameraController::OnMousePressed(MouseButtonPressedEvent& e) {
 		// right button clicked
 		if (e.GetMouseButton() == 1) {
-			m_MouseButtonPressed = true;
-			m_MoveEventsCount = 0;
+			m_PressedMouse.Right = true;
+			m_PressedMouse.MoveCount = 0;
 		}
 		return false;
 	}
@@ -79,25 +79,25 @@ namespace Pistachio {
 	bool OrthographicCameraController::OnMouseReleased(MouseButtonReleasedEvent& e) {
 		// right button unclicked
 		if (e.GetMouseButton() == 1) {
-			m_MouseButtonPressed = false;
-			m_MoveEventsCount = 0;
+			m_PressedMouse.Right = false;
+			m_PressedMouse.MoveCount = 0;
 		}
 		return false;
 	}
 
 	bool OrthographicCameraController::OnMouseMoved(MouseMovedEvent& e) {
-		if (!m_MouseButtonPressed)
+		if (!m_PressedMouse.Right)
 			return false;
-		// initialize this dragging action
-		if (m_MoveEventsCount == 0) {
-			m_StartMousePosition = { e.GetX(), e.GetY() };
-			m_StartCameraPosition = m_Camera.GetPosition();
+		// initialize this drag
+		if (m_PressedMouse.MoveCount == 0) {
+			m_PressedMouse.MouseStartPos = { e.GetX(), e.GetY() };
+			m_PressedMouse.CameraStartPos = m_Camera.GetPosition();
 		}
-		float dx = e.GetX() - m_StartMousePosition.x, dy = e.GetY() - m_StartMousePosition.y;
-		m_CameraPosition.x = m_StartCameraPosition.x - dx / m_Width * 2 * m_AspectRatio * m_ZoomLevel;
-		m_CameraPosition.y = m_StartCameraPosition.y + dy / m_Height * 2 * m_ZoomLevel;
+		float dx = e.GetX() - m_PressedMouse.MouseStartPos.x, dy = e.GetY() - m_PressedMouse.MouseStartPos.y;
+		m_CameraPosition.x = m_PressedMouse.CameraStartPos.x - dx / m_WindowWidth * 2 * m_AspectRatio * m_ZoomLevel;
+		m_CameraPosition.y = m_PressedMouse.CameraStartPos.y + dy / m_WindowHeight * 2 * m_ZoomLevel;
 		m_Camera.SetPosition(m_CameraPosition);
-		m_MoveEventsCount++;
+		m_PressedMouse.MoveCount++;
 		return false;
 	}
 

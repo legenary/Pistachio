@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include "Pistachio/Core.h"
+#include "Pistachio/Core/Core.h"
 
 namespace Pistachio {
 

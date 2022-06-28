@@ -57,16 +57,16 @@
     <ClInclude Include="src\Pistachio.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\Pistachio\Application.h">
+    <ClInclude Include="src\Pistachio\Core\Application.h">
       <Filter>src\Pistachio</Filter>
     </ClInclude>
-    <ClInclude Include="src\Pistachio\Core.h">
+    <ClInclude Include="src\Pistachio\Core\Core.h">
       <Filter>src\Pistachio</Filter>
     </ClInclude>
     <ClInclude Include="src\Pistachio\Core\Timestep.h">
       <Filter>src\Pistachio\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Pistachio\EntryPoint.h">
+    <ClInclude Include="src\Pistachio\Core\EntryPoint.h">
       <Filter>src\Pistachio</Filter>
     </ClInclude>
     <ClInclude Include="src\Pistachio\Events\ApplicationEvent.h">
@@ -84,22 +84,25 @@
     <ClInclude Include="src\Pistachio\ImGui\ImGuiLayer.h">
       <Filter>src\Pistachio\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="src\Pistachio\Input.h">
+    <ClInclude Include="src\Pistachio\Core\Input.h">
       <Filter>src\Pistachio</Filter>
     </ClInclude>
-    <ClInclude Include="src\Pistachio\Keycodes.h">
+    <ClInclude Include="src\Pistachio\Core\Keycodes.h">
       <Filter>src\Pistachio</Filter>
     </ClInclude>
-    <ClInclude Include="src\Pistachio\Layer.h">
+    <ClInclude Include="src\Pistachio\Core\Layer.h">
       <Filter>src\Pistachio</Filter>
     </ClInclude>
-    <ClInclude Include="src\Pistachio\LayerStack.h">
+    <ClInclude Include="src\Pistachio\Core\LayerStack.h">
       <Filter>src\Pistachio</Filter>
     </ClInclude>
-    <ClInclude Include="src\Pistachio\Log.h">
+    <ClInclude Include="src\Pistachio\Core\Log.h">
       <Filter>src\Pistachio</Filter>
     </ClInclude>
-    <ClInclude Include="src\Pistachio\MouseButtonCodes.h">
+    <ClInclude Include="src\Pistachio\Core\MouseButtonCodes.h">
+      <Filter>src\Pistachio</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Pistachio\Renderer\OrthographicCameraController.h">
       <Filter>src\Pistachio</Filter>
     </ClInclude>
     <ClInclude Include="src\Pistachio\Renderer\Buffer.h">
@@ -129,7 +132,7 @@
     <ClInclude Include="src\Pistachio\Renderer\VertexArray.h">
       <Filter>src\Pistachio\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="src\Pistachio\Window.h">
+    <ClInclude Include="src\Pistachio\Core\Window.h">
       <Filter>src\Pistachio</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h">
@@ -1407,10 +1410,9 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Pistachio\OrthographicCameraController.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Pistachio\Application.cpp">
+    <ClCompile Include="src\Pistachio\Core\Application.cpp">
       <Filter>src\Pistachio</Filter>
     </ClCompile>
     <ClCompile Include="src\Pistachio\ImGui\ImGuiBuild.cpp">
@@ -1419,13 +1421,16 @@
     <ClCompile Include="src\Pistachio\ImGui\ImGuiLayer.cpp">
       <Filter>src\Pistachio\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="src\Pistachio\Layer.cpp">
+    <ClCompile Include="src\Pistachio\Core\Layer.cpp">
       <Filter>src\Pistachio</Filter>
     </ClCompile>
-    <ClCompile Include="src\Pistachio\LayerStack.cpp">
+    <ClCompile Include="src\Pistachio\Core\LayerStack.cpp">
       <Filter>src\Pistachio</Filter>
     </ClCompile>
-    <ClCompile Include="src\Pistachio\Log.cpp">
+    <ClCompile Include="src\Pistachio\Core\Log.cpp">
+      <Filter>src\Pistachio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Pistachio\Renderer\OrthographicCameraController.cpp">
       <Filter>src\Pistachio</Filter>
     </ClCompile>
     <ClCompile Include="src\Pistachio\Renderer\Buffer.cpp">
@@ -1461,13 +1466,13 @@
     <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLShader.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLTexture.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArray.cpp">
-      <Filter>src\Platform\OpenGL</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Platform\OpenGL\OpenGLShader.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp">
@@ -1482,6 +1487,5 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Pistachio\OrthographicCameraController.cpp" />
   </ItemGroup>
 </Project>

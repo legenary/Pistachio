@@ -11,7 +11,6 @@ namespace Pistachio {
 	public:
 		OrthographicCameraController(unsigned int width, unsigned int height, bool rotation = true);
 		
-
 		void OnUpdate(Timestep ts);
 		void OnEvent(Event& e);
 
@@ -25,7 +24,7 @@ namespace Pistachio {
 		bool OnMouseReleased(MouseButtonReleasedEvent& e);
 		bool OnMouseMoved(MouseMovedEvent& e);
 	private:
-		unsigned int m_Width, m_Height;
+		unsigned int m_WindowWidth, m_WindowHeight;
 		float m_AspectRatio;
 		float m_ZoomLevel = 1.0f;
 		
@@ -38,10 +37,14 @@ namespace Pistachio {
 		float m_CameraTranslationSpeed = 3.0f;
 		float m_CameraRotationSpeed = 90.0f;
 
-		bool m_MouseButtonPressed = false;
-		int m_MoveEventsCount = 0;
-		glm::vec2 m_StartMousePosition;
-		glm::vec3 m_StartCameraPosition;
+		struct MouseButtonPressed {
+			bool Right = false;
+			bool Left = false;
+			int MoveCount = 0;
+			glm::vec2 MouseStartPos;
+			glm::vec3 CameraStartPos;
+		};
+		MouseButtonPressed m_PressedMouse;
 	};
 
 }

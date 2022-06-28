@@ -1,6 +1,6 @@
 #include "ptcpch.h"
 #include "WindowsInput.h"
-#include "Pistachio/Application.h"
+#include "Pistachio/Core/Application.h"
 
 #include <GLFW/glfw3.h>
 

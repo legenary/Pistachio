@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Pistachio/Input.h"
+#include "Pistachio/Core/Input.h"
 
 namespace Pistachio {
 
