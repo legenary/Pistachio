@@ -13,6 +13,7 @@
 
 // renderer
 #include "Pistachio/Renderer/Renderer.h"
+#include "Pistachio/Renderer/Renderer2D.h"
 #include "Pistachio/Renderer/RenderCommand.h"
 
 #include "Pistachio/Renderer/Buffer.h"

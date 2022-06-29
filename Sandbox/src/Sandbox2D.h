@@ -15,12 +15,6 @@ public:
 	virtual void OnEvent(Pistachio::Event& event) override;
 
 private:
-	Pistachio::ShaderLibrary m_ShaderLibrary;
-	// first triangle
-	Pistachio::Ref<Pistachio::VertexArray> m_TriVA;
-
-	// second square
-	Pistachio::Ref<Pistachio::VertexArray> m_SquareVA;
 
 	// third texture
 	Pistachio::Ref<Pistachio::Texture2D> m_Texture, m_EmojiTexture;

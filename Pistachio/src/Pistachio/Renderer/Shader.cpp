@@ -34,7 +34,7 @@ namespace Pistachio {
 	}
 
 	void ShaderLibrary::Add(const std::string& name, const Ref<Shader>& shader) {
-		PTC_CORE_ASSERT(!Exists(name), "Shader already exist.");
+		PTC_CORE_ASSERT(!Exists(name), "Shader already exists.");
 		m_Shaders[name] = shader;
 	}
 
