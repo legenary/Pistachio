@@ -10,3 +10,6 @@
 [submodule "Pistachio/vendor/glm"]
 	path = Pistachio/vendor/glm
 	url = https://github.com/g-truc/glm.git
+[submodule "Pistachio/vendor/box2d"]
+	path = Pistachio/vendor/box2d
+	url = https://github.com/thecherno/box2d

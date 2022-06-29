@@ -4,7 +4,6 @@
 
 #include "imgui.h"
 
-
 #include <glm/gtc/type_ptr.hpp>
 
 Sandbox2D::Sandbox2D()

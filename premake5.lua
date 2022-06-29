@@ -23,6 +23,7 @@ IncludeDir["box2d"] = "Pistachio/vendor/box2d"
 include "Pistachio/vendor/GLFW"
 include "Pistachio/vendor/Glad"
 include "Pistachio/vendor/imgui"
+include "Pistachio/vendor/box2d"
 
 project "Pistachio"
 	location "Pistachio"
@@ -60,7 +61,7 @@ project "Pistachio"
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.stb_image}",
-		--"%{IncludeDir.box2d}/include"
+		"%{IncludeDir.box2d}/include"
 	}
 
 	links
@@ -68,7 +69,7 @@ project "Pistachio"
 		"GLFW",
 		"Glad",
 		"ImGui",
-		--"%{IncludeDir.box2d}/build/bin/Debug/box2d.lib",
+		"Box2D",
 		"opengl32.lib"
 	}
 
@@ -122,6 +123,7 @@ project "Sandbox"
 		"Pistachio/vendor/spdlog/include",
 		"Pistachio/src",
 		"%{IncludeDir.ImGui}",
+		"%{IncludeDir.box2d}/include",
 		"%{IncludeDir.glm}"
 	}
 
