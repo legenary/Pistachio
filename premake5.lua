@@ -18,6 +18,7 @@ IncludeDir["Glad"] = "Pistachio/vendor/Glad/include"
 IncludeDir["ImGui"] = "Pistachio/vendor/imgui"
 IncludeDir["glm"] = "Pistachio/vendor/glm"
 IncludeDir["stb_image"] = "Pistachio/vendor/stb_image"
+IncludeDir["box2d"] = "Pistachio/vendor/box2d"
 
 include "Pistachio/vendor/GLFW"
 include "Pistachio/vendor/Glad"
@@ -58,7 +59,8 @@ project "Pistachio"
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.stb_image}"
+		"%{IncludeDir.stb_image}",
+		--"%{IncludeDir.box2d}/include"
 	}
 
 	links
@@ -66,6 +68,7 @@ project "Pistachio"
 		"GLFW",
 		"Glad",
 		"ImGui",
+		--"%{IncludeDir.box2d}/build/bin/Debug/box2d.lib",
 		"opengl32.lib"
 	}
 
