@@ -18,12 +18,12 @@ namespace Pistachio {
 
 		// make fixture
 		b2PolygonShape boxShape;
-		boxShape.SetAsBox(m_Width / 2.0f, m_Height / 2.0f);
+		boxShape.SetAsBox(m_Width/2.0f, m_Height/2.0f);
 		b2FixtureDef fixtureDef;
 		fixtureDef.shape = &boxShape;
 		fixtureDef.density = (dynamic) ? 1.0f : 0.0f;
-		fixtureDef.friction = 0.5f;
-		fixtureDef.restitution = 0.1f;
+		fixtureDef.friction = 0.3f;
+		fixtureDef.restitution = 0.0f;
 		fixtureDef.restitutionThreshold = 0.5f;
 		m_Fixture = m_Body->CreateFixture(&fixtureDef);
 	}

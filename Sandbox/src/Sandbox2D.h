@@ -16,6 +16,7 @@ public:
 
 private:
 	Pistachio::Physics* m_Physics;
+
 	
 	Pistachio::Ref<Pistachio::Texture2D> m_Texture, m_EmojiTexture;
 	Pistachio::OrthographicCameraController m_CameraController;

@@ -12,10 +12,12 @@ namespace Pistachio {
 		Physics();
 		~Physics();
 
+		void Init();
+
 		//void addGround(float height);
 		void addBox(const glm::vec2& position, float rotation, const glm::vec2& dimensions, bool dynamic = true);
 		
-		inline b2World* getWorld() { return m_PysicsWorld; }
+		inline b2World* getWorld() const { return m_PysicsWorld; }
 
 		Box getObjectByIndex(int idx) const { return m_Boxes[idx]; }
 

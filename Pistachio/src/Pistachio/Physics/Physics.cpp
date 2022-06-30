@@ -4,14 +4,16 @@
 namespace Pistachio {
 
 	Physics::Physics() {
-		m_Gravity = b2Vec2(0.0f, -9.8f);
-		m_PysicsWorld = new b2World(m_Gravity);
-
 	}
 
 	Physics::~Physics() {
 		delete m_PysicsWorld;
 		m_PysicsWorld = nullptr;
+	}
+
+	void Physics::Init() {
+		m_Gravity = b2Vec2(0.0f, -9.8f);
+		m_PysicsWorld = new b2World(m_Gravity);
 	}
 
 	//void Physics::addGround(float height) {
