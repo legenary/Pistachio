@@ -26,7 +26,7 @@ namespace Pistachio {
 	private:
 		unsigned int m_WindowWidth, m_WindowHeight;
 		float m_AspectRatio;
-		float m_ZoomLevel = 1.0f;
+		float m_ZoomLevel = 100.0f;
 		
 		OrthographicCamera m_Camera;
 
