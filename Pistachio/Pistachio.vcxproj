@@ -80,7 +80,7 @@
       <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;vendor\box2d\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -103,7 +103,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -127,7 +127,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -140,7 +140,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Pistachio\Objects\Box.h" />
+    <ClInclude Include="src\Pistachio\Physics\ShapeComponent.h" />
     <ClInclude Include="src\Pistachio.h" />
     <ClInclude Include="src\Pistachio\Core\Application.h" />
     <ClInclude Include="src\Pistachio\Core\Core.h" />
@@ -158,7 +158,7 @@
     <ClInclude Include="src\Pistachio\Events\KeyEvent.h" />
     <ClInclude Include="src\Pistachio\Events\MouseEvent.h" />
     <ClInclude Include="src\Pistachio\ImGui\ImGuiLayer.h" />
-    <ClInclude Include="src\Pistachio\Physics\Physics.h" />
+    <ClInclude Include="src\Pistachio\Physics\World.h" />
     <ClInclude Include="src\Pistachio\Renderer\Buffer.h" />
     <ClInclude Include="src\Pistachio\Renderer\GraphicsContext.h" />
     <ClInclude Include="src\Pistachio\Renderer\OrthographicCamera.h" />
@@ -597,14 +597,14 @@
     <ClInclude Include="vendor\stb_image\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Pistachio\Objects\Box.cpp" />
+    <ClCompile Include="src\Pistachio\Physics\ShapeComponent.cpp" />
     <ClCompile Include="src\Pistachio\Core\Application.cpp" />
     <ClCompile Include="src\Pistachio\Core\Layer.cpp" />
     <ClCompile Include="src\Pistachio\Core\LayerStack.cpp" />
     <ClCompile Include="src\Pistachio\Core\Log.cpp" />
     <ClCompile Include="src\Pistachio\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\Pistachio\ImGui\ImGuiLayer.cpp" />
-    <ClCompile Include="src\Pistachio\Physics\Physics.cpp" />
+    <ClCompile Include="src\Pistachio\Physics\World.cpp" />
     <ClCompile Include="src\Pistachio\Renderer\Buffer.cpp" />
     <ClCompile Include="src\Pistachio\Renderer\OrthographicCamera.cpp" />
     <ClCompile Include="src\Pistachio\Renderer\OrthographicCameraController.cpp" />

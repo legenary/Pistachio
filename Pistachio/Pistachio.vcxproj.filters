@@ -16,6 +16,9 @@
     <Filter Include="src\Pistachio\ImGui">
       <UniqueIdentifier>{AAB07C02-1612-5A10-9F7F-A0C20BE090CF}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Pistachio\Objects">
+      <UniqueIdentifier>{39BA104B-A526-CC45-6E1A-64A3DA45EEAD}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Pistachio\Physics">
       <UniqueIdentifier>{F21E21A7-5E8B-DCA1-277F-74FF93AAFE09}</UniqueIdentifier>
     </Filter>
@@ -108,7 +111,7 @@
     <ClInclude Include="src\Pistachio\ImGui\ImGuiLayer.h">
       <Filter>src\Pistachio\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="src\Pistachio\Physics\Physics.h">
+    <ClInclude Include="src\Pistachio\Physics\World.h">
       <Filter>src\Pistachio\Physics</Filter>
     </ClInclude>
     <ClInclude Include="src\Pistachio\Renderer\Buffer.h">
@@ -1419,7 +1422,7 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Pistachio\Objects\Box.h" />
+    <ClInclude Include="src\Pistachio\Physics\ShapeComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pistachio\Core\Application.cpp">
@@ -1440,7 +1443,7 @@
     <ClCompile Include="src\Pistachio\ImGui\ImGuiLayer.cpp">
       <Filter>src\Pistachio\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="src\Pistachio\Physics\Physics.cpp">
+    <ClCompile Include="src\Pistachio\Physics\World.cpp">
       <Filter>src\Pistachio\Physics</Filter>
     </ClCompile>
     <ClCompile Include="src\Pistachio\Renderer\Buffer.cpp">
@@ -1503,6 +1506,6 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Pistachio\Objects\Box.cpp" />
+    <ClCompile Include="src\Pistachio\Physics\ShapeComponent.cpp" />
   </ItemGroup>
 </Project>

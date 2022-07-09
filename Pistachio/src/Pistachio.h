@@ -25,4 +25,5 @@
 #include "Pistachio/Renderer/OrthographicCameraController.h"
 
 // physics engine
-#include "Pistachio/Physics/Physics.h"
+#include "Pistachio/Physics/World.h"
+#include "Pistachio/Physics/ShapeComponent.h"

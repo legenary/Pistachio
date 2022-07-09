@@ -39,7 +39,7 @@ namespace Pistachio {
 	}
 
 	void Application::OnEvent(Event& e) {
-		PTC_CORE_INFO("{0}", e);
+		//PTC_CORE_INFO("{0}", e);
 
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(PTC_BIND_EVENT_FN(Application::OnWindowClose));

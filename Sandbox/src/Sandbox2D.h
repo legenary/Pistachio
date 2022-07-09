@@ -15,7 +15,7 @@ public:
 	virtual void OnEvent(Pistachio::Event& event) override;
 
 private:
-	Pistachio::Physics* m_Physics;
+	Pistachio::World* m_World;
 
 	
 	Pistachio::Ref<Pistachio::Texture2D> m_Texture, m_EmojiTexture;
