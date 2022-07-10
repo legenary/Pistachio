@@ -24,6 +24,8 @@ namespace Pistachio {
 	}
 
 	void ImGuiLayer::OnAttach() {
+		PTC_PROFILE_FUNCTION();
+
 		// setup dear ImGui context
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO(); //(void io);
@@ -50,24 +52,30 @@ namespace Pistachio {
 	}
 
 	void ImGuiLayer::OnDetach() {
+		PTC_PROFILE_FUNCTION();
+
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
 	}
 
 	void ImGuiLayer::OnImGuiRender() {
-		static bool show = true;
-		ImGui::ShowDemoWindow(&show);
+		//static bool show = true;
+		//ImGui::ShowDemoWindow(&show);
 	}
 
 
 	void ImGuiLayer::Begin() {
+		PTC_PROFILE_FUNCTION();
+
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 	}
 
 	void ImGuiLayer::End() {
+		PTC_PROFILE_FUNCTION();
+
 		ImGuiIO& io = ImGui::GetIO();
 		Application& app = Application::Get();
 		io.DisplaySize = ImVec2((float)app.GetWindow().GetWidth(), (float)app.GetWindow().GetHeight());

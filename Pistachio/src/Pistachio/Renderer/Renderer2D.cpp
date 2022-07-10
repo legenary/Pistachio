@@ -22,6 +22,8 @@ namespace Pistachio {
 	static Renderer2DStorage* s_Data;
 
 	void Renderer2D::Init() {
+		PTC_PROFILE_FUNCTION();
+
 		s_Data = new Renderer2DStorage();
 
 		/// Quad primitive
@@ -91,10 +93,14 @@ namespace Pistachio {
 	}
 
 	void Renderer2D::Shutdown() {
+		PTC_PROFILE_FUNCTION();
+
 		delete s_Data;
 	}
 
 	void Renderer2D::BeginScene(const OrthographicCamera& camera) {
+		PTC_PROFILE_FUNCTION();
+
 		s_Data->TheShaderLibrary.Get("Texture")->Bind();
 		s_Data->TheShaderLibrary.Get("Texture")
 			->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
@@ -108,6 +114,8 @@ namespace Pistachio {
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec4& color, const glm::vec3& position, const glm::vec2& size, const float rotation) {
+		PTC_PROFILE_FUNCTION();
+
 		s_Data->TheShaderLibrary.Get("Texture")->Bind();
 		s_Data->TheShaderLibrary.Get("Texture")
 			->SetFloat4("u_Color", color);
@@ -128,6 +136,8 @@ namespace Pistachio {
 	}
 
 	void Renderer2D::DrawQuad(const Ref<Texture2D>& tex, const glm::vec3& position, const glm::vec2& size, const float rotation) {
+		PTC_PROFILE_FUNCTION();
+
 		s_Data->TheShaderLibrary.Get("Texture")->SetFloat4("u_Color", glm::vec4(1.0f));
 		tex->Bind();
 
@@ -147,6 +157,8 @@ namespace Pistachio {
 	}
 
 	void Renderer2D::DrawCircle(const glm::vec4& color, const glm::vec3& position, const float radius, const float rotation, const uint32_t sides) {
+		PTC_PROFILE_FUNCTION();
+
 		s_Data->TheShaderLibrary.Get("Texture")->Bind();
 		s_Data->TheShaderLibrary.Get("Texture")
 			->SetFloat4("u_Color", color);

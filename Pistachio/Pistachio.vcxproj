@@ -140,6 +140,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Pistachio\Debug\Instrumentor.h" />
     <ClInclude Include="src\Pistachio\Physics\ShapeComponent.h" />
     <ClInclude Include="src\Pistachio.h" />
     <ClInclude Include="src\Pistachio\Core\Application.h" />

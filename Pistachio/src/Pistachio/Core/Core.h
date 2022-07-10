@@ -18,6 +18,7 @@
 
 #ifdef PTC_DEBUG
 #define PTC_ENABLE_ASSERTS
+#define PTC_PROFILE
 #endif
 
 

@@ -1,14 +1,10 @@
 #include "Sandbox2D.h"
-
-#include "Platform/OpenGL/OpenGLShader.h"
-
 #include "imgui.h"
 
 #include <glm/gtc/type_ptr.hpp>
 
 Sandbox2D::Sandbox2D()
-	:Layer("Sandbox2D")
-	, m_CameraController(1280, 720) {
+	:Layer("Sandbox2D"), m_CameraController(1280, 720) {
 
 	
 }
@@ -36,35 +32,46 @@ void Sandbox2D::OnDetach() {
 }
 
 void Sandbox2D::OnUpdate(Pistachio::Timestep ts) {
-	//PTC_TRACE("Delta time: {0}s", ts.GetSeconds());
-	Pistachio::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
-	Pistachio::RenderCommand::Clear();
-
-	// step simulate world
-	m_World->getPhysicsWorld()->Step(ts, 6, 2);
+	PTC_PROFILE_FUNCTION();
 
 	// Update
 	m_CameraController.OnUpdate(ts);
 
-	// draw calls
-	Pistachio::Renderer2D::BeginScene(m_CameraController.GetCamera());
-
-	int bodyCount = m_World->getPhysicsWorld()->GetBodyCount();
-	for (int i = 0; i < bodyCount; i++) {
-		m_World->getComponentByIndex(i)->Draw({ 0.2f, 0.8f, 0.3f, 1.0f });
+	// step simulate world
+	{
+		PTC_PROFILE_SCOPE("Physics step simulation");
+		m_World->getPhysicsWorld()->Step(ts, 6, 2);
 	}
 
-	
-	Pistachio::Renderer2D::DrawQuad({ 0.8f, 0.3f, 0.2f, 1.0f }, { 0.0f, 0.0f }, { 4.5f, 1.5f }, 10);
-	Pistachio::Renderer2D::DrawQuad(m_Texture, { 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f });
-	
-	Pistachio::Renderer2D::EndScene();
+	// Renderer Prep
+	{
+		PTC_PROFILE_SCOPE("Renderer Prep");
+		Pistachio::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
+		Pistachio::RenderCommand::Clear();
+	}
 
-	//Renderer::Flush();
+	// draw calls
+	{
+		PTC_PROFILE_SCOPE("Renderer Draw");
+		Pistachio::Renderer2D::BeginScene(m_CameraController.GetCamera());
+
+		int bodyCount = m_World->getPhysicsWorld()->GetBodyCount();
+		for (int i = 0; i < bodyCount; i++) {
+			m_World->getComponentByIndex(i)->Draw({ 0.2f, 0.8f, 0.3f, 1.0f });
+		}
+	
+		Pistachio::Renderer2D::DrawQuad({ 0.8f, 0.3f, 0.2f, 1.0f }, { 0.0f, 0.0f }, { 4.5f, 1.5f }, 10);
+		Pistachio::Renderer2D::DrawQuad(m_Texture, { 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f });
+	
+		Pistachio::Renderer2D::EndScene();
+	}
+
 	
 }
 
 void Sandbox2D::OnImGuiRender() {
+	PTC_PROFILE_FUNCTION();
+
 	ImGui::Begin("Settings");
 	ImGui::ColorEdit3("SquareColor", glm::value_ptr(m_SquareColor));
 	ImGui::End();

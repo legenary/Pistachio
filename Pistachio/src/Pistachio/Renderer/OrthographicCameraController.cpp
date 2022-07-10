@@ -17,6 +17,8 @@ namespace Pistachio {
 	}
 
 	void OrthographicCameraController::OnUpdate(Timestep ts) {
+		PTC_PROFILE_FUNCTION();
+
 		//camera
 		if (Input::IsKeyPressed(PTC_KEY_A)) {
 			m_CameraPosition.x -= m_CameraTranslationSpeed * ts;
@@ -45,6 +47,8 @@ namespace Pistachio {
 	}
 
 	void OrthographicCameraController::OnEvent(Event& e) {
+		PTC_PROFILE_FUNCTION();
+
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<MouseScrolledEvent>(PTC_BIND_EVENT_FN(OrthographicCameraController::OnMouseScrolled));
 		dispatcher.Dispatch<WindowResizeEvent>(PTC_BIND_EVENT_FN(OrthographicCameraController::OnWindowResized));
@@ -54,12 +58,16 @@ namespace Pistachio {
 	}
 
 	bool OrthographicCameraController::OnMouseScrolled(MouseScrolledEvent& e) {
+		PTC_PROFILE_FUNCTION();
+
 		m_ZoomLevel = std::max(m_ZoomLevel - e.GetYOffset() / 5, 0.3f);
 		m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
 		return false;
 	}
 
 	bool OrthographicCameraController::OnWindowResized(WindowResizeEvent& e) {
+		PTC_PROFILE_FUNCTION();
+
 		m_WindowWidth = e.GetWidth();
 		m_WindowHeight = e.GetHeight();
 		m_AspectRatio = (float)m_WindowWidth / (float)m_WindowHeight;
@@ -68,6 +76,8 @@ namespace Pistachio {
 	}
 
 	bool OrthographicCameraController::OnMousePressed(MouseButtonPressedEvent& e) {
+		PTC_PROFILE_FUNCTION();
+
 		// right button clicked
 		if (e.GetMouseButton() == 1) {
 			m_PressedMouse.Right = true;
@@ -77,6 +87,8 @@ namespace Pistachio {
 	}
 
 	bool OrthographicCameraController::OnMouseReleased(MouseButtonReleasedEvent& e) {
+		PTC_PROFILE_FUNCTION();
+
 		// right button unclicked
 		if (e.GetMouseButton() == 1) {
 			m_PressedMouse.Right = false;
@@ -86,6 +98,8 @@ namespace Pistachio {
 	}
 
 	bool OrthographicCameraController::OnMouseMoved(MouseMovedEvent& e) {
+		PTC_PROFILE_FUNCTION();
+
 		if (!m_PressedMouse.Right)
 			return false;
 		// initialize this drag

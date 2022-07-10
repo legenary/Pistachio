@@ -1423,6 +1423,7 @@
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
     <ClInclude Include="src\Pistachio\Physics\ShapeComponent.h" />
+    <ClInclude Include="src\Pistachio\Debug\Instrumentor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pistachio\Core\Application.cpp">

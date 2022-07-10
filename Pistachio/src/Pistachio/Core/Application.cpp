@@ -14,6 +14,8 @@ namespace Pistachio {
 	Application* Application::s_Instance = nullptr;
 
 	Application::Application() {
+		PTC_PROFILE_FUNCTION();
+
 		PTC_CORE_ASSERT(!s_Instance, "Application already exist!");
 		s_Instance = this;
 
@@ -31,15 +33,21 @@ namespace Pistachio {
 	}
 
 	void Application::PushLayer(Layer* layer) {
+		PTC_PROFILE_FUNCTION();
+
 		m_LayerStack.PushLayer(layer);
+		layer->OnAttach();
 	}
 
 	void Application::PushOverlay(Layer* overlay) {
+		PTC_PROFILE_FUNCTION();
+
 		m_LayerStack.PushOverlay(overlay);
+		overlay->OnAttach();
 	}
 
 	void Application::OnEvent(Event& e) {
-		//PTC_CORE_INFO("{0}", e);
+		PTC_PROFILE_FUNCTION();
 
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(PTC_BIND_EVENT_FN(Application::OnWindowClose));
@@ -54,22 +62,29 @@ namespace Pistachio {
 	}
 
 	void Application::Run() {
+		PTC_PROFILE_FUNCTION();
 
 		while (m_Running) {
+			PTC_PROFILE_SCOPE("RunLoop");
 			
 			float time = (float)glfwGetTime(); // platform
 			Timestep timestep = time - m_LastFrameTime;
 			m_LastFrameTime = time;
 
 			if (!m_Minimized) {
+				PTC_PROFILE_SCOPE("layer:Layerstack->OnUpdate");
+
 				for (Layer* layer : m_LayerStack)
 					layer->OnUpdate(timestep);
 			}
 
 			// we still want ImGui active when main rendering window is minimized
 			m_ImGuiLayer->Begin();
-			for (Layer* layer : m_LayerStack)
-				layer->OnImGuiRender();
+			{
+				PTC_PROFILE_SCOPE("layer:Layerstack->OnImGuiRender");
+				for (Layer* layer : m_LayerStack)
+					layer->OnImGuiRender();
+			}
 			m_ImGuiLayer->End();
 
 			m_Window->OnUpdate();
@@ -82,6 +97,8 @@ namespace Pistachio {
 	}
 
 	bool Application::OnWindowResize(WindowResizeEvent& e) {
+		PTC_PROFILE_FUNCTION();
+
 		// if minimized (|| and && both fine)
 		if (e.GetHeight() == 0 || e.GetWidth() == 0) {
 			m_Minimized = true;

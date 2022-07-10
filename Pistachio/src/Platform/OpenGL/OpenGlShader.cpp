@@ -18,6 +18,8 @@ namespace Pistachio {
 	}
 
 	OpenGLShader::OpenGLShader(const std::string& filepath) {
+		PTC_PROFILE_FUNCTION();
+
 		std::string source = ReadFile(filepath);
 		auto shaderSources = Preprocess(source);
 		Compile(shaderSources);
@@ -34,6 +36,8 @@ namespace Pistachio {
 
 	OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc)
 		: m_Name(name) {
+		PTC_PROFILE_FUNCTION();
+
 		std::unordered_map<GLenum, std::string> shaderSources;
 		shaderSources[GL_VERTEX_SHADER] = vertexSrc;
 		shaderSources[GL_FRAGMENT_SHADER] = fragmentSrc;
@@ -41,10 +45,14 @@ namespace Pistachio {
 	}
 
 	OpenGLShader::~OpenGLShader() {
+		PTC_PROFILE_FUNCTION();
+
 		glDeleteProgram(m_RendererID);
 	}
 
 	std::string OpenGLShader::ReadFile(const std::string& filepath) {
+		PTC_PROFILE_FUNCTION();
+
 		std::string result;
 		std::ifstream in(filepath, std::ios::in | std::ios::binary);
 		if (in) {
@@ -61,6 +69,8 @@ namespace Pistachio {
 	}
 
 	std::unordered_map<GLenum, std::string> OpenGLShader::Preprocess(const std::string& source) {
+		PTC_PROFILE_FUNCTION();
+
 		std::unordered_map<GLenum, std::string> shaderSources;
 
 		const char* typeToken = "#type";
@@ -83,6 +93,8 @@ namespace Pistachio {
 	}
 
 	void OpenGLShader::Compile(const std::unordered_map<GLenum, std::string>& shaderSources){
+		PTC_PROFILE_FUNCTION();
+
 
 		// Vertex and fragment shaders are successfully compiled.
 		// Now time to link them together into a program.
@@ -170,42 +182,60 @@ namespace Pistachio {
 	}
 
 	void OpenGLShader::Bind() const {
+		PTC_PROFILE_FUNCTION();
+
 		glUseProgram(m_RendererID);
 	}
 
 	void OpenGLShader::Unbind() const {
+		PTC_PROFILE_FUNCTION();
+
 		glUseProgram(0);
 	}
 
 	void OpenGLShader::SetInt(const std::string& name, int value) {
+		PTC_PROFILE_FUNCTION();
+
 		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
 		glUniform1i(location, value);
 	}
 
 	void OpenGLShader::SetFloat(const std::string& name, float value) {
+		PTC_PROFILE_FUNCTION();
+
 		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
 		glUniform1f(location, value);
 	}
 
 	void OpenGLShader::SetFloat2(const std::string& name, const glm::vec2& values) {
+		PTC_PROFILE_FUNCTION();
+
 		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
 		glUniform2f(location, values.x, values.y);
 	}
 
 	void OpenGLShader::SetFloat3(const std::string& name, const glm::vec3& values) {
+		PTC_PROFILE_FUNCTION();
+
 		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
 		glUniform3f(location, values.x, values.y, values.z);
 	}
 
 	void OpenGLShader::SetFloat4(const std::string& name, const glm::vec4& values) {
+		PTC_PROFILE_FUNCTION();
+
 		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
 		glUniform4f(location, values.x, values.y, values.z, values.w);
 	}
 	void OpenGLShader::SetMat3(const std::string& name, const glm::mat3& matrix) {
+		PTC_PROFILE_FUNCTION();
+
 		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
 		glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 	}
 	void OpenGLShader::SetMat4(const std::string& name, const glm::mat4& matrix) {
+		PTC_PROFILE_FUNCTION();
+
 		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
 		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 	}

@@ -12,6 +12,8 @@ namespace Pistachio {
 	class Renderer {
 	public:
 		static void Init() {
+			PTC_PROFILE_FUNCTION();
+
 			RenderCommand::Init();
 			Renderer2D::Init();
 		}
