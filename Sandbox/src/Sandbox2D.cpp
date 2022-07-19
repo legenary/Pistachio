@@ -13,8 +13,8 @@ void Sandbox2D::OnAttach() {
 	m_Texture = Pistachio::Texture2D::Create("assets/textures/Checkerboard.png");
 	m_EmojiTexture = Pistachio::Texture2D::Create("assets/textures/emoji.png");
 
-	m_World = new Pistachio::World();
-	m_World->Init();
+	//m_World = new Pistachio::World();
+	//m_World->Init();
 
 	//m_World->addBoxComponent(glm::vec2(0.0f, 0.0f), -90, glm::vec2(5.0f, 2.0f));
 	//m_World->addBoxComponent(glm::vec2(2.0f, 4.0f), 10, glm::vec2(4.0f, 1.0f));
@@ -37,11 +37,11 @@ void Sandbox2D::OnUpdate(Pistachio::Timestep ts) {
 	// Update
 	m_CameraController.OnUpdate(ts);
 
-	// step simulate world
-	{
-		PTC_PROFILE_SCOPE("Physics step simulation");
-		m_World->getPhysicsWorld()->Step(ts, 6, 2);
-	}
+	//// step simulate world
+	//{
+	//	PTC_PROFILE_SCOPE("Physics step simulation");
+	//	m_World->getPhysicsWorld()->Step(ts, 6, 2);
+	//}
 
 	// Renderer Prep
 	{
@@ -55,14 +55,14 @@ void Sandbox2D::OnUpdate(Pistachio::Timestep ts) {
 		PTC_PROFILE_SCOPE("Renderer Draw");
 		Pistachio::Renderer2D::BeginScene(m_CameraController.GetCamera());
 
-		int bodyCount = m_World->getPhysicsWorld()->GetBodyCount();
-		for (int i = 0; i < bodyCount; i++) {
-			//m_World->getComponentByIndex(i)->Draw({ 0.2f, 0.8f, 0.3f, 1.0f });
-		}
+		//int bodyCount = m_World->getPhysicsWorld()->GetBodyCount();
+		//for (int i = 0; i < bodyCount; i++) {
+		//	//m_World->getComponentByIndex(i)->Draw({ 0.2f, 0.8f, 0.3f, 1.0f });
+		//}
 	
-		Pistachio::Renderer2D::DrawQuad({ 0.8f, 0.3f, 0.2f, 1.0f }, { 0.0f, 0.0f }, { 1.0f, 1.0f }, 10);
+		Pistachio::Renderer2D::DrawQuad({ 0.3f, 0.8f, 0.2f, 1.0f }, { 0.0f, 0.0f }, { 1.0f, 1.0f }, 10);
 		Pistachio::Renderer2D::DrawQuad({ 0.8f, 0.3f, 0.2f, 1.0f }, { 0.0f, 2.0f }, { 4.5f, 1.5f }, 10);
-		//Pistachio::Renderer2D::DrawQuad(m_Texture, { 0.0f, 0.0f, -0.1f }, { 100.0f, 100.0f });
+		Pistachio::Renderer2D::DrawQuad(m_Texture, { 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, 0.0f, 2.0f);
 	
 		Pistachio::Renderer2D::EndScene();
 	}
