@@ -18,14 +18,14 @@ void Sandbox2D::OnAttach() {
 
 	//m_World->addBoxComponent(glm::vec2(0.0f, 0.0f), -90, glm::vec2(5.0f, 2.0f));
 	//m_World->addBoxComponent(glm::vec2(2.0f, 4.0f), 10, glm::vec2(4.0f, 1.0f));
-	m_World->addBoxComponent(glm::vec2(0.0f, -9.0f), 10, glm::vec2(20.0f, 5.0f), false);
-	m_World->addBoxComponent(glm::vec2(0.0f, -9.0f), -10, glm::vec2(20.0f, 5.0f), false);
+	//m_World->addBoxComponent(glm::vec2(4.0f, -7.0f), 10, glm::vec2(10.0f, 1.0f), false);
+	//m_World->addBoxComponent(glm::vec2(-4.0f, -7.0f), -10, glm::vec2(10.0f, 1.0f), false);
 
-	for (float x = -4.5f; x < 4.5f; x += 2.0f) {
-		for (float y = 0.0f; y <10.0f; y += 2.0f) {
-			m_World->addCircleComponent(glm::vec2(x, y), 0.8f);
-		}
-	}
+	//for (float x = -4.5f; x < 4.5f; x += 2.0f) {
+	//	for (float y = 0.0f; y <10.0f; y += 2.0f) {
+	//		m_World->addCircleComponent(glm::vec2(x, y), 0.8f);
+	//	}
+	//}
 }
 
 void Sandbox2D::OnDetach() {
@@ -57,11 +57,12 @@ void Sandbox2D::OnUpdate(Pistachio::Timestep ts) {
 
 		int bodyCount = m_World->getPhysicsWorld()->GetBodyCount();
 		for (int i = 0; i < bodyCount; i++) {
-			m_World->getComponentByIndex(i)->Draw({ 0.2f, 0.8f, 0.3f, 1.0f });
+			//m_World->getComponentByIndex(i)->Draw({ 0.2f, 0.8f, 0.3f, 1.0f });
 		}
 	
-		Pistachio::Renderer2D::DrawQuad({ 0.8f, 0.3f, 0.2f, 1.0f }, { 0.0f, 0.0f }, { 4.5f, 1.5f }, 10);
-		Pistachio::Renderer2D::DrawQuad(m_Texture, { 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f });
+		Pistachio::Renderer2D::DrawQuad({ 0.8f, 0.3f, 0.2f, 1.0f }, { 0.0f, 0.0f }, { 1.0f, 1.0f }, 10);
+		Pistachio::Renderer2D::DrawQuad({ 0.8f, 0.3f, 0.2f, 1.0f }, { 0.0f, 2.0f }, { 4.5f, 1.5f }, 10);
+		//Pistachio::Renderer2D::DrawQuad(m_Texture, { 0.0f, 0.0f, -0.1f }, { 100.0f, 100.0f });
 	
 		Pistachio::Renderer2D::EndScene();
 	}

@@ -8,6 +8,18 @@ namespace Pistachio {
 
 
 
+	Ref<VertexBuffer> VertexBuffer::Create(uint32_t size) {
+		switch (Renderer::GetAPI()) {
+		case RendererAPI::API::None:
+			PTC_CORE_ASSERT(false, "Renderer API none currently not supported!");
+			return nullptr;
+		case RendererAPI::API::OpenGL:
+			return std::make_shared<OpenGLVertexBuffer>(size);
+		}
+		PTC_CORE_ASSERT(false, "Unknown Renderer API!");
+		return nullptr;
+	}
+
 	Ref<VertexBuffer> VertexBuffer::Create(float* vertices, uint32_t size) {
 		switch (Renderer::GetAPI()) {
 		case RendererAPI::API::None: 
