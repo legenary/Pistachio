@@ -17,6 +17,22 @@ namespace Pistachio {
 
 	}
 
+	void OrthographicCameraController::SetZoomLevel(float zoom) {
+		m_ZoomLevel = zoom;
+		m_CameraTranslationSpeed = m_ZoomLevel * 3;
+		CalculateView();
+	}
+
+	void OrthographicCameraController::SetAspectRatio(int width, int height) {
+		m_AspectRatio = (float)width / (float)height;
+		CalculateView();
+	}
+
+	void OrthographicCameraController::CalculateView() {
+		m_Bounds = { -m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel };
+		m_Camera.SetProjection(m_Bounds.Left, m_Bounds.Right, m_Bounds.Bottom, m_Bounds.Top);
+	}
+
 	void OrthographicCameraController::OnUpdate(Timestep ts) {
 		PTC_PROFILE_FUNCTION();
 
@@ -60,21 +76,15 @@ namespace Pistachio {
 
 	bool OrthographicCameraController::OnMouseScrolled(MouseScrolledEvent& e) {
 		PTC_PROFILE_FUNCTION();
-
-		m_ZoomLevel = std::max(m_ZoomLevel - e.GetYOffset() / 5, 0.3f);
-		m_Bounds = { -m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel };
-		m_Camera.SetProjection(m_Bounds.Left, m_Bounds.Right, m_Bounds.Bottom, m_Bounds.Top); 
+		SetZoomLevel(std::max(m_ZoomLevel - e.GetYOffset() / 5, 0.3f));
+		CalculateView();
 		return false;
 	}
 
 	bool OrthographicCameraController::OnWindowResized(WindowResizeEvent& e) {
 		PTC_PROFILE_FUNCTION();
-
-		m_WindowWidth = e.GetWidth();
-		m_WindowHeight = e.GetHeight();
-		m_AspectRatio = (float)m_WindowWidth / (float)m_WindowHeight;
-		m_Bounds = { -m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel };
-		m_Camera.SetProjection(m_Bounds.Left, m_Bounds.Right, m_Bounds.Bottom, m_Bounds.Top);
+		SetAspectRatio(e.GetWidth(), e.GetHeight());
+		CalculateView();
 		return false;
 	}
 

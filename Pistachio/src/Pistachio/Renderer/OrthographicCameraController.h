@@ -26,6 +26,9 @@ namespace Pistachio {
 		inline const OrthographicCamera& GetCamera() const { return m_Camera; }
 		inline OrthographicCamera& GetCamera() { return m_Camera; }
 		const OrthographicCameraBounds& GetBounds() const { return m_Bounds; }
+		void SetZoomLevel(float zoom);
+		void SetAspectRatio(int width, int height);
+
 
 	private:
 		bool OnMouseScrolled(MouseScrolledEvent& e);
@@ -33,6 +36,8 @@ namespace Pistachio {
 		bool OnMousePressed(MouseButtonPressedEvent& e);
 		bool OnMouseReleased(MouseButtonReleasedEvent& e);
 		bool OnMouseMoved(MouseMovedEvent& e);
+
+		void CalculateView();
 	private:
 		unsigned int m_WindowWidth, m_WindowHeight;
 		float m_AspectRatio;

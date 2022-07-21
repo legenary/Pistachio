@@ -14,7 +14,7 @@ namespace Pistachio {
 		inline virtual uint32_t GetWidth() const override { return m_Width; }
 		inline virtual uint32_t GetHeight() const override { return m_Height; }
 		inline virtual const glm::vec2& GetStride() const override { return m_Stride; }
-
+		virtual uint32_t GetRendererID() const override { return m_RendererID; }
 
 		virtual void SetData(void* data, uint32_t size) override;
 
