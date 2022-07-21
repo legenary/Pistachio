@@ -140,8 +140,6 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Pistachio\Debug\Instrumentor.h" />
-    <ClInclude Include="src\Pistachio\Physics\ShapeComponent.h" />
     <ClInclude Include="src\Pistachio.h" />
     <ClInclude Include="src\Pistachio\Core\Application.h" />
     <ClInclude Include="src\Pistachio\Core\Core.h" />
@@ -154,11 +152,13 @@
     <ClInclude Include="src\Pistachio\Core\MouseButtonCodes.h" />
     <ClInclude Include="src\Pistachio\Core\Timestep.h" />
     <ClInclude Include="src\Pistachio\Core\Window.h" />
+    <ClInclude Include="src\Pistachio\Debug\Instrumentor.h" />
     <ClInclude Include="src\Pistachio\Events\ApplicationEvent.h" />
     <ClInclude Include="src\Pistachio\Events\Event.h" />
     <ClInclude Include="src\Pistachio\Events\KeyEvent.h" />
     <ClInclude Include="src\Pistachio\Events\MouseEvent.h" />
     <ClInclude Include="src\Pistachio\ImGui\ImGuiLayer.h" />
+    <ClInclude Include="src\Pistachio\Physics\ShapeComponent.h" />
     <ClInclude Include="src\Pistachio\Physics\World.h" />
     <ClInclude Include="src\Pistachio\Renderer\Buffer.h" />
     <ClInclude Include="src\Pistachio\Renderer\FrameBuffer.h" />
@@ -601,13 +601,13 @@
     <ClInclude Include="vendor\stb_image\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Pistachio\Physics\ShapeComponent.cpp" />
     <ClCompile Include="src\Pistachio\Core\Application.cpp" />
     <ClCompile Include="src\Pistachio\Core\Layer.cpp" />
     <ClCompile Include="src\Pistachio\Core\LayerStack.cpp" />
     <ClCompile Include="src\Pistachio\Core\Log.cpp" />
     <ClCompile Include="src\Pistachio\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\Pistachio\ImGui\ImGuiLayer.cpp" />
+    <ClCompile Include="src\Pistachio\Physics\ShapeComponent.cpp" />
     <ClCompile Include="src\Pistachio\Physics\World.cpp" />
     <ClCompile Include="src\Pistachio\Renderer\Buffer.cpp" />
     <ClCompile Include="src\Pistachio\Renderer\FrameBuffer.cpp" />

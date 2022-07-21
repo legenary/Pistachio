@@ -1,6 +1,6 @@
 workspace "Pistachio"
 	architecture "x64"
-	startproject "Sandbox"
+	startproject "Pistachio-Editor"
 
 	configurations
 	{
@@ -20,10 +20,12 @@ IncludeDir["glm"] = "Pistachio/vendor/glm"
 IncludeDir["stb_image"] = "Pistachio/vendor/stb_image"
 IncludeDir["box2d"] = "Pistachio/vendor/box2d"
 
-include "Pistachio/vendor/GLFW"
-include "Pistachio/vendor/Glad"
-include "Pistachio/vendor/imgui"
-include "Pistachio/vendor/box2d"
+group "Dependencies"
+	include "Pistachio/vendor/GLFW"
+	include "Pistachio/vendor/Glad"
+	include "Pistachio/vendor/imgui"
+	include "Pistachio/vendor/box2d"
+group ""
 
 project "Pistachio"
 	location "Pistachio"
@@ -104,6 +106,61 @@ project "Pistachio"
 
 project "Sandbox"
 	location "Sandbox"
+	kind "ConsoleApp"
+	language "C++"
+	cppdialect "C++17"
+	staticruntime "off"
+
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+	files
+	{
+		"%{prj.name}/src/**.h",
+		"%{prj.name}/src/**.cpp"
+	}
+
+	includedirs
+	{
+		"Pistachio/vendor/spdlog/include",
+		"Pistachio/src",
+		"%{IncludeDir.ImGui}",
+		"%{IncludeDir.box2d}/include",
+		"%{IncludeDir.glm}"
+	}
+
+	links
+	{
+		"Pistachio"
+	}
+
+	filter "system:windows"
+		systemversion "latest"
+		
+		defines
+		{
+			"PTC_PLATFORM_WINDOWS",
+		}
+
+
+	filter "configurations:Debug"
+		defines "PTC_DEBUG"
+		runtime "Debug"
+		symbols "on"
+
+	filter "configurations:Release"
+		defines "PTC_RELEASE"
+		runtime "Release"
+		optimize "on"
+
+	filter "configurations:Dist"
+		defines "PTC_DIST"
+		runtime "Release"
+		optimize "on"
+
+		
+project "Pistachio-Editor"
+	location "Pistachio-Editor"
 	kind "ConsoleApp"
 	language "C++"
 	cppdialect "C++17"

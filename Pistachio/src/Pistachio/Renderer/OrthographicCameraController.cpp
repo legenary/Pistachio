@@ -77,14 +77,16 @@ namespace Pistachio {
 	bool OrthographicCameraController::OnMouseScrolled(MouseScrolledEvent& e) {
 		PTC_PROFILE_FUNCTION();
 		SetZoomLevel(std::max(m_ZoomLevel - e.GetYOffset() / 5, 0.3f));
-		CalculateView();
 		return false;
+	}
+
+	void OrthographicCameraController::OnResize(float width, float height) {
+		SetAspectRatio(width, height);
 	}
 
 	bool OrthographicCameraController::OnWindowResized(WindowResizeEvent& e) {
 		PTC_PROFILE_FUNCTION();
 		SetAspectRatio(e.GetWidth(), e.GetHeight());
-		CalculateView();
 		return false;
 	}
 

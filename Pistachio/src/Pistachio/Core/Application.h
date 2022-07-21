@@ -20,7 +20,7 @@ namespace Pistachio {
 	class Application
 	{
 	public:
-		Application();
+		Application(const std::string& name = "Pistachio App");
 		virtual ~Application();
 
 		void Run();
@@ -39,7 +39,7 @@ namespace Pistachio {
 		bool OnWindowClose(WindowCloseEvent& e);
 		bool OnWindowResize(WindowResizeEvent& e);
 
-		std::unique_ptr<Window> m_Window;
+		Ref<Window> m_Window;
 		ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
 		bool m_Minimized = false;
