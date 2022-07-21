@@ -7,6 +7,8 @@ namespace Pistachio {
 
 	class SubTexture2D {
 	public:
+		virtual ~SubTexture2D() = default;
+
 		SubTexture2D(const Ref<Texture2D>& texture, const glm::vec2& min, const glm::vec2& max);
 
 		const glm::vec2* GetTexCoord() const { return m_TexCoords; }

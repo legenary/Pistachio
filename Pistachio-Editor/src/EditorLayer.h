@@ -19,6 +19,8 @@ namespace Pistachio {
 	private:
 		//Pistachio::World* m_World;
 		glm::vec2 m_ViewportSize;
+		bool m_ViewportFocused = false;
+		bool m_ViewportHovered = false;
 	
 		Ref<Texture2D> m_Texture, m_EmojiTexture, m_SpriteSheet;
 		OrthographicCameraController m_CameraController;

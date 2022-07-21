@@ -15,6 +15,8 @@ namespace Pistachio {
 	class FrameBuffer {
 
 	public:
+		virtual ~FrameBuffer() = default;
+
 		//virtual FrameBufferSpecification& GetSpecification() = 0;
 		virtual const FrameBufferSpecification& GetSpecification() const = 0;
 

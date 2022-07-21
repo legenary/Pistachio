@@ -50,7 +50,9 @@ namespace Pistachio {
 		PTC_PROFILE_FUNCTION();
 
 		// Update
-		m_CameraController.OnUpdate(ts);
+		if (m_ViewportFocused) {
+			m_CameraController.OnUpdate(ts);
+		}
 
 		//// step simulate world
 		//{
@@ -176,6 +178,9 @@ namespace Pistachio {
 		{
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 			ImGui::Begin("Viewport");
+			m_ViewportFocused = ImGui::IsWindowFocused();
+			m_ViewportHovered = ImGui::IsWindowHovered();
+			
 			ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
 			//PTC_CORE_TRACE("viewport size: {0}, {1}", viewportPanelSize.x, viewportPanelSize.y);
 			if (m_ViewportSize != *((glm::vec2*)&viewportPanelSize)) {
@@ -195,7 +200,9 @@ namespace Pistachio {
 	}
 
 	void EditorLayer::OnEvent(Event& event) {
-		m_CameraController.OnEvent(event);
+		if (m_ViewportHovered) {
+			m_CameraController.OnEvent(event);
+		}
 	}
 }
 

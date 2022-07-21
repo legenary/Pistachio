@@ -24,6 +24,8 @@ namespace Pistachio {
 	}
 
 	void OrthographicCameraController::SetAspectRatio(int width, int height) {
+		m_WindowWidth = width;
+		m_WindowHeight = height;
 		m_AspectRatio = (float)width / (float)height;
 		CalculateView();
 	}
