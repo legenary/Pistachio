@@ -11,6 +11,7 @@ namespace Pistachio {
 	OrthographicCameraController::OrthographicCameraController(unsigned int width, unsigned int height, bool rotation)
 		: m_WindowWidth(width), m_WindowHeight(height)
 		, m_AspectRatio((float)width/(float)height)
+		, m_Bounds({ -m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel })
 		, m_Camera(-m_AspectRatio * m_ZoomLevel, m_AspectRatio* m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel)
 		, m_Rotation(rotation) {
 
@@ -61,7 +62,8 @@ namespace Pistachio {
 		PTC_PROFILE_FUNCTION();
 
 		m_ZoomLevel = std::max(m_ZoomLevel - e.GetYOffset() / 5, 0.3f);
-		m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
+		m_Bounds = { -m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel };
+		m_Camera.SetProjection(m_Bounds.Left, m_Bounds.Right, m_Bounds.Bottom, m_Bounds.Top); 
 		return false;
 	}
 
@@ -71,7 +73,8 @@ namespace Pistachio {
 		m_WindowWidth = e.GetWidth();
 		m_WindowHeight = e.GetHeight();
 		m_AspectRatio = (float)m_WindowWidth / (float)m_WindowHeight;
-		m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
+		m_Bounds = { -m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel };
+		m_Camera.SetProjection(m_Bounds.Left, m_Bounds.Right, m_Bounds.Bottom, m_Bounds.Top);
 		return false;
 	}
 

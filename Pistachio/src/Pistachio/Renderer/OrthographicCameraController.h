@@ -7,6 +7,15 @@
 #include "Pistachio/Events/MouseEvent.h"
 
 namespace Pistachio {
+
+	struct OrthographicCameraBounds {
+		float Left, Right;
+		float Bottom, Top;
+
+		float GetWidth() { return Right - Left; }
+		float GetHeight() { return Top - Bottom; }
+	};
+
 	class OrthographicCameraController {
 	public:
 		OrthographicCameraController(unsigned int width, unsigned int height, bool rotation = true);
@@ -16,6 +25,7 @@ namespace Pistachio {
 
 		inline const OrthographicCamera& GetCamera() const { return m_Camera; }
 		inline OrthographicCamera& GetCamera() { return m_Camera; }
+		const OrthographicCameraBounds& GetBounds() const { return m_Bounds; }
 
 	private:
 		bool OnMouseScrolled(MouseScrolledEvent& e);
@@ -29,6 +39,7 @@ namespace Pistachio {
 		float m_ZoomLevel = 10.0f;
 		
 		OrthographicCamera m_Camera;
+		OrthographicCameraBounds m_Bounds;
 
 		bool m_Rotation;
 		glm::vec3 m_CameraPosition = { 0.0f, 0.0f, 0.0f };

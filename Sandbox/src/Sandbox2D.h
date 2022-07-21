@@ -2,6 +2,8 @@
 
 #include "Pistachio.h"
 
+#include "ParticleSystem.h"
+
 class Sandbox2D : public Pistachio::Layer {
 public:
 	Sandbox2D();
@@ -17,9 +19,13 @@ public:
 private:
 	//Pistachio::World* m_World;
 	
-	Pistachio::Ref<Pistachio::Texture2D> m_Texture, m_EmojiTexture;
+	Pistachio::Ref<Pistachio::Texture2D> m_Texture, m_EmojiTexture, m_SpriteSheet;
+	Pistachio::Ref<Pistachio::SubTexture2D> m_TextureStairs, m_TextureBarrel, m_TextureGreenTree;
 	Pistachio::OrthographicCameraController m_CameraController;
 
 	glm::vec3 m_SquareColor = { 0.2f, 0.3f, 0.8f };
+
+	ParticleProps m_Particle;
+	ParticleSystem m_ParticleSystem;
 };
 

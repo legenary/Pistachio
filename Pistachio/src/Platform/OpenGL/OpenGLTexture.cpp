@@ -5,8 +5,8 @@
 #include <stb_image.h>
 
 namespace  Pistachio {
-	OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height)
-		: m_Width(width), m_Height(height) {
+	OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height, const glm::vec2& stride)
+		: m_Width(width), m_Height(height), m_Stride(stride) {
 		PTC_PROFILE_FUNCTION();
 
 		m_InternalFormat = GL_RGBA8;
@@ -22,8 +22,8 @@ namespace  Pistachio {
 		glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	}
 
-	OpenGLTexture2D::OpenGLTexture2D(const std::string& path)
-		:m_Path(path) {
+	OpenGLTexture2D::OpenGLTexture2D(const std::string& path, const glm::vec2& stride)
+		:m_Path(path), m_Stride(stride) {
 		PTC_PROFILE_FUNCTION();
 
 		int width, height, channels;

@@ -209,28 +209,38 @@ namespace Pistachio {
 		const float texIndex = 0.0f;	// whiteTexture
 		const float tilingFactor = 1.0f;
 
-		s_Data.QuadVertexBufferPtr->Position = position;
+		glm::mat4 translate = glm::translate(glm::mat4(1.0f), position);
+		glm::mat4 rotate = (rotation == 0) ? glm::mat4(1.0f) : glm::rotate(glm::mat4(1.0f), rotation, glm::vec3(0, 0, 1));
+		glm::mat4 scale = glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+		glm::mat4 transform = translate * rotate * scale;
+		//glm::vec4 oldPos(0.0f, 0.0f, 0.0f, 1.0f);
+		glm::vec4 newPos1 = transform * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+		glm::vec4 newPos2 = transform * glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+		glm::vec4 newPos3 = transform * glm::vec4(1.0f, 1.0f, 0.0f, 1.0f);
+		glm::vec4 newPos4 = transform * glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
+
+		s_Data.QuadVertexBufferPtr->Position = newPos1;
 		s_Data.QuadVertexBufferPtr->Color = color;
 		s_Data.QuadVertexBufferPtr->TexCoord = { 0.0f, 0.0f};
 		s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
 		s_Data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
 		s_Data.QuadVertexBufferPtr++;
 
-		s_Data.QuadVertexBufferPtr->Position = {position.x + size.x, position.y, 0.0f};
+		s_Data.QuadVertexBufferPtr->Position = newPos2;
 		s_Data.QuadVertexBufferPtr->Color = color;
 		s_Data.QuadVertexBufferPtr->TexCoord = { 1.0f, 0.0f};
 		s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
 		s_Data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
 		s_Data.QuadVertexBufferPtr++;
 
-		s_Data.QuadVertexBufferPtr->Position = { position.x + size.x, position.y + size.y, 0.0f };
+		s_Data.QuadVertexBufferPtr->Position = newPos3;
 		s_Data.QuadVertexBufferPtr->Color = color;
 		s_Data.QuadVertexBufferPtr->TexCoord = { 1.0f, 1.0f};
 		s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
 		s_Data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
 		s_Data.QuadVertexBufferPtr++;
 
-		s_Data.QuadVertexBufferPtr->Position = { position.x, position.y + size.y, 0.0f };
+		s_Data.QuadVertexBufferPtr->Position = newPos4;
 		s_Data.QuadVertexBufferPtr->Color = color;
 		s_Data.QuadVertexBufferPtr->TexCoord = { 0.0f, 1.0f};
 		s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
@@ -250,6 +260,7 @@ namespace Pistachio {
 		PTC_PROFILE_FUNCTION();
 
 		constexpr glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
+		constexpr glm::vec2 textureCoords[] = { {0.0f, 0.0f}, {1.0f,0.0f}, {1.0f,1.0f}, {0.0f,1.0f} };
 
 		float textureIndex = 0.0f;
 
@@ -266,50 +277,112 @@ namespace Pistachio {
 			s_Data.TextureSlotIndex++;
 		} 
 
-		s_Data.QuadVertexBufferPtr->Position = position;
+		glm::mat4 translate = glm::translate(glm::mat4(1.0f), position);
+		glm::mat4 rotate = (rotation == 0) ? glm::mat4(1.0f) : glm::rotate(glm::mat4(1.0f), rotation, glm::vec3(0, 0, 1));
+		glm::mat4 scale = glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+		glm::mat4 transform = translate * rotate * scale;
+		//glm::vec4 oldPos(0.0f, 0.0f, 0.0f, 1.0f);
+		glm::vec4 newPos1 = transform * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+		glm::vec4 newPos2 = transform * glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+		glm::vec4 newPos3 = transform * glm::vec4(1.0f, 1.0f, 0.0f, 1.0f);
+		glm::vec4 newPos4 = transform * glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
+
+		s_Data.QuadVertexBufferPtr->Position = newPos1;
 		s_Data.QuadVertexBufferPtr->Color = color;
-		s_Data.QuadVertexBufferPtr->TexCoord = { 0.0f, 0.0f };
+		s_Data.QuadVertexBufferPtr->TexCoord = textureCoords[0];
 		s_Data.QuadVertexBufferPtr->TexIndex = textureIndex;
 		s_Data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
 		s_Data.QuadVertexBufferPtr++;
 
-		s_Data.QuadVertexBufferPtr->Position = { position.x + size.x, position.y, 0.0f };
+		s_Data.QuadVertexBufferPtr->Position = newPos2;
 		s_Data.QuadVertexBufferPtr->Color = color;
-		s_Data.QuadVertexBufferPtr->TexCoord = { 1.0f, 0.0f };
+		s_Data.QuadVertexBufferPtr->TexCoord = textureCoords[1];
 		s_Data.QuadVertexBufferPtr->TexIndex = textureIndex;
 		s_Data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
 		s_Data.QuadVertexBufferPtr++;
 
-		s_Data.QuadVertexBufferPtr->Position = { position.x + size.x, position.y + size.y, 0.0f };
+		s_Data.QuadVertexBufferPtr->Position = newPos3;
 		s_Data.QuadVertexBufferPtr->Color = color;
-		s_Data.QuadVertexBufferPtr->TexCoord = { 1.0f, 1.0f };
+		s_Data.QuadVertexBufferPtr->TexCoord = textureCoords[2];
 		s_Data.QuadVertexBufferPtr->TexIndex = textureIndex;
 		s_Data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
 		s_Data.QuadVertexBufferPtr++;
 
-		s_Data.QuadVertexBufferPtr->Position = { position.x, position.y + size.y, 0.0f };
+		s_Data.QuadVertexBufferPtr->Position = newPos4;
 		s_Data.QuadVertexBufferPtr->Color = color;
-		s_Data.QuadVertexBufferPtr->TexCoord = { 0.0f, 1.0f };
+		s_Data.QuadVertexBufferPtr->TexCoord = textureCoords[3];
 		s_Data.QuadVertexBufferPtr->TexIndex = textureIndex;
 		s_Data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
 		s_Data.QuadVertexBufferPtr++;
 
 		s_Data.QuadIndexCount += 6;
-		/*
-		s_Data.TheShaderLibrary.Get("Texture")->SetFloat4("u_Color", glm::vec4(1.0f));
-		s_Data.TheShaderLibrary.Get("Texture")->SetFloat("u_TilingFactor", tilingFactor);
-		tex->Bind();
+	}
+
+	void Renderer2D::DrawQuad(const Ref<SubTexture2D>& subtex, const glm::vec2& position, const glm::vec2& size, const float rotation, const float tilingFactor) {
+		DrawQuad(subtex, { position.x, position.y, 0.0f }, size, rotation, tilingFactor);
+	}
+
+	void Renderer2D::DrawQuad(const Ref<SubTexture2D>& subtex, const glm::vec3& position, const glm::vec2& size, const float rotation, const float tilingFactor) {
+		PTC_PROFILE_FUNCTION();
+
+		constexpr glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
+		const glm::vec2* textureCoords = subtex->GetTexCoord();
+		const Ref<Texture2D> texture = subtex->GetTexture();
+
+		float textureIndex = 0.0f;
+
+		for (uint32_t i = 1; i < s_Data.TextureSlotIndex; i++) {
+			if (*s_Data.TextureSlots[i].get() == *texture.get()) {
+				textureIndex = (float)i;
+				break;
+			}
+		}
+
+		if (textureIndex == 0.0f) {
+			textureIndex = (float)s_Data.TextureSlotIndex;
+			s_Data.TextureSlots[s_Data.TextureSlotIndex] = texture;
+			s_Data.TextureSlotIndex++;
+		}
 
 		glm::mat4 translate = glm::translate(glm::mat4(1.0f), position);
+		glm::mat4 rotate = (rotation == 0) ? glm::mat4(1.0f) : glm::rotate(glm::mat4(1.0f), rotation, glm::vec3(0, 0, 1));
 		glm::mat4 scale = glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
-		glm::mat4 rotate = glm::rotate(glm::mat4(1.0f), glm::radians(rotation), glm::vec3(0, 0, 1));
-		s_Data.TheShaderLibrary.Get("Texture")->Bind();
-		s_Data.TheShaderLibrary.Get("Texture")
-			->SetMat4("u_Transform", translate * rotate * scale);
+		glm::mat4 transform = translate * rotate * scale;
+		//glm::vec4 oldPos(0.0f, 0.0f, 0.0f, 1.0f);
+		glm::vec4 newPos1 = transform * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+		glm::vec4 newPos2 = transform * glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+		glm::vec4 newPos3 = transform * glm::vec4(1.0f, 1.0f, 0.0f, 1.0f);
+		glm::vec4 newPos4 = transform * glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
 
-		s_Data.QuadVertexArray->Bind();
-		RenderCommand::DrawIndexed(s_Data.QuadVertexArray);
-		*/
+		s_Data.QuadVertexBufferPtr->Position = newPos1;
+		s_Data.QuadVertexBufferPtr->Color = color;
+		s_Data.QuadVertexBufferPtr->TexCoord = textureCoords[0];
+		s_Data.QuadVertexBufferPtr->TexIndex = textureIndex;
+		s_Data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
+		s_Data.QuadVertexBufferPtr++;
+
+		s_Data.QuadVertexBufferPtr->Position = newPos2;
+		s_Data.QuadVertexBufferPtr->Color = color;
+		s_Data.QuadVertexBufferPtr->TexCoord = textureCoords[1];
+		s_Data.QuadVertexBufferPtr->TexIndex = textureIndex;
+		s_Data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
+		s_Data.QuadVertexBufferPtr++;
+
+		s_Data.QuadVertexBufferPtr->Position = newPos3;
+		s_Data.QuadVertexBufferPtr->Color = color;
+		s_Data.QuadVertexBufferPtr->TexCoord = textureCoords[2];
+		s_Data.QuadVertexBufferPtr->TexIndex = textureIndex;
+		s_Data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
+		s_Data.QuadVertexBufferPtr++;
+
+		s_Data.QuadVertexBufferPtr->Position = newPos4;
+		s_Data.QuadVertexBufferPtr->Color = color;
+		s_Data.QuadVertexBufferPtr->TexCoord = textureCoords[3];
+		s_Data.QuadVertexBufferPtr->TexIndex = textureIndex;
+		s_Data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
+		s_Data.QuadVertexBufferPtr++;
+
+		s_Data.QuadIndexCount += 6;
 	}
 
 
@@ -365,7 +438,7 @@ namespace Pistachio {
 		s_Data.WhiteTexture->Bind();
 
 		glm::mat4 translate = glm::translate(glm::mat4(1.0f), position);
-		glm::mat4 rotate = glm::rotate(glm::mat4(1.0f), glm::radians(rotation), glm::vec3(0.0f, 0.0f, 1.0f));
+		glm::mat4 rotate = glm::rotate(glm::mat4(1.0f), rotation, glm::vec3(0.0f, 0.0f, 1.0f));
 		glm::mat4 scale = glm::scale(glm::mat4(1.0f), { radius, radius, 1.0f });
 		s_Data.TheShaderLibrary.Get("Texture")
 			->SetMat4("u_Transform", translate * rotate * scale);

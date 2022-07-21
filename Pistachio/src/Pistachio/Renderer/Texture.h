@@ -2,6 +2,7 @@
 
 #include <string>
 #include "Pistachio/Core/Core.h"
+#include <glm/glm.hpp>
 
 namespace Pistachio {
 
@@ -21,13 +22,11 @@ namespace Pistachio {
 
 	class Texture2D : public Texture {
 	public:
-		static Ref<Texture2D> Create(uint32_t width, uint32_t height);
-		static Ref<Texture2D> Create(const std::string& path);
+		static Ref<Texture2D> Create(uint32_t width, uint32_t height, const glm::vec2& stride = {0, 0});
+		static Ref<Texture2D> Create(const std::string& path, const glm::vec2& stride = { 0, 0 });
 
-
+		virtual const glm::vec2& GetStride() const = 0;
 	};
-
-
 }
 
 

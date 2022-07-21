@@ -3,6 +3,7 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
+
 Sandbox2D::Sandbox2D()
 	:Layer("Sandbox2D"), m_CameraController(1280, 720) {
 
@@ -12,6 +13,20 @@ Sandbox2D::Sandbox2D()
 void Sandbox2D::OnAttach() {
 	m_Texture = Pistachio::Texture2D::Create("assets/textures/Checkerboard.png");
 	m_EmojiTexture = Pistachio::Texture2D::Create("assets/textures/emoji.png");
+	m_SpriteSheet = Pistachio::Texture2D::Create("assets/game/textures/RPGpack_sheet_2X.png", {128, 128} /*stride*/);
+
+	m_TextureStairs = Pistachio::SubTexture2D::CreateFromCoords(m_SpriteSheet, { 7, 6 });
+	m_TextureBarrel = Pistachio::SubTexture2D::CreateFromCoords(m_SpriteSheet, { 8, 2 }, {1, 1});
+	m_TextureGreenTree = Pistachio::SubTexture2D::CreateFromCoords(m_SpriteSheet, { 4, 1 }, { 1, 2 });
+	
+	// Particle System Init here
+	m_Particle.ColorBegin = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f, 1.0f };
+	m_Particle.ColorEnd = { 254 / 255.0f, 109 / 255.0f, 41 / 255.0f, 1.0f };
+	m_Particle.SizeBegin = 0.5f, m_Particle.SizeVariation = 0.3f, m_Particle.SizeEnd = 0.0f;
+	m_Particle.LifeTime = 1.0f;
+	m_Particle.Velocity = { 0.0f, 0.0f };
+	m_Particle.VelocityVariation = { 3.0f, 1.0f };
+	m_Particle.Position = { 0.0f, 0.0f };
 
 	//m_World = new Pistachio::World();
 	//m_World->Init();
@@ -50,24 +65,55 @@ void Sandbox2D::OnUpdate(Pistachio::Timestep ts) {
 		Pistachio::RenderCommand::Clear();
 	}
 
-	// draw calls
-	{
-		PTC_PROFILE_SCOPE("Renderer Draw");
-		Pistachio::Renderer2D::BeginScene(m_CameraController.GetCamera());
+	//// draw calls
+	//{
+	//	PTC_PROFILE_SCOPE("Renderer Draw");
+	//	Pistachio::Renderer2D::BeginScene(m_CameraController.GetCamera());
 
-		//int bodyCount = m_World->getPhysicsWorld()->GetBodyCount();
-		//for (int i = 0; i < bodyCount; i++) {
-		//	//m_World->getComponentByIndex(i)->Draw({ 0.2f, 0.8f, 0.3f, 1.0f });
-		//}
+	//	//int bodyCount = m_World->getPhysicsWorld()->GetBodyCount();
+	//	//for (int i = 0; i < bodyCount; i++) {
+	//	//	//m_World->getComponentByIndex(i)->Draw({ 0.2f, 0.8f, 0.3f, 1.0f });
+	//	//}
+	//
+	//	Pistachio::Renderer2D::DrawQuad({ 0.3f, 0.8f, 0.2f, 1.0f }, { 0.0f, 0.0f }, { 1.0f, 1.0f }, glm::radians(10.0f));
+	//	Pistachio::Renderer2D::DrawQuad({ 0.8f, 0.3f, 0.2f, 1.0f }, { 0.0f, 0.0f }, { 4.5f, 1.5f }, glm::radians(-10.0f));
+	//	Pistachio::Renderer2D::DrawQuad(m_Texture, { -50.0f, -50.0f, -0.1f }, { 100.0f, 100.0f }, glm::radians(0.0f), 10.0f);
+	//	
+	//	Pistachio::Renderer2D::EndScene();
+	//}
+
+	// Particle system
+	{
+		if (Pistachio::Input::IsMouseButtonPressed(PTC_MOUSE_BUTTON_LEFT))
+		{
+			auto [x, y] = Pistachio::Input::GetMousePosition();
+			auto width = Pistachio::Application::Get().GetWindow().GetWidth();
+			auto height = Pistachio::Application::Get().GetWindow().GetHeight();
+
+			auto bounds = m_CameraController.GetBounds();
+			auto pos = m_CameraController.GetCamera().GetPosition();
+			x = (x / width) * bounds.GetWidth() - bounds.GetWidth() * 0.5f;
+			y = bounds.GetHeight() * 0.5f - (y / height) * bounds.GetHeight();
+			m_Particle.Position = { x + pos.x, y + pos.y };
+			for (int i = 0; i < 5; i++)
+				m_ParticleSystem.Emit(m_Particle);
+		}
+		m_ParticleSystem.OnUpdate(ts);
+		m_ParticleSystem.OnRender(m_CameraController.GetCamera());
+	}
 	
-		Pistachio::Renderer2D::DrawQuad({ 0.3f, 0.8f, 0.2f, 1.0f }, { 0.0f, 0.0f }, { 1.0f, 1.0f }, 10);
-		Pistachio::Renderer2D::DrawQuad({ 0.8f, 0.3f, 0.2f, 1.0f }, { 0.0f, 2.0f }, { 4.5f, 1.5f }, 10);
-		Pistachio::Renderer2D::DrawQuad(m_Texture, { 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, 0.0f, 2.0f);
 	
+	// sprite sheet test
+	{
+		Pistachio::Renderer2D::BeginScene(m_CameraController.GetCamera());
+		Pistachio::Renderer2D::DrawQuad(m_Texture, { -50.0f, -50.0f, 0.2f }, { 100.0f, 100.0f }, glm::radians(0.0f), 50.0f);
+		//Pistachio::Renderer2D::DrawQuad(m_SpriteSheet, { 0.0f, 0.0f, 1.0f }, { 3.0f, 3.0f });
+		Pistachio::Renderer2D::DrawQuad(m_TextureStairs, {0.0f, 0.0f, 1.0f}, {5.0f, 5.0f});
+		Pistachio::Renderer2D::DrawQuad(m_TextureBarrel, {0.0f, -5.0f, 1.0f}, {5.0f, 5.0f});
+		Pistachio::Renderer2D::DrawQuad(m_TextureGreenTree, {-5.0f, -5.0f, 1.0f}, {5.0f, 10.0f});
 		Pistachio::Renderer2D::EndScene();
 	}
 
-	
 }
 
 void Sandbox2D::OnImGuiRender() {

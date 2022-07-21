@@ -1424,6 +1424,7 @@
     </ClInclude>
     <ClInclude Include="src\Pistachio\Physics\ShapeComponent.h" />
     <ClInclude Include="src\Pistachio\Debug\Instrumentor.h" />
+    <ClInclude Include="src\Pistachio\Renderer\SubTexture2D.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pistachio\Core\Application.cpp">
@@ -1508,5 +1509,6 @@
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
     <ClCompile Include="src\Pistachio\Physics\ShapeComponent.cpp" />
+    <ClCompile Include="src\Pistachio\Renderer\SubTexture2D.cpp" />
   </ItemGroup>
 </Project>
