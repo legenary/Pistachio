@@ -1,1 +1,0 @@
-{"otherData": {},"traceEvents":[{"cat":"function","dur":1,"name":"__cdecl Pistachio::OpenGLTexture2D::~OpenGLTexture2D(void)","ph":"X","pid":0,"tid":596858726,"ts":416988450814},{"cat":"function","dur":25744,"name":"void __cdecl Pistachio::WindowsWindow::Shutdown(void)","ph":"X","pid":0,"tid":596858726,"ts":416988450870}]}
