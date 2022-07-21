@@ -1425,6 +1425,8 @@
     <ClInclude Include="src\Pistachio\Physics\ShapeComponent.h" />
     <ClInclude Include="src\Pistachio\Debug\Instrumentor.h" />
     <ClInclude Include="src\Pistachio\Renderer\SubTexture2D.h" />
+    <ClInclude Include="src\Pistachio\Renderer\FrameBuffer.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLFrameBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pistachio\Core\Application.cpp">
@@ -1510,5 +1512,7 @@
     </ClCompile>
     <ClCompile Include="src\Pistachio\Physics\ShapeComponent.cpp" />
     <ClCompile Include="src\Pistachio\Renderer\SubTexture2D.cpp" />
+    <ClCompile Include="src\Pistachio\Renderer\FrameBuffer.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLFrameBuffer.cpp" />
   </ItemGroup>
 </Project>

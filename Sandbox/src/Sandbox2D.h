@@ -21,6 +21,8 @@ private:
 	
 	Pistachio::Ref<Pistachio::Texture2D> m_Texture, m_EmojiTexture, m_SpriteSheet;
 	Pistachio::OrthographicCameraController m_CameraController;
+	
+	Pistachio::Ref<Pistachio::FrameBuffer> m_Framebuffer;
 
 	glm::vec3 m_SquareColor = { 0.2f, 0.3f, 0.8f };
 

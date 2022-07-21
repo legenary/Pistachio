@@ -30,6 +30,12 @@ void Sandbox2D::OnAttach() {
 	m_Particle.VelocityVariation = { 3.0f, 1.0f };
 	m_Particle.Position = { 0.0f, 0.0f };
 
+	// framebuffer
+	Pistachio::FrameBufferSpecification fbSpec;
+	fbSpec.Width = 1280;
+	fbSpec.Height = 720;
+	m_Framebuffer = Pistachio::FrameBuffer::Create(fbSpec);
+
 	//m_World = new Pistachio::World();
 	//m_World->Init();
 
@@ -63,6 +69,8 @@ void Sandbox2D::OnUpdate(Pistachio::Timestep ts) {
 	// Renderer Prep
 	{
 		PTC_PROFILE_SCOPE("Renderer Prep");
+		m_Framebuffer->Bind();
+
 		Pistachio::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 		Pistachio::RenderCommand::Clear();
 	}
@@ -114,14 +122,17 @@ void Sandbox2D::OnUpdate(Pistachio::Timestep ts) {
 		Pistachio::Renderer2D::DrawQuad(m_TextureMap['D'], {0.0f, -1.0f, 1.0f}, {1.0f, 1.0f});
 		Pistachio::Renderer2D::DrawQuad(m_TextureMap['G'], {-1.0f, -1.0f, 1.0f}, {1.0f, 1.0f});
 		Pistachio::Renderer2D::EndScene();
+		m_Framebuffer->Unbind();
 	}
+
+	
 
 }
 
 void Sandbox2D::OnImGuiRender() {
 	PTC_PROFILE_FUNCTION();
 
-	static bool dockingEnabled = false;
+	static bool dockingEnabled = true;
 	if (dockingEnabled) {
 		static bool DockspaceOpen = true;
 		static bool opt_fullscreen = true;
@@ -188,13 +199,20 @@ void Sandbox2D::OnImGuiRender() {
 
 		ImGui::Begin("Settings");
 		ImGui::ColorEdit3("SquareColor", glm::value_ptr(m_SquareColor));
+		uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
+		ImGui::Image((void*)textureID, ImVec2{ 1280.0f , 720.0f });
+		ImGui::End();
+
+
+		ImGui::End();
+
+	}
+	else {
+		ImGui::Begin("Settings");
+		ImGui::ColorEdit3("SquareColor", glm::value_ptr(m_SquareColor));
 		uint32_t textureID = m_Texture->GetRendererID();
 		ImGui::Image((void*)textureID, ImVec2{ 64.0f ,64.0f });
 		ImGui::End();
-
-
-		ImGui::End();
-
 	}
 }
 
