@@ -26,8 +26,9 @@
 #include "Pistachio/Renderer/OrthographicCamera.h"
 #include "Pistachio/Renderer/OrthographicCameraController.h"
 
-// physics engine
-//#include "Pistachio/Physics/World.h"
-//#include "Pistachio/Physics/ShapeComponent.h"
+// ECS
+#include "Pistachio/Scene/Scene.h"
+#include "Pistachio/Scene/Component.h"
+
 
 #include "Pistachio/Debug/Instrumentor.h"

@@ -17,17 +17,16 @@ namespace Pistachio {
 		virtual void OnEvent(Event& event) override;
 
 	private:
-		//Pistachio::World* m_World;
 		glm::vec2 m_ViewportSize;
 		bool m_ViewportFocused = false;
 		bool m_ViewportHovered = false;
 	
 		Ref<Texture2D> m_Texture, m_EmojiTexture, m_SpriteSheet;
 		OrthographicCameraController m_CameraController;
-	
+		
+		Ref<Scene> m_ActiveScene;
+		entt::entity m_SquareEntity;
 		Ref<FrameBuffer> m_Framebuffer;
-
-		glm::vec3 m_SquareColor = { 0.2f, 0.3f, 0.8f };
 
 		std::unordered_map<char, Ref<SubTexture2D>> m_TextureMap;
 	};

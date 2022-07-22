@@ -28,19 +28,15 @@ namespace Pistachio {
 		fbSpec.Height = 720;
 		m_Framebuffer = FrameBuffer::Create(fbSpec);
 
-		//m_World = new World();
-		//m_World->Init();
+		// Scene
+		m_ActiveScene = CreateRef<Scene>();
+		auto square = m_ActiveScene->CreateEntity();
+		m_ActiveScene->Reg().emplace<TransformComponent>(square);
+		m_ActiveScene->Reg().emplace<SpriteComponent>(square, glm::vec4{1.0f, 0.0f, 0.0f, 1.0f});
+		m_SquareEntity = square;
 
-		//m_World->addBoxComponent(glm::vec2(0.0f, 0.0f), -90, glm::vec2(5.0f, 2.0f));
-		//m_World->addBoxComponent(glm::vec2(2.0f, 4.0f), 10, glm::vec2(4.0f, 1.0f));
-		//m_World->addBoxComponent(glm::vec2(4.0f, -7.0f), 10, glm::vec2(10.0f, 1.0f), false);
-		//m_World->addBoxComponent(glm::vec2(-4.0f, -7.0f), -10, glm::vec2(10.0f, 1.0f), false);
+		//square.
 
-		//for (float x = -4.5f; x < 4.5f; x += 2.0f) {
-		//	for (float y = 0.0f; y <10.0f; y += 2.0f) {
-		//		m_World->addCircleComponent(glm::vec2(x, y), 0.8f);
-		//	}
-		//}
 	}
 
 	void EditorLayer::OnDetach() {
@@ -54,52 +50,31 @@ namespace Pistachio {
 			m_CameraController.OnUpdate(ts);
 		}
 
-		//// step simulate world
-		//{
-		//	PTC_PROFILE_SCOPE("Physics step simulation");
-		//	m_World->getPhysicsWorld()->Step(ts, 6, 2);
-		//}
-
 		// Renderer Prep
 		{
 			PTC_PROFILE_SCOPE("Renderer Prep");
 			m_Framebuffer->Bind();
-
 			RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 			RenderCommand::Clear();
 		}
-
-		//// draw calls
-		//{
-		//	PTC_PROFILE_SCOPE("Renderer Draw");
-		//	Renderer2D::BeginScene(m_CameraController.GetCamera());
-
-		//	//int bodyCount = m_World->getPhysicsWorld()->GetBodyCount();
-		//	//for (int i = 0; i < bodyCount; i++) {
-		//	//	//m_World->getComponentByIndex(i)->Draw({ 0.2f, 0.8f, 0.3f, 1.0f });
-		//	//}
-		//
-		//	Renderer2D::DrawQuad({ 0.3f, 0.8f, 0.2f, 1.0f }, { 0.0f, 0.0f }, { 1.0f, 1.0f }, glm::radians(10.0f));
-		//	Renderer2D::DrawQuad({ 0.8f, 0.3f, 0.2f, 1.0f }, { 0.0f, 0.0f }, { 4.5f, 1.5f }, glm::radians(-10.0f));
-		//	Renderer2D::DrawQuad(m_Texture, { -50.0f, -50.0f, -0.1f }, { 100.0f, 100.0f }, glm::radians(0.0f), 10.0f);
-		//	
-		//	Renderer2D::EndScene();
-		//}
-	
+		
 	
 		// sprite sheet test
 		{
 			Renderer2D::BeginScene(m_CameraController.GetCamera());
-			Renderer2D::DrawQuad(m_Texture, { -50.0f, -50.0f, 0.2f }, { 100.0f, 100.0f }, glm::radians(0.0f), 50.0f);
-			//Renderer2D::DrawQuad(m_SpriteSheet, { 0.0f, 0.0f, 1.0f }, { 3.0f, 3.0f });
-			Renderer2D::DrawQuad(m_TextureMap['W'], {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f});
-			Renderer2D::DrawQuad(m_TextureMap['D'], {0.0f, -1.0f, 1.0f}, {1.0f, 1.0f});
-			Renderer2D::DrawQuad(m_TextureMap['G'], {-1.0f, -1.0f, 1.0f}, {1.0f, 1.0f});
+			//Renderer2D::DrawQuad(m_Texture, { -50.0f, -50.0f, -0.5f }, glm::radians(0.0f), { 100.0f, 100.0f }, 50.0f);
+			//Renderer2D::DrawQuad(m_TextureMap['W'], { 0.0f, 0.0f, 1.0f }, glm::radians(0.0f), { 1.0f, 1.0f });
+			//Renderer2D::DrawQuad(m_TextureMap['D'], { 0.0f, -1.0f, 1.0f }, glm::radians(0.0f), { 1.0f, 1.0f });
+			//Renderer2D::DrawQuad(m_TextureMap['G'], { -1.0f, -1.0f, 1.0f }, glm::radians(0.0f), { 1.0f, 1.0f });
+			//Renderer2D::DrawQuad({1.0f, 1.0f, 0.0f, 1.0f}, { -1.0f, 2.0f, 1.0f }, glm::radians(30.0f), { 1.0f, 1.0f });
+			// Draw scene
+			m_ActiveScene->OnUpdate(ts);
+
+
 			Renderer2D::EndScene();
 			m_Framebuffer->Unbind();
 		}
 
-	
 
 	}
 
@@ -170,7 +145,9 @@ namespace Pistachio {
 
 		{
 			ImGui::Begin("Settings");
-			ImGui::ColorEdit3("SquareColor", glm::value_ptr(m_SquareColor));
+
+			auto& squarecolor = m_ActiveScene->Reg().get<SpriteComponent>(m_SquareEntity).Color;
+			ImGui::ColorEdit4("SquareColor", glm::value_ptr(squarecolor));
 				
 			ImGui::End();
 		}
@@ -183,7 +160,8 @@ namespace Pistachio {
 			
 			ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
 			//PTC_CORE_TRACE("viewport size: {0}, {1}", viewportPanelSize.x, viewportPanelSize.y);
-			if (m_ViewportSize != *((glm::vec2*)&viewportPanelSize)) {
+			if (m_ViewportSize != *((glm::vec2*)&viewportPanelSize) 
+				&& viewportPanelSize.x > 0 && viewportPanelSize.y > 0) {
 				m_Framebuffer->Resize((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
 				m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
 
