@@ -1436,6 +1436,7 @@
     </ClInclude>
     <ClInclude Include="src\Pistachio\Scene\Component.h" />
     <ClInclude Include="src\Pistachio\Core\Utility.h" />
+    <ClInclude Include="src\Pistachio\Scene\Entity.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pistachio\Core\Application.cpp">
@@ -1528,5 +1529,6 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
+    <ClCompile Include="src\Pistachio\Scene\Entity.cpp" />
   </ItemGroup>
 </Project>

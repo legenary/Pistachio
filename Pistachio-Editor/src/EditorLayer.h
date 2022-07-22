@@ -25,7 +25,7 @@ namespace Pistachio {
 		OrthographicCameraController m_CameraController;
 		
 		Ref<Scene> m_ActiveScene;
-		entt::entity m_SquareEntity;
+		Entity squareEntity;
 		Ref<FrameBuffer> m_Framebuffer;
 
 		std::unordered_map<char, Ref<SubTexture2D>> m_TextureMap;

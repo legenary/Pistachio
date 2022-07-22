@@ -30,12 +30,10 @@ namespace Pistachio {
 
 		// Scene
 		m_ActiveScene = CreateRef<Scene>();
-		auto square = m_ActiveScene->CreateEntity();
-		m_ActiveScene->Reg().emplace<TransformComponent>(square);
-		m_ActiveScene->Reg().emplace<SpriteComponent>(square, glm::vec4{1.0f, 0.0f, 0.0f, 1.0f});
-		m_SquareEntity = square;
 
-		//square.
+		// Generate Entities
+		squareEntity = m_ActiveScene->CreateEntity("Square");
+		squareEntity.AddComponent<SpriteComponent>(glm::vec4{ 1.0f, 0.0f, 0.0f, 1.0f });
 
 	}
 
@@ -146,8 +144,10 @@ namespace Pistachio {
 		{
 			ImGui::Begin("Settings");
 
-			auto& squarecolor = m_ActiveScene->Reg().get<SpriteComponent>(m_SquareEntity).Color;
-			ImGui::ColorEdit4("SquareColor", glm::value_ptr(squarecolor));
+			if (squareEntity) {
+				auto& color = squareEntity.GetComponent<SpriteComponent>().Color;
+				ImGui::ColorEdit4("SquareColor", glm::value_ptr(color));
+			}
 				
 			ImGui::End();
 		}

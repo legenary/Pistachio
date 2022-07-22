@@ -3,6 +3,7 @@
 #include "Component.h"
 
 #include "Pistachio/Renderer/Renderer.h"
+#include "Pistachio/Scene/Entity.h"
 #include <glm/glm.hpp>
 
 namespace Pistachio {
@@ -55,17 +56,18 @@ namespace Pistachio {
 		////m_Registry.on_update...
 		//m_Registry.on_construct<TransformComponent>().connect<&OnTransformConstruct>();
 
-		
-
 
 	}
 
 	Scene::~Scene() {
 	}
 
-
-	entt::entity Scene::CreateEntity() {
-		return m_Registry.create();
+	Entity Scene::CreateEntity(const std::string& name) {
+		Entity e = { m_Registry.create(), this };
+		e.AddComponent<TransformComponent>();
+		auto& tag = e.AddComponent<TagComponent>();
+		tag.Tag = name.empty() ? "Unnamed Entity" : name;
+		return e;
 	}
 
 
