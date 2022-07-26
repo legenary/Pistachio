@@ -160,6 +160,7 @@
     <ClInclude Include="src\Pistachio\Events\MouseEvent.h" />
     <ClInclude Include="src\Pistachio\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\Pistachio\Renderer\Buffer.h" />
+    <ClInclude Include="src\Pistachio\Renderer\Camera.h" />
     <ClInclude Include="src\Pistachio\Renderer\FrameBuffer.h" />
     <ClInclude Include="src\Pistachio\Renderer\GraphicsContext.h" />
     <ClInclude Include="src\Pistachio\Renderer\OrthographicCamera.h" />
@@ -175,6 +176,7 @@
     <ClInclude Include="src\Pistachio\Scene\Component.h" />
     <ClInclude Include="src\Pistachio\Scene\Entity.h" />
     <ClInclude Include="src\Pistachio\Scene\Scene.h" />
+    <ClInclude Include="src\Pistachio\Scene\SceneCamera.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLFrameBuffer.h" />
@@ -622,6 +624,7 @@
     <ClCompile Include="src\Pistachio\Renderer\VertexArray.cpp" />
     <ClCompile Include="src\Pistachio\Scene\Entity.cpp" />
     <ClCompile Include="src\Pistachio\Scene\Scene.cpp" />
+    <ClCompile Include="src\Pistachio\Scene\SceneCamera.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLFrameBuffer.cpp" />

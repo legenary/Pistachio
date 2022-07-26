@@ -1,6 +1,6 @@
 #pragma once
 
-#include <glm/glm.hpp>
+#include "Pistachio/Scene/SceneCamera.h"
 
 namespace Pistachio {
 
@@ -32,6 +32,15 @@ namespace Pistachio {
 		SpriteComponent(const SpriteComponent&) = default;
 		SpriteComponent(const glm::vec4& c)
 			: Color(c) {}
+	};
+
+	struct CameraComponent {
+		SceneCamera Camera;
+		bool Primary = true;	// TODO: think about moving to scene
+		bool FixedAspectRatio = false;
+
+		CameraComponent() = default;
+		CameraComponent(const CameraComponent&) = default;
 	};
 
 }

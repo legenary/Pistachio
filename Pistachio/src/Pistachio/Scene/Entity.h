@@ -2,6 +2,7 @@
 
 #include "Scene.h"
 #include <entt.hpp>
+#include "Component.h"
 
 namespace Pistachio {
 
@@ -18,13 +19,13 @@ namespace Pistachio {
 		}
 
 		template<typename T>
-		T& GetComponent() {
+		T& GetComponent() const {
 			PTC_CORE_ASSERT(HasComponent<T>(), "Entity does not have component");
 			return m_Scene->m_Registry.get<T>(m_EntityHandle);
 		}
 
 		template<typename T>
-		bool HasComponent() {
+		bool HasComponent() const {
 			return m_Scene->m_Registry.any_of<T>(m_EntityHandle);
 		}
 
@@ -35,8 +36,11 @@ namespace Pistachio {
 		}
 
 		operator bool() const { return m_EntityHandle != entt::null; }
+
+		std::string& GetTag() const { return GetComponent<TagComponent>().Tag; }
+
 	private:
-		entt::entity m_EntityHandle = entt::null;
+		entt::entity m_EntityHandle{ entt::null };
 		Scene* m_Scene = nullptr;
 
 	};

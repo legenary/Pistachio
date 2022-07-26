@@ -73,16 +73,49 @@ namespace Pistachio {
 
 	void Scene::OnUpdate(Timestep ts) {
 
-		// retrive entities that has multiple components
-		auto group = m_Registry.group<TransformComponent>(entt::get<SpriteComponent>);
+		// Render sprites
+		mainCamera = nullptr;
+		glm::mat4* transform = nullptr;
+		auto group = m_Registry.group<CameraComponent>(entt::get<TransformComponent>);
 		for (auto entity : group) {
-			auto& [trans, sprite] = group.get<TransformComponent, SpriteComponent>(entity);
+			auto& [cameraComp, transComp] = group.get<CameraComponent, TransformComponent>(entity);
+			if (cameraComp.Primary) {
+				mainCamera = &(cameraComp.Camera);
+				transform = &(transComp.Transform);
+				break;
+			}
+		}
+
+		if (mainCamera) {
+
+			Renderer2D::BeginScene(*mainCamera, *transform);
+
+			// retrive entities that has multiple components
+			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteComponent>);
+			for (auto entity : group) {
+				auto& [trans, sprite] = group.get<TransformComponent, SpriteComponent>(entity);
 			
-			Renderer2D::DrawQuad(sprite.Color, trans);
+				Renderer2D::DrawQuad(sprite.Color, trans);
+
+			}
+			Renderer2D::EndScene();
 
 		}
 
+	}
 
+	void Scene::OnViewportResize(uint32_t width, uint32_t height) {
+		m_ViewportWidth = width;
+		m_ViewportHeight = height;
+
+		// Resize non-fixed aspect ratio camera
+		auto view = m_Registry.view<CameraComponent>();
+		for (auto entity : view) {
+			auto& cameraComp = view.get<CameraComponent>(entity);
+			if (!cameraComp.FixedAspectRatio) {
+				cameraComp.Camera.SetViewportSize(width, height);
+			}
+		}
 	}
 
 }

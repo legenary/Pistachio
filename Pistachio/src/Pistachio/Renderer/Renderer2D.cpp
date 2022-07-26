@@ -109,6 +109,21 @@ namespace Pistachio {
 		PTC_PROFILE_FUNCTION();
 	}
 
+	void Renderer2D::BeginScene(const Camera& camera, const glm::mat4& transform) {
+		PTC_PROFILE_FUNCTION();
+
+		glm::mat4 viewProj = camera.GetProjectionMatrix() * glm::inverse(transform);
+
+		s_Data.TheShaderLibrary.Get("Texture")->Bind();
+		s_Data.TheShaderLibrary.Get("Texture")
+			->SetMat4("u_ViewProjection", viewProj);
+
+		s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
+		s_Data.QuadIndexCount = 0;
+
+		s_Data.TextureSlotIndex = 1;
+	}
+
 	void Renderer2D::BeginScene(const OrthographicCamera& camera) {
 		PTC_PROFILE_FUNCTION();
 

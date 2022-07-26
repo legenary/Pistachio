@@ -1,8 +1,9 @@
 #pragma once
 
-#include "OrthographicCamera.h"
-#include "Texture.h"
-#include "SubTexture2D.h"
+#include "Pistachio/Renderer/OrthographicCamera.h"
+#include "Pistachio/Renderer/Camera.h"
+#include "Pistachio/Renderer/Texture.h"
+#include "Pistachio/Renderer/SubTexture2D.h"
 
 namespace Pistachio {
 
@@ -11,6 +12,7 @@ namespace Pistachio {
 		static void Init();
 		static void Shutdown();
 
+		static void BeginScene(const Camera& camera, const glm::mat4& transform);
 		static void BeginScene(const OrthographicCamera& camera);
 		static void EndScene();
 		static void Flush();

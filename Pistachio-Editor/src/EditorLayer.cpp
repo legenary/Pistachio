@@ -32,8 +32,12 @@ namespace Pistachio {
 		m_ActiveScene = CreateRef<Scene>();
 
 		// Generate Entities
-		squareEntity = m_ActiveScene->CreateEntity("Square");
-		squareEntity.AddComponent<SpriteComponent>(glm::vec4{ 1.0f, 0.0f, 0.0f, 1.0f });
+		m_SquareEntity = m_ActiveScene->CreateEntity("Square");
+		m_SquareEntity.AddComponent<SpriteComponent>(glm::vec4{ 1.0f, 0.0f, 0.0f, 1.0f });
+
+		// Camera
+		m_CameraEntity = m_ActiveScene->CreateEntity("Camera Entity");
+		m_CameraEntity.AddComponent<CameraComponent>();
 
 	}
 
@@ -59,7 +63,7 @@ namespace Pistachio {
 	
 		// sprite sheet test
 		{
-			Renderer2D::BeginScene(m_CameraController.GetCamera());
+			//Renderer2D::BeginScene(m_CameraController.GetCamera());
 			//Renderer2D::DrawQuad(m_Texture, { -50.0f, -50.0f, -0.5f }, glm::radians(0.0f), { 100.0f, 100.0f }, 50.0f);
 			//Renderer2D::DrawQuad(m_TextureMap['W'], { 0.0f, 0.0f, 1.0f }, glm::radians(0.0f), { 1.0f, 1.0f });
 			//Renderer2D::DrawQuad(m_TextureMap['D'], { 0.0f, -1.0f, 1.0f }, glm::radians(0.0f), { 1.0f, 1.0f });
@@ -69,7 +73,7 @@ namespace Pistachio {
 			m_ActiveScene->OnUpdate(ts);
 
 
-			Renderer2D::EndScene();
+			//Renderer2D::EndScene();
 			m_Framebuffer->Unbind();
 		}
 
@@ -141,14 +145,20 @@ namespace Pistachio {
 			ImGui::EndMenuBar();
 		}
 
+
 		{
 			ImGui::Begin("Settings");
-
-			if (squareEntity) {
-				auto& color = squareEntity.GetComponent<SpriteComponent>().Color;
+			if (m_SquareEntity) {
+				ImGui::Text("%s", m_SquareEntity.GetTag().c_str());
+				auto& color = m_SquareEntity.GetComponent<SpriteComponent>().Color;
 				ImGui::ColorEdit4("SquareColor", glm::value_ptr(color));
+				ImGui::Separator();
 			}
-				
+			auto& camera = m_CameraEntity.GetComponent<CameraComponent>().Camera;
+			glm::float32 cs = camera.GetOrthographicSize();
+			if (ImGui::DragFloat("camera size", &cs)) {
+				camera.SetOrthographicSize(cs);
+			}
 			ImGui::End();
 		}
 
@@ -166,6 +176,7 @@ namespace Pistachio {
 				m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
 
 				m_CameraController.OnResize(m_ViewportSize.x, m_ViewportSize.y);
+				m_ActiveScene->OnViewportResize((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
 			}
 			uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
 			ImGui::Image((void*)textureID, viewportPanelSize, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });

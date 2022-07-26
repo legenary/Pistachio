@@ -1437,6 +1437,8 @@
     <ClInclude Include="src\Pistachio\Scene\Component.h" />
     <ClInclude Include="src\Pistachio\Core\Utility.h" />
     <ClInclude Include="src\Pistachio\Scene\Entity.h" />
+    <ClInclude Include="src\Pistachio\Renderer\Camera.h" />
+    <ClInclude Include="src\Pistachio\Scene\SceneCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pistachio\Core\Application.cpp">
@@ -1530,5 +1532,6 @@
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
     <ClCompile Include="src\Pistachio\Scene\Entity.cpp" />
+    <ClCompile Include="src\Pistachio\Scene\SceneCamera.cpp" />
   </ItemGroup>
 </Project>
