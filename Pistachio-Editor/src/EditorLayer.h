@@ -27,6 +27,7 @@ namespace Pistachio {
 		Ref<Scene> m_ActiveScene;
 		Entity m_SquareEntity;
 		Entity m_CameraEntity;
+		Entity m_CameraEntity2;
 		Ref<FrameBuffer> m_Framebuffer;
 
 		std::unordered_map<char, Ref<SubTexture2D>> m_TextureMap;

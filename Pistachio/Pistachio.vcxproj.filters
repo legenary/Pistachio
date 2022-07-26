@@ -1439,6 +1439,7 @@
     <ClInclude Include="src\Pistachio\Scene\Entity.h" />
     <ClInclude Include="src\Pistachio\Renderer\Camera.h" />
     <ClInclude Include="src\Pistachio\Scene\SceneCamera.h" />
+    <ClInclude Include="src\Pistachio\Scene\ScriptableEntity.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pistachio\Core\Application.cpp">

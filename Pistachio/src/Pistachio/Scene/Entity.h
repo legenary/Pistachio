@@ -2,7 +2,6 @@
 
 #include "Scene.h"
 #include <entt.hpp>
-#include "Component.h"
 
 namespace Pistachio {
 
@@ -37,12 +36,12 @@ namespace Pistachio {
 
 		operator bool() const { return m_EntityHandle != entt::null; }
 
-		std::string& GetTag() const { return GetComponent<TagComponent>().Tag; }
-
 	private:
 		entt::entity m_EntityHandle{ entt::null };
 		Scene* m_Scene = nullptr;
 
 	};
+
+
 
 }

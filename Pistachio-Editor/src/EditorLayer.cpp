@@ -39,6 +39,27 @@ namespace Pistachio {
 		m_CameraEntity = m_ActiveScene->CreateEntity("Camera Entity");
 		m_CameraEntity.AddComponent<CameraComponent>();
 
+		m_CameraEntity2 = m_ActiveScene->CreateEntity("Camera Entity 2");
+		auto& cc = m_CameraEntity2.AddComponent<CameraComponent>();
+		cc.Primary = false;
+
+		class CameraController : public ScriptableEntity {
+		public:
+			void OnCreate() {
+				PTC_CORE_INFO("Create camera controller!");
+			}
+			void OnDestroy() {
+
+			}
+			void OnUpdate(Timestep ts) {
+				auto& trans = GetComponent<TransformComponent>().Transform;
+				if (Input::IsKeyPressed(PTC_KEY_A)) {
+					trans[3][0] -= 5 * ts;
+				}
+			}
+		};
+		m_CameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
+
 	}
 
 	void EditorLayer::OnDetach() {
@@ -149,7 +170,7 @@ namespace Pistachio {
 		{
 			ImGui::Begin("Settings");
 			if (m_SquareEntity) {
-				ImGui::Text("%s", m_SquareEntity.GetTag().c_str());
+				ImGui::Text("%s", m_SquareEntity.GetComponent<TagComponent>().Tag.c_str());
 				auto& color = m_SquareEntity.GetComponent<SpriteComponent>().Color;
 				ImGui::ColorEdit4("SquareColor", glm::value_ptr(color));
 				ImGui::Separator();
