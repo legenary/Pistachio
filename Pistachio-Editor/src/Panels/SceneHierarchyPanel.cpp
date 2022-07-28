@@ -9,7 +9,7 @@ namespace Pistachio {
 	SceneHierarchyPanel::SceneHierarchyPanel(const Ref<Scene>& scene) {
 		SetContext(scene);
 	}
-
+	 
 	void SceneHierarchyPanel::SetContext(const Ref<Scene>& scene) {
 		m_Context = scene;
 	}
@@ -29,9 +29,8 @@ namespace Pistachio {
 
 		ImGui::Begin("Properties");
 		if (m_SelectionContext) {
-			DrawComponent(m_SelectionContext);
+			DrawComponents(m_SelectionContext);
 		}
-		ImGui::ShowDemoWindow();
 		ImGui::End();
 	}
 
@@ -49,11 +48,11 @@ namespace Pistachio {
 		if (opened) {
 			ImGui::TreePop();
 		}
-
 	}
 
-	void SceneHierarchyPanel::DrawComponent(Entity entity) {
-		if (entity.HasComponent<TagComponent>()) {
+	void SceneHierarchyPanel::DrawComponents(Entity entity) {
+
+		DrawComponent<TagComponent>("Tag", entity, [&]() {
 			auto& tag = entity.GetComponent<TagComponent>().Tag;
 			char buffer[256];
 			memset(buffer, 0, sizeof(buffer));
@@ -61,18 +60,18 @@ namespace Pistachio {
 			if (ImGui::InputText("Tag", buffer, sizeof(buffer))) {
 				tag = std::string(buffer);
 			}
-		}
+		});
 
-		if (entity.HasComponent<TransformComponent>()) {
+		DrawComponent<TransformComponent>("Position", entity, [&]() {
 			if (ImGui::TreeNodeEx((void*)typeid(TransformComponent).hash_code(),
 				ImGuiTreeNodeFlags_DefaultOpen, "Transform")) {
 				auto& transform = entity.GetComponent<TransformComponent>().Transform;
 				ImGui::DragFloat3("Position", glm::value_ptr(transform[3]), 0.5f);
 				ImGui::TreePop();
 			}
-		}
+		});
 
-		if (entity.HasComponent<CameraComponent>()) {
+		DrawComponent<CameraComponent>("Camera", entity, [&]() {
 			if (ImGui::TreeNodeEx((void*)typeid(CameraComponent).hash_code(),
 				ImGuiTreeNodeFlags_DefaultOpen, "Camera")) {
 				auto& cameraComp = entity.GetComponent<CameraComponent>();
@@ -98,42 +97,51 @@ namespace Pistachio {
 				}
 
 				switch (camera.GetProjectionType()) {
-					case SceneCamera::ProjectionType::Perspective: {
-						float perspectiveFOV = glm::degrees(camera.GetPerspectiveVerticalFOV());
-						if (ImGui::DragFloat("FOV", &perspectiveFOV))
-							camera.SetPerspectiveVerticalFOV(glm::radians(perspectiveFOV));
+				case SceneCamera::ProjectionType::Perspective: {
+					float perspectiveFOV = glm::degrees(camera.GetPerspectiveVerticalFOV());
+					if (ImGui::DragFloat("FOV", &perspectiveFOV))
+						camera.SetPerspectiveVerticalFOV(glm::radians(perspectiveFOV));
 
-						float perspectiveNearClip = camera.GetPerspectiveNearClip();
-						if (ImGui::DragFloat("Near Clip", &perspectiveNearClip))
-							camera.SetPerspectiveNearClip(perspectiveNearClip);
+					float perspectiveNearClip = camera.GetPerspectiveNearClip();
+					if (ImGui::DragFloat("Near Clip", &perspectiveNearClip))
+						camera.SetPerspectiveNearClip(perspectiveNearClip);
 
-						float perspectiveFarClip = camera.GetPerspectiveFarClip();
-						if (ImGui::DragFloat("Far Clip", &perspectiveFarClip))
-							camera.SetPerspectiveFarClip(perspectiveFarClip);
+					float perspectiveFarClip = camera.GetPerspectiveFarClip();
+					if (ImGui::DragFloat("Far Clip", &perspectiveFarClip))
+						camera.SetPerspectiveFarClip(perspectiveFarClip);
 
-						break;
-					}
-					case SceneCamera::ProjectionType::Orthographic: {
-						float orthoSize = camera.GetOrthographicSize();
-						if (ImGui::DragFloat("Size", &orthoSize))
-							camera.SetOrthographicSize(orthoSize);
+					break;
+				}
+				case SceneCamera::ProjectionType::Orthographic: {
+					float orthoSize = camera.GetOrthographicSize();
+					if (ImGui::DragFloat("Size", &orthoSize))
+						camera.SetOrthographicSize(orthoSize);
 
-						float orthoNearClip = camera.GetOrthographicNearClip();
-						if (ImGui::DragFloat("Near Clip", &orthoNearClip))
-							camera.SetOrthographicNearClip(orthoNearClip);
+					float orthoNearClip = camera.GetOrthographicNearClip();
+					if (ImGui::DragFloat("Near Clip", &orthoNearClip))
+						camera.SetOrthographicNearClip(orthoNearClip);
 
-						float orthoFarClip = camera.GetOrthographicFarClip();
-						if (ImGui::DragFloat("Far Clip", &orthoFarClip))
-							camera.SetOrthographicFarClip(orthoFarClip);
+					float orthoFarClip = camera.GetOrthographicFarClip();
+					if (ImGui::DragFloat("Far Clip", &orthoFarClip))
+						camera.SetOrthographicFarClip(orthoFarClip);
 
-						ImGui::Checkbox("Fixed Aspect Ratio", &cameraComp.FixedAspectRatio);
-						break;
-					}
+					ImGui::Checkbox("Fixed Aspect Ratio", &cameraComp.FixedAspectRatio);
+					break;
+				}
 				}
 
 				ImGui::TreePop();
 			}
-		}
+		});
 
+		DrawComponent<SpriteRendererComponent>("Sprite", entity, [&]() {
+			if (ImGui::TreeNodeEx((void*)typeid(SpriteRendererComponent).hash_code(),
+				ImGuiTreeNodeFlags_DefaultOpen, "Sprite Renderer")) {
+				auto& spriteComp = entity.GetComponent<SpriteRendererComponent>();
+				ImGui::ColorEdit4("Color", glm::value_ptr(spriteComp.Color));
+
+				ImGui::TreePop();
+			}
+		});
 	}
 }

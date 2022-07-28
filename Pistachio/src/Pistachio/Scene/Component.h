@@ -26,12 +26,13 @@ namespace Pistachio {
 		operator const glm::mat4& () const { return Transform; }
 	};
 	
-	struct SpriteComponent {
+	struct SpriteRendererComponent {
 		glm::vec4 Color{ 1.0f, 1.0f, 1.0f, 1.0f };
+		// TODO: Ref<MaterialInstance>
 
-		SpriteComponent() = default;
-		SpriteComponent(const SpriteComponent&) = default;
-		SpriteComponent(const glm::vec4& c)
+		SpriteRendererComponent() = default;
+		SpriteRendererComponent(const SpriteRendererComponent&) = default;
+		SpriteRendererComponent(const glm::vec4& c)
 			: Color(c) {}
 	};
 

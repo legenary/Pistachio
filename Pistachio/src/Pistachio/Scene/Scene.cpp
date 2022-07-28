@@ -105,9 +105,9 @@ namespace Pistachio {
 			Renderer2D::BeginScene(*mainCamera, *transform);
 
 			// retrive entities that has multiple components
-			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteComponent>);
+			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
 			for (auto entity : group) {
-				auto [trans, sprite] = group.get<TransformComponent, SpriteComponent>(entity);
+				auto [trans, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
 			
 				Renderer2D::DrawQuad(sprite.Color, trans);
 

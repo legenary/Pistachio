@@ -17,8 +17,8 @@ namespace Pistachio {
 		void SetPerspective(float verticalFOV, float nearClip, float farClip);
 		void SetViewportSize(uint32_t width, uint32_t height);
 
-		ProjectionType GetProjectionType() const { return m_ProjectionType; }
-		void SetProjectionType(ProjectionType type) { m_ProjectionType = type; RecalculateProjection(); }
+		inline ProjectionType GetProjectionType() const { return m_ProjectionType; }
+		inline void SetProjectionType(ProjectionType type) { m_ProjectionType = type; RecalculateProjection(); }
 
 		inline float GetOrthographicSize() const { return m_OrthographicSize; }
 		inline void SetOrthographicSize(float size) { m_OrthographicSize = size; RecalculateProjection(); }

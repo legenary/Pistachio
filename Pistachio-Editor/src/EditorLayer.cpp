@@ -33,7 +33,7 @@ namespace Pistachio {
 
 		// Generate Entities
 		m_SquareEntity = m_ActiveScene->CreateEntity("Square");
-		m_SquareEntity.AddComponent<SpriteComponent>(glm::vec4{ 1.0f, 0.0f, 0.0f, 1.0f });
+		m_SquareEntity.AddComponent<SpriteRendererComponent>(glm::vec4{ 1.0f, 0.0f, 0.0f, 1.0f });
 
 		// Camera
 		m_CameraEntity = m_ActiveScene->CreateEntity("Camera Entity");
@@ -174,7 +174,7 @@ namespace Pistachio {
 			ImGui::Begin("Settings");
 			if (m_SquareEntity) {
 				ImGui::Text("%s", m_SquareEntity.GetComponent<TagComponent>().Tag.c_str());
-				auto& color = m_SquareEntity.GetComponent<SpriteComponent>().Color;
+				auto& color = m_SquareEntity.GetComponent<SpriteRendererComponent>().Color;
 				ImGui::ColorEdit4("SquareColor", glm::value_ptr(color));
 				ImGui::Separator();
 			}
