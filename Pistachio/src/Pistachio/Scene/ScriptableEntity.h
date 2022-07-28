@@ -4,14 +4,19 @@
 
 namespace Pistachio {
 
-	class Entity;
 	class ScriptableEntity {
 	public:
+		virtual ~ScriptableEntity() {}
+
 		template<typename T>
 		T& GetComponent() const {
 			return m_Entity.GetComponent<T>();
 		}
 
+	protected:
+		virtual void OnCreate() {}
+		virtual void OnDestroy() {}
+		virtual void OnUpdate(Timestep ts) {}
 
 	private:
 		Entity m_Entity;

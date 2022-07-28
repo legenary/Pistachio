@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Pistachio.h"
+#include "Panels/SceneHierarchyPanel.h"
 
 namespace Pistachio {
 
@@ -31,6 +32,8 @@ namespace Pistachio {
 		Ref<FrameBuffer> m_Framebuffer;
 
 		std::unordered_map<char, Ref<SubTexture2D>> m_TextureMap;
+
+		SceneHierarchyPanel m_SceneHierarchyPanel;
 	};
 
 }

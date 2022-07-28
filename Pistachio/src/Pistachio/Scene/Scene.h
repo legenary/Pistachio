@@ -28,7 +28,7 @@ namespace Pistachio {
 		entt::registry m_Registry;	// registry per scene
 
 		friend class Entity;
-
+		friend class SceneHierarchyPanel;
 	};
 
 }

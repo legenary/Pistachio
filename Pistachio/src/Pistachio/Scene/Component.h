@@ -47,21 +47,14 @@ namespace Pistachio {
 	struct NativeScriptComponent {
 		ScriptableEntity* Instance = nullptr;
 
-		std::function<void()> InstantiateFunction;
-		std::function<void()> DestroyInstanceFunction;
-
-		std::function<void(ScriptableEntity*)> OnCreateFunction;
-		std::function<void(ScriptableEntity*)> OnDestroyFunction;
-		std::function<void(ScriptableEntity*, Timestep)> OnUpdateFunction;
+		ScriptableEntity* (*InstantiateScript)();
+		void (*DestroyScript)(NativeScriptComponent*);
 
 		template<typename T>
 		void Bind() {
-			InstantiateFunction = [&]() { Instance = new T(); }; // TODO: forward paras for T that requires inputs
-			DestroyInstanceFunction = [&]() { delete (T*)Instance; };
+			InstantiateScript = []() { return static_cast<ScriptableEntity*>(new T()); }; // TODO: forward paras for T that requires inputs
+			DestroyScript = [](NativeScriptComponent* nsc) { delete nsc->Instance; nsc->Instance = nullptr; };
 
-			OnCreateFunction = [](ScriptableEntity* instance) { ((T*)instance)->OnCreate(); };
-			OnDestroyFunction = [](ScriptableEntity* instance) { ((T*)instance)->OnDestroy(); };
-			OnUpdateFunction = [](ScriptableEntity* instance, Timestep ts) { ((T*)instance)->OnUpdate(ts); };
 		}
 	};
 

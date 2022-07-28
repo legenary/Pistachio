@@ -76,13 +76,15 @@ namespace Pistachio {
 		// Update Scripts
 		{
 			m_Registry.view<NativeScriptComponent>().each([=](auto entity, auto& nsc) {
+				// TODO: move to scene::OnScenePlay
 				if (!nsc.Instance) {
-					nsc.InstantiateFunction();
+					nsc.Instance = nsc.InstantiateScript();
 					nsc.Instance->m_Entity = Entity{ entity, this };
-					nsc.OnCreateFunction(nsc.Instance);
+					nsc.Instance->OnCreate();
 				}
-				nsc.OnUpdateFunction(nsc.Instance, ts);
+				nsc.Instance->OnUpdate(ts);
 			});
+			// TODO: add nsc.Instance->OnDestroy to scene::OnSceneStop
 		}
 
 		// Render sprites
@@ -90,7 +92,7 @@ namespace Pistachio {
 		glm::mat4* transform = nullptr;
 		auto group = m_Registry.group<CameraComponent>(entt::get<TransformComponent>);
 		for (auto entity : group) {
-			auto& [cameraComp, transComp] = group.get<CameraComponent, TransformComponent>(entity);
+			auto [cameraComp, transComp] = group.get<CameraComponent, TransformComponent>(entity);
 			if (cameraComp.Primary) {
 				mainCamera = &(cameraComp.Camera);
 				transform = &(transComp.Transform);
@@ -105,7 +107,7 @@ namespace Pistachio {
 			// retrive entities that has multiple components
 			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteComponent>);
 			for (auto entity : group) {
-				auto& [trans, sprite] = group.get<TransformComponent, SpriteComponent>(entity);
+				auto [trans, sprite] = group.get<TransformComponent, SpriteComponent>(entity);
 			
 				Renderer2D::DrawQuad(sprite.Color, trans);
 
