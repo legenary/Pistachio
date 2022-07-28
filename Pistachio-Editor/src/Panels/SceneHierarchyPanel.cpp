@@ -15,6 +15,7 @@ namespace Pistachio {
 	}
 
 	void SceneHierarchyPanel::OnImGuiRender() {
+		PTC_PROFILE_FUNCTION("Scene Hierarchy Panel Render");
 		ImGui::Begin("Scene Hierarchy");
 		m_Context->m_Registry.each([=](auto entityID) {
 			Entity entity{ entityID, m_Context.get() };
@@ -30,6 +31,7 @@ namespace Pistachio {
 		if (m_SelectionContext) {
 			DrawComponent(m_SelectionContext);
 		}
+		ImGui::ShowDemoWindow();
 		ImGui::End();
 	}
 
@@ -42,7 +44,7 @@ namespace Pistachio {
 		bool opened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)entity, flags, tag.c_str());
 		if (ImGui::IsItemClicked()) {
 			m_SelectionContext = entity;
-			PTC_CORE_INFO("selected entity name: {0}", entity.GetComponent<TagComponent>().Tag);
+			//PTC_CORE_INFO("selected entity name: {0}", entity.GetComponent<TagComponent>().Tag);
 		}
 		if (opened) {
 			ImGui::TreePop();
@@ -68,9 +70,70 @@ namespace Pistachio {
 				ImGui::DragFloat3("Position", glm::value_ptr(transform[3]), 0.5f);
 				ImGui::TreePop();
 			}
-
 		}
 
+		if (entity.HasComponent<CameraComponent>()) {
+			if (ImGui::TreeNodeEx((void*)typeid(CameraComponent).hash_code(),
+				ImGuiTreeNodeFlags_DefaultOpen, "Camera")) {
+				auto& cameraComp = entity.GetComponent<CameraComponent>();
+				auto& camera = cameraComp.Camera;
+				const char* projectiontypeStrings[] = { "perspective", "orthographic" };
+				const char* currentProjectionTypeString = projectiontypeStrings[(int)(camera.GetProjectionType())];
+
+				ImGui::BeginDisabled();
+				ImGui::Checkbox("Primary", &cameraComp.Primary);
+				ImGui::EndDisabled();
+
+				if (ImGui::BeginCombo("Type", currentProjectionTypeString)) {
+					for (int i = 0; i < 2; i++) {
+						bool isSelected = currentProjectionTypeString == projectiontypeStrings[i];
+						if (ImGui::Selectable(projectiontypeStrings[i], isSelected)) {
+							currentProjectionTypeString = projectiontypeStrings[i];
+							camera.SetProjectionType((SceneCamera::ProjectionType)i);
+						}
+						if (isSelected)
+							ImGui::SetItemDefaultFocus();
+					}
+					ImGui::EndCombo();
+				}
+
+				switch (camera.GetProjectionType()) {
+					case SceneCamera::ProjectionType::Perspective: {
+						float perspectiveFOV = glm::degrees(camera.GetPerspectiveVerticalFOV());
+						if (ImGui::DragFloat("FOV", &perspectiveFOV))
+							camera.SetPerspectiveVerticalFOV(glm::radians(perspectiveFOV));
+
+						float perspectiveNearClip = camera.GetPerspectiveNearClip();
+						if (ImGui::DragFloat("Near Clip", &perspectiveNearClip))
+							camera.SetPerspectiveNearClip(perspectiveNearClip);
+
+						float perspectiveFarClip = camera.GetPerspectiveFarClip();
+						if (ImGui::DragFloat("Far Clip", &perspectiveFarClip))
+							camera.SetPerspectiveFarClip(perspectiveFarClip);
+
+						break;
+					}
+					case SceneCamera::ProjectionType::Orthographic: {
+						float orthoSize = camera.GetOrthographicSize();
+						if (ImGui::DragFloat("Size", &orthoSize))
+							camera.SetOrthographicSize(orthoSize);
+
+						float orthoNearClip = camera.GetOrthographicNearClip();
+						if (ImGui::DragFloat("Near Clip", &orthoNearClip))
+							camera.SetOrthographicNearClip(orthoNearClip);
+
+						float orthoFarClip = camera.GetOrthographicFarClip();
+						if (ImGui::DragFloat("Far Clip", &orthoFarClip))
+							camera.SetOrthographicFarClip(orthoFarClip);
+
+						ImGui::Checkbox("Fixed Aspect Ratio", &cameraComp.FixedAspectRatio);
+						break;
+					}
+				}
+
+				ImGui::TreePop();
+			}
+		}
 
 	}
 }
