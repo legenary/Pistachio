@@ -52,9 +52,9 @@ namespace Pistachio {
 
 			}
 			void OnUpdate(Timestep ts) {
-				auto& trans = GetComponent<TransformComponent>().Transform;
+				auto& translation = GetComponent<TransformComponent>().Translation;
 				if (Input::IsKeyPressed(PTC_KEY_A)) {
-					trans[3][0] -= 5 * ts;
+					translation[0] -= 5 * ts;
 				}
 			}
 		};

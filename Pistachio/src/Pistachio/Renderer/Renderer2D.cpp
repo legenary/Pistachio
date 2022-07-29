@@ -161,7 +161,7 @@ namespace Pistachio {
 	void Renderer2D::DrawQuad(const glm::vec4& color, const glm::vec3& position, const float rotation, const glm::vec2& size) {
 		PTC_PROFILE_FUNCTION();
 
-		DrawQuad(color, TRS2Transform(position, rotation, size));
+		DrawQuad(color, TRS2Transform(position, { 0.0f, 0.0f, rotation }, { size, 1.0f }));
 	}
 
 	void Renderer2D::DrawQuad(const Ref<Texture2D>& tex, const glm::vec2& position, const float rotation, const glm::vec2& size, const float tilingFactor) {
@@ -171,7 +171,7 @@ namespace Pistachio {
 	void Renderer2D::DrawQuad(const Ref<Texture2D>& tex, const glm::vec3& position, const float rotation, const glm::vec2& size, const float tilingFactor) {
 		PTC_PROFILE_FUNCTION();
 
-		DrawQuad(tex, TRS2Transform(position, rotation, size), tilingFactor);
+		DrawQuad(tex, TRS2Transform(position, { 0.0f, 0.0f, rotation }, { size, 1.0f }), tilingFactor);
 	}
 
 	void Renderer2D::DrawQuad(const Ref<SubTexture2D>& subtex, const glm::vec2& position, const float rotation, const glm::vec2& size, const float tilingFactor) {
@@ -181,7 +181,7 @@ namespace Pistachio {
 	void Renderer2D::DrawQuad(const Ref<SubTexture2D>& subtex, const glm::vec3& position, const float rotation, const glm::vec2& size, const float tilingFactor) {
 		PTC_PROFILE_FUNCTION();
 
-		DrawQuad(subtex, TRS2Transform(position, rotation, size), tilingFactor);
+		DrawQuad(subtex, TRS2Transform(position, { 0.0f, 0.0f, rotation }, { size, 1.0f }), tilingFactor);
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec4& color, const glm::mat4& transform) {

@@ -70,6 +70,10 @@ namespace Pistachio {
 		return e;
 	}
 
+	void Scene::DestroyEntity(Entity entity) {
+		m_Registry.destroy(entity);
+	}
+
 
 	void Scene::OnUpdate(Timestep ts) {
 
@@ -89,27 +93,27 @@ namespace Pistachio {
 
 		// Render sprites
 		mainCamera = nullptr;
-		glm::mat4* transform = nullptr;
+		glm::mat4 transform;
 		auto group = m_Registry.group<CameraComponent>(entt::get<TransformComponent>);
 		for (auto entity : group) {
 			auto [cameraComp, transComp] = group.get<CameraComponent, TransformComponent>(entity);
 			if (cameraComp.Primary) {
 				mainCamera = &(cameraComp.Camera);
-				transform = &(transComp.Transform);
+				transform = transComp.GetTransform();
 				break;
 			}
 		}
 
 		if (mainCamera) {
 
-			Renderer2D::BeginScene(*mainCamera, *transform);
+			Renderer2D::BeginScene(*mainCamera, transform);
 
 			// retrive entities that has multiple components
 			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
 			for (auto entity : group) {
 				auto [trans, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
 			
-				Renderer2D::DrawQuad(sprite.Color, trans);
+				Renderer2D::DrawQuad(sprite.Color, trans.GetTransform());
 
 			}
 			Renderer2D::EndScene();
