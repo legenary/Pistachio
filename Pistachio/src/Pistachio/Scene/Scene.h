@@ -19,8 +19,9 @@ namespace Pistachio {
 		void OnUpdate(Timestep ts);
 		void OnViewportResize(uint32_t width, uint32_t height);
 
-		// temp
-		entt::registry& Reg() { return m_Registry; }
+	private:
+		template<typename T>
+		void OnComponentAdded(Entity entity, T& component);
 
 	private:
 		Camera* mainCamera = nullptr;

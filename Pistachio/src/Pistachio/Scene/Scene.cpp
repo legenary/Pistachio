@@ -4,6 +4,7 @@
 
 #include "Pistachio/Renderer/Renderer.h"
 #include "Pistachio/Scene/Entity.h"
+#include "Pistachio.h"
 #include <glm/glm.hpp>
 
 namespace Pistachio {
@@ -55,7 +56,6 @@ namespace Pistachio {
 		////m_Registry.on_destroy...
 		////m_Registry.on_update...
 		//m_Registry.on_construct<TransformComponent>().connect<&OnTransformConstruct>();
-
 
 	}
 
@@ -135,5 +135,23 @@ namespace Pistachio {
 			}
 		}
 	}
+
+	template<typename T>
+	void Scene::OnComponentAdded(Entity entity, T& component) {
+		static_assert(false);
+	}
+	template<>
+	void Scene::OnComponentAdded<TagComponent>(Entity entity, TagComponent& component) {}
+	template<>
+	void Scene::OnComponentAdded<TransformComponent>(Entity entity, TransformComponent& component) {}
+	template<>
+	void Scene::OnComponentAdded<CameraComponent>(Entity entity, CameraComponent& component) {
+		component.Camera.SetViewportSize(m_ViewportWidth, m_ViewportHeight);
+		//entity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
+	}
+	template<>
+	void Scene::OnComponentAdded<SpriteRendererComponent>(Entity entity, SpriteRendererComponent& component) {}
+	template<>
+	void Scene::OnComponentAdded<NativeScriptComponent>(Entity entity, NativeScriptComponent& component) {}
 
 }

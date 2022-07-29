@@ -39,10 +39,7 @@ namespace Pistachio {
 		m_CameraEntity = m_ActiveScene->CreateEntity("Camera Entity");
 		m_CameraEntity.AddComponent<CameraComponent>();
 
-		m_CameraEntity2 = m_ActiveScene->CreateEntity("Camera Entity 2");
-		auto& cc = m_CameraEntity2.AddComponent<CameraComponent>();
-		cc.Primary = false;
-
+		// Native script for camera
 		class CameraController : public ScriptableEntity {
 		public:
 			void OnCreate() {
@@ -51,7 +48,7 @@ namespace Pistachio {
 			void OnDestroy() {
 
 			}
-			void OnUpdate(Timestep ts) {
+			void OnUpdate(Timestep ts) override {
 				auto& translation = GetComponent<TransformComponent>().Translation;
 				if (Input::IsKeyPressed(PTC_KEY_A)) {
 					translation[0] -= 5 * ts;
@@ -170,21 +167,21 @@ namespace Pistachio {
 
 		m_SceneHierarchyPanel.OnImGuiRender();
 
-		{
-			ImGui::Begin("Settings");
-			if (m_SquareEntity) {
-				ImGui::Text("%s", m_SquareEntity.GetComponent<TagComponent>().Tag.c_str());
-				auto& color = m_SquareEntity.GetComponent<SpriteRendererComponent>().Color;
-				ImGui::ColorEdit4("SquareColor", glm::value_ptr(color));
-				ImGui::Separator();
-			}
-			auto& camera = m_CameraEntity.GetComponent<CameraComponent>().Camera;
-			glm::float32 cs = camera.GetOrthographicSize();
-			if (ImGui::DragFloat("camera size", &cs)) {
-				camera.SetOrthographicSize(cs);
-			}
-			ImGui::End();
-		}
+		//{
+		//	ImGui::Begin("Settings");
+		//	if (m_SquareEntity) {
+		//		ImGui::Text("%s", m_SquareEntity.GetComponent<TagComponent>().Tag.c_str());
+		//		auto& color = m_SquareEntity.GetComponent<SpriteRendererComponent>().Color;
+		//		ImGui::ColorEdit4("SquareColor", glm::value_ptr(color));
+		//		ImGui::Separator();
+		//	}
+		//	//auto& camera = m_CameraEntity.GetComponent<CameraComponent>().Camera;
+		//	//glm::float32 cs = camera.GetOrthographicSize();
+		//	//if (ImGui::DragFloat("camera size", &cs)) {
+		//	//	camera.SetOrthographicSize(cs);
+		//	//}
+		//	ImGui::End();
+		//}
 
 		{
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });

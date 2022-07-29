@@ -24,4 +24,5 @@ namespace Pistachio {
 		friend class Scene;
 
 	};
+
 }

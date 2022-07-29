@@ -25,12 +25,34 @@ namespace Pistachio {
 		if (ImGui::IsWindowHovered() && ImGui::IsMouseDown(0)) {
 			m_SelectionContext = {};
 		}
+		// right click on blank space
+		if (ImGui::BeginPopupContextWindow(0, 1, false)) {
+			if (ImGui::MenuItem("Create Empty Entity")) {
+				m_Context->CreateEntity("Empty Entity");
+			}
+			ImGui::EndPopup();
+		}
 		ImGui::End();
-
 
 		ImGui::Begin("Properties");
 		if (m_SelectionContext) {
+			// draw components
 			DrawComponents(m_SelectionContext);
+			// "add component" button
+			if (ImGui::Button("Add Component +")) {
+				ImGui::OpenPopup("AddComponent");
+			}
+			if (ImGui::BeginPopup("AddComponent")) {
+				if (ImGui::MenuItem("Camera")) {
+					m_SelectionContext.AddComponent<CameraComponent>();
+					ImGui::CloseCurrentPopup();
+				}
+				if (ImGui::MenuItem("Sprite Renderer")) {
+					m_SelectionContext.AddComponent<SpriteRendererComponent>();
+					ImGui::CloseCurrentPopup();
+				}
+				ImGui::EndPopup();
+			}
 		}
 		ImGui::End();
 	}
@@ -46,8 +68,24 @@ namespace Pistachio {
 			m_SelectionContext = entity;
 			//PTC_CORE_INFO("selected entity name: {0}", entity.GetComponent<TagComponent>().Tag);
 		}
+
+		// right click on entity item
+		bool entityDeleted = false;
+		if (ImGui::BeginPopupContextItem()) {
+			if (ImGui::MenuItem("Delete Entity")) {
+				entityDeleted = true;
+			}
+			ImGui::EndPopup();
+		}
+
 		if (opened) {
 			ImGui::TreePop();
+		}
+
+		if (entityDeleted) {
+			m_Context->DestroyEntity(entity);
+			if (m_SelectionContext == entity)
+				m_SelectionContext = {};
 		}
 	}
 
@@ -117,10 +155,11 @@ namespace Pistachio {
 			}
 		});
 
-		DrawComponent<TransformComponent>(entity, [&]() {
-			if (ImGui::TreeNodeEx((void*)typeid(TransformComponent).hash_code(),
-				ImGuiTreeNodeFlags_DefaultOpen, "Transform")) {
+		const ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap;
 
+		DrawComponent<TransformComponent>(entity, [&]() {
+			bool open = ImGui::TreeNodeEx((void*)typeid(TransformComponent).hash_code(), treeNodeFlags, "Transform");
+			if (open) {
 				auto& transComp = entity.GetComponent<TransformComponent>();
 				DrawVec3Control("Translation", transComp.Translation);
 				glm::vec3 rot = glm::degrees(transComp.Rotation);
@@ -128,13 +167,12 @@ namespace Pistachio {
 				transComp.Rotation = glm::radians(rot);
 				DrawVec3Control("Scale", transComp.Scale, 1.0f /*reset value*/);
 				ImGui::TreePop();
-
 			}
 		});
 
 		DrawComponent<CameraComponent>(entity, [&]() {
 			if (ImGui::TreeNodeEx((void*)typeid(CameraComponent).hash_code(),
-				ImGuiTreeNodeFlags_DefaultOpen, "Camera")) {
+				treeNodeFlags, "Camera")) {
 				auto& cameraComp = entity.GetComponent<CameraComponent>();
 				auto& camera = cameraComp.Camera;
 				const char* projectiontypeStrings[] = { "perspective", "orthographic" };
@@ -196,12 +234,27 @@ namespace Pistachio {
 		});
 
 		DrawComponent<SpriteRendererComponent>(entity, [&]() {
-			if (ImGui::TreeNodeEx((void*)typeid(SpriteRendererComponent).hash_code(),
-				ImGuiTreeNodeFlags_DefaultOpen, "Sprite Renderer")) {
+			//ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{ 4,4 });
+			bool open = ImGui::TreeNodeEx((void*)typeid(SpriteRendererComponent).hash_code(), treeNodeFlags, "Sprite Renderer");
+			ImGui::SameLine(ImGui::GetWindowWidth()-55.0f);
+			bool removeComponent = false;
+			if (ImGui::Button("+more", ImVec2{ 50, 18 })) {
+				ImGui::OpenPopup("ComponentSettings");
+			}
+			//ImGui::PopStyleVar();
+			if (ImGui::BeginPopup("ComponentSettings")) {
+				if (ImGui::MenuItem("Remove component"))
+					removeComponent = true;
+				ImGui::EndPopup();
+			}
+			if (open) {
 				auto& spriteComp = entity.GetComponent<SpriteRendererComponent>();
 				ImGui::ColorEdit4("Color", glm::value_ptr(spriteComp.Color));
 
 				ImGui::TreePop();
+			}
+			if (removeComponent) {
+				entity.RemoveComponent<SpriteRendererComponent>();
 			}
 		});
 	}
