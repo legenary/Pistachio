@@ -62,7 +62,7 @@ namespace Pistachio {
 
 		ImGuiTreeNodeFlags flags = 
 			((m_SelectionContext == entity) ? ImGuiTreeNodeFlags_Selected : 0) 
-			| ImGuiTreeNodeFlags_OpenOnArrow;
+			| ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
 		bool opened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)entity, flags, tag.c_str());
 		if (ImGui::IsItemClicked()) {
 			m_SelectionContext = entity;
@@ -143,59 +143,85 @@ namespace Pistachio {
 		ImGui::PopID();
 	}
 
+	template<typename T, typename F>
+	bool SceneHierarchyPanel::DrawComponent(const std::string& name, Entity& entity, F&& func) {
+		if (!entity.HasComponent<T>())
+			return false;
+		
+		const ImGuiTreeNodeFlags treeNodeFlags = 
+			ImGuiTreeNodeFlags_DefaultOpen | 
+			ImGuiTreeNodeFlags_Framed |
+			ImGuiTreeNodeFlags_SpanAvailWidth |
+			ImGuiTreeNodeFlags_AllowItemOverlap |
+			ImGuiTreeNodeFlags_FramePadding;
+
+		auto& comp = entity.GetComponent<T>();
+		//ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{ 4,4 });
+		bool open = ImGui::TreeNodeEx((void*)typeid(T).hash_code(), treeNodeFlags, name.c_str());
+		ImGui::SameLine(ImGui::GetWindowWidth() - 55.0f);
+		bool removeComponent = false;
+		if (ImGui::Button("...", ImVec2{ 50, 18 })) {
+			ImGui::OpenPopup("ComponentSettings");
+		}
+		//ImGui::PopStyleVar();
+		if (ImGui::BeginPopup("ComponentSettings")) {
+			if (ImGui::MenuItem("Remove component"))
+				removeComponent = true;
+			ImGui::EndPopup();
+		}
+		if (open) {
+			//ImGui::ColorEdit4("Color", glm::value_ptr(comp.Color));
+			func(comp);
+			ImGui::TreePop();
+		}
+		if (removeComponent) {
+			entity.RemoveComponent<T>();
+		}
+
+		return true;
+	}
+
 	void SceneHierarchyPanel::DrawComponents(Entity entity) {
 
-		DrawComponent<TagComponent>(entity, [&]() {
-			auto& tag = entity.GetComponent<TagComponent>().Tag;
-			char buffer[256];
-			memset(buffer, 0, sizeof(buffer));
-			strcpy(buffer, tag.c_str());
-			if (ImGui::InputText("Tag", buffer, sizeof(buffer))) {
-				tag = std::string(buffer);
-			}
+		auto& tag = entity.GetComponent<TagComponent>().Tag;
+		char buffer[256];
+		memset(buffer, 0, sizeof(buffer));
+		strcpy(buffer, tag.c_str());
+		if (ImGui::InputText("Tag", buffer, sizeof(buffer))) {
+			tag = std::string(buffer);
+		}
+
+		DrawComponent<TransformComponent>("Transform", entity, [](auto& component) {
+			DrawVec3Control("Translation", component.Translation);
+			glm::vec3 rot = glm::degrees(component.Rotation);
+			DrawVec3Control("Rotation", rot);
+			component.Rotation = glm::radians(rot);
+			DrawVec3Control("Scale", component.Scale, 1.0f /*reset value*/);
 		});
 
-		const ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap;
+		DrawComponent<CameraComponent>("Camera", entity, [](auto& component) {
+			auto& camera = component.Camera;
+			const char* projectiontypeStrings[] = { "perspective", "orthographic" };
+			const char* currentProjectionTypeString = projectiontypeStrings[(int)(camera.GetProjectionType())];
 
-		DrawComponent<TransformComponent>(entity, [&]() {
-			bool open = ImGui::TreeNodeEx((void*)typeid(TransformComponent).hash_code(), treeNodeFlags, "Transform");
-			if (open) {
-				auto& transComp = entity.GetComponent<TransformComponent>();
-				DrawVec3Control("Translation", transComp.Translation);
-				glm::vec3 rot = glm::degrees(transComp.Rotation);
-				DrawVec3Control("Rotation", rot);
-				transComp.Rotation = glm::radians(rot);
-				DrawVec3Control("Scale", transComp.Scale, 1.0f /*reset value*/);
-				ImGui::TreePop();
-			}
-		});
+			ImGui::BeginDisabled();
+			ImGui::Checkbox("Primary", &component.Primary);
+			ImGui::EndDisabled();
 
-		DrawComponent<CameraComponent>(entity, [&]() {
-			if (ImGui::TreeNodeEx((void*)typeid(CameraComponent).hash_code(),
-				treeNodeFlags, "Camera")) {
-				auto& cameraComp = entity.GetComponent<CameraComponent>();
-				auto& camera = cameraComp.Camera;
-				const char* projectiontypeStrings[] = { "perspective", "orthographic" };
-				const char* currentProjectionTypeString = projectiontypeStrings[(int)(camera.GetProjectionType())];
-
-				ImGui::BeginDisabled();
-				ImGui::Checkbox("Primary", &cameraComp.Primary);
-				ImGui::EndDisabled();
-
-				if (ImGui::BeginCombo("Type", currentProjectionTypeString)) {
-					for (int i = 0; i < 2; i++) {
-						bool isSelected = currentProjectionTypeString == projectiontypeStrings[i];
-						if (ImGui::Selectable(projectiontypeStrings[i], isSelected)) {
-							currentProjectionTypeString = projectiontypeStrings[i];
-							camera.SetProjectionType((SceneCamera::ProjectionType)i);
-						}
-						if (isSelected)
-							ImGui::SetItemDefaultFocus();
+			if (ImGui::BeginCombo("Type", currentProjectionTypeString)) {
+				for (int i = 0; i < 2; i++) {
+					bool isSelected = currentProjectionTypeString == projectiontypeStrings[i];
+					if (ImGui::Selectable(projectiontypeStrings[i], isSelected)) {
+						currentProjectionTypeString = projectiontypeStrings[i];
+						camera.SetProjectionType((SceneCamera::ProjectionType)i);
 					}
-					ImGui::EndCombo();
+					if (isSelected)
+						ImGui::SetItemDefaultFocus();
 				}
+				ImGui::EndCombo();
+			}
 
-				switch (camera.GetProjectionType()) {
+			switch (camera.GetProjectionType()) {
 				case SceneCamera::ProjectionType::Perspective: {
 					float perspectiveFOV = glm::degrees(camera.GetPerspectiveVerticalFOV());
 					if (ImGui::DragFloat("FOV", &perspectiveFOV))
@@ -224,38 +250,14 @@ namespace Pistachio {
 					if (ImGui::DragFloat("Far Clip", &orthoFarClip))
 						camera.SetOrthographicFarClip(orthoFarClip);
 
-					ImGui::Checkbox("Fixed Aspect Ratio", &cameraComp.FixedAspectRatio);
+					ImGui::Checkbox("Fixed Aspect Ratio", &component.FixedAspectRatio);
 					break;
 				}
-				}
-
-				ImGui::TreePop();
 			}
 		});
 
-		DrawComponent<SpriteRendererComponent>(entity, [&]() {
-			//ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{ 4,4 });
-			bool open = ImGui::TreeNodeEx((void*)typeid(SpriteRendererComponent).hash_code(), treeNodeFlags, "Sprite Renderer");
-			ImGui::SameLine(ImGui::GetWindowWidth()-55.0f);
-			bool removeComponent = false;
-			if (ImGui::Button("+more", ImVec2{ 50, 18 })) {
-				ImGui::OpenPopup("ComponentSettings");
-			}
-			//ImGui::PopStyleVar();
-			if (ImGui::BeginPopup("ComponentSettings")) {
-				if (ImGui::MenuItem("Remove component"))
-					removeComponent = true;
-				ImGui::EndPopup();
-			}
-			if (open) {
-				auto& spriteComp = entity.GetComponent<SpriteRendererComponent>();
-				ImGui::ColorEdit4("Color", glm::value_ptr(spriteComp.Color));
-
-				ImGui::TreePop();
-			}
-			if (removeComponent) {
-				entity.RemoveComponent<SpriteRendererComponent>();
-			}
+		DrawComponent<SpriteRendererComponent>("SpriteRenderer", entity, [](auto& component) {
+			ImGui::ColorEdit4("Color", glm::value_ptr(component.Color));
 		});
 	}
 }

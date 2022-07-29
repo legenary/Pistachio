@@ -33,6 +33,8 @@ namespace Pistachio {
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;		// enable docking
 		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;		// enable multi-vieport
 
+		io.FontDefault = io.Fonts->AddFontFromFileTTF("assets/Roboto-font/Roboto-Regular.ttf", 16.0f);
+
 		// Setup dear imgui style
 		ImGui::StyleColorsDark();
 

@@ -33,10 +33,10 @@ namespace Pistachio {
 		QuadVertex* QuadVertexBufferBase = nullptr;
 		QuadVertex* QuadVertexBufferPtr = nullptr;
 		glm::vec4 QuadVertexPositions[4] = {
-			{0.0f, 0.0f, 0.0f, 1.0f},
-			{0.0f, 1.0f, 0.0f, 1.0f},
-			{1.0f, 1.0f, 0.0f, 1.0f},
-			{1.0f, 0.0f, 0.0f, 1.0f}
+			{-0.5f, -0.5f, 0.0f, 1.0f},
+			{0.5f, -0.5f, 0.0f, 1.0f},
+			{0.5f, 0.5f, 0.0f, 1.0f},
+			{-0.5f, 0.5f, 0.0f, 1.0f}
 		};
 		int QuadCount = 0;
 
