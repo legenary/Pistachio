@@ -64,8 +64,6 @@ namespace YAML {
 
 namespace Pistachio {
 
-	
-
 	SceneSerializer::SceneSerializer(const Ref<Scene>& scene)
 		:m_Scene(scene) {
 

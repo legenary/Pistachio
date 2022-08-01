@@ -12,6 +12,8 @@ namespace Pistachio {
 		void SetContext(const Ref<Scene>& scene);
 
 		void OnImGuiRender();
+		void Clear();
+
 	private:
 		void DrawEntityNode(Entity entity);
 		void DrawComponents(Entity entity);

@@ -38,6 +38,4 @@ namespace Pistachio {
 		return y;
 	}
 
-
-
 }

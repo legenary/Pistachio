@@ -3,14 +3,15 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Pistachio/Utils/PlatformUtils.h"
 #include "Pistachio/Scene/SceneSerializer.h"
+#include "Pistachio/Core/Input.h"
+
 
 namespace Pistachio {
 
 	EditorLayer::EditorLayer()
 		:Layer("EditorLayer"), m_CameraController(1280, 720) {
-
-	
 	}
 
 	void EditorLayer::OnAttach() {
@@ -37,38 +38,9 @@ namespace Pistachio {
 		//Scene hierarchy
 		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 
-		// load saved work
-		SceneSerializer serializer(m_ActiveScene);
-		if (!serializer.Deserialize("assets/scenes/Example.ptc")) {
-			// This is default scene
-			
-			// Square sprite
-			m_SquareEntity = m_ActiveScene->CreateEntity("Square");
-			m_SquareEntity.AddComponent<SpriteRendererComponent>(glm::vec4{ 1.0f, 0.0f, 0.0f, 1.0f });
-
-			// Camera
-			m_CameraEntity = m_ActiveScene->CreateEntity("Camera Entity");
-			m_CameraEntity.AddComponent<CameraComponent>();
-
-			// Native script for camera
-			class CameraController : public ScriptableEntity {
-			public:
-				void OnCreate() {
-					PTC_CORE_INFO("Create camera controller!");
-				}
-				void OnDestroy() {
-
-				}
-				void OnUpdate(Timestep ts) override {
-					auto& translation = GetComponent<TransformComponent>().Translation;
-					if (Input::IsKeyPressed(PTC_KEY_A)) {
-						translation[0] -= 5 * ts;
-					}
-				}
-			};
-			m_CameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
-		}
-
+		// load default scene
+		//SceneSerializer serializer(m_ActiveScene);
+		//CreateDefaultScene();
 	}
 
 	void EditorLayer::OnDetach() {
@@ -169,21 +141,16 @@ namespace Pistachio {
 		{
 			if (ImGui::BeginMenu("File"))
 			{
-				if (ImGui::MenuItem("Save")) {
-					SceneSerializer serializer(m_ActiveScene);
-					serializer.Serialize("assets/scenes/Example.ptc");
-				}
-				if (ImGui::MenuItem("Load")) {
-					m_ActiveScene->Clear();
-					SceneSerializer serializer(m_ActiveScene);
-					serializer.Deserialize("assets/scenes/Example.ptc");
-				}
-				if (ImGui::MenuItem("Exit & Save")) {
-					// auto-save on exit
-					SceneSerializer serializer(m_ActiveScene);
-					serializer.Serialize("assets/scenes/Example.ptc");
+				if (ImGui::MenuItem("New", "Ctrl+N"))
+					SceneNew();
+				if (ImGui::MenuItem("Open...", "Ctrl+O"))
+					SceneOpen();
+				if (ImGui::MenuItem("Save", "Ctrl+S"))
+					SceneSave();
+				if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
+					SceneSaveAs();
+				if (ImGui::MenuItem("Exit"))
 					Application::Get().Close();
-				}
 				ImGui::EndMenu();
 			}
 			ImGui::EndMenuBar();
@@ -237,6 +204,100 @@ namespace Pistachio {
 		//if (m_ViewportHovered) {
 		//	m_CameraController.OnEvent(event);
 		//}
+
+		EventDispatcher dispatcher(event);
+		dispatcher.Dispatch<KeyPressedEvent>(PTC_BIND_EVENT_FN(EditorLayer::OnKeyPressed));
 	}
+
+	bool EditorLayer::OnKeyPressed(KeyPressedEvent& e) {
+		// Hotkey
+		if (e.GetRepearCount() > 0)
+			return false;
+
+		bool ctrl = Input::IsKeyPressed(PTC_KEY_LEFT_CONTROL) || Input::IsKeyPressed(PTC_KEY_RIGHT_CONTROL);
+		bool shift = Input::IsKeyPressed(PTC_KEY_LEFT_SHIFT) || Input::IsKeyPressed(PTC_KEY_RIGHT_SHIFT);
+
+		switch (e.GetKeyCode()) {
+			case PTC_KEY_S: {
+				if (ctrl && shift)
+					SceneSaveAs();
+				else if (ctrl)
+					SceneSave();
+				break;
+			}
+			case PTC_KEY_O: {
+				if (ctrl)
+					SceneOpen();
+				break;
+			}
+			case PTC_KEY_N: {
+				if (ctrl)
+					SceneNew();
+				break;
+			}
+		}
+	}
+	void EditorLayer::SceneSave() {
+		if (!m_cachedSavePath.empty()) {
+			SceneSerializer serializer(m_ActiveScene);
+			serializer.Serialize(m_cachedSavePath);
+		}
+		else {
+			SceneSaveAs();
+		}
+	}
+	void EditorLayer::SceneSaveAs() {
+		std::string filepath = FileDialogs::SaveFile("Pistachio Scene (*.ptc)\0*.ptc\0");
+		if (!filepath.empty()) {
+			SceneSerializer serializer(m_ActiveScene);
+			serializer.Serialize(filepath);
+			m_cachedSavePath = filepath;
+		}
+	}
+	void EditorLayer::SceneNew() {
+		m_SceneHierarchyPanel.Clear();
+		CreateDefaultScene();
+		m_cachedSavePath = {};
+	}
+	void EditorLayer::SceneOpen() {
+		std::string filepath = FileDialogs::OpenFile("Pistachio Scene (*.ptc)\0*.ptc\0");
+		if (!filepath.empty()) {
+			m_SceneHierarchyPanel.Clear();
+			SceneSerializer serializer(m_ActiveScene);
+			serializer.Deserialize(filepath);
+			m_cachedSavePath = filepath;
+		}
+	}
+
+	void EditorLayer::CreateDefaultScene() {
+		// This is default scene
+
+		// Square sprite
+		Entity squareEntity = m_ActiveScene->CreateEntity("Square");
+		squareEntity.AddComponent<SpriteRendererComponent>(glm::vec4{ 1.0f, 0.0f, 0.0f, 1.0f });
+
+		// Camera
+		Entity cameraEntity = m_ActiveScene->CreateEntity("Camera Entity");
+		cameraEntity.AddComponent<CameraComponent>();
+
+		// Native script for camera
+		class CameraController : public ScriptableEntity {
+		public:
+			void OnCreate() {
+				PTC_CORE_INFO("Create camera controller!");
+			}
+			void OnDestroy() {
+
+			}
+			void OnUpdate(Timestep ts) override {
+				auto& translation = GetComponent<TransformComponent>().Translation;
+				if (Input::IsKeyPressed(PTC_KEY_A)) {
+					translation[0] -= 5 * ts;
+				}
+			}
+		};
+		cameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
+	}
+
 }
 

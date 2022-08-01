@@ -260,4 +260,9 @@ namespace Pistachio {
 			ImGui::ColorEdit4("Color", glm::value_ptr(component.Color));
 		});
 	}
+
+	void SceneHierarchyPanel::Clear() {
+		m_Context->Clear();
+		m_SelectionContext = {};
+	}
 }
