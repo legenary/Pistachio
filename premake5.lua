@@ -20,11 +20,13 @@ IncludeDir["glm"] = "Pistachio/vendor/glm"
 IncludeDir["stb_image"] = "Pistachio/vendor/stb_image"
 IncludeDir["entt"] = "Pistachio/vendor/entt/include"
 IncludeDir["box2d"] = "Pistachio/vendor/box2d"
+IncludeDir["yaml_cpp"] = "Pistachio/vendor/yaml-cpp/include"
 
 group "Dependencies"
 	include "Pistachio/vendor/GLFW"
 	include "Pistachio/vendor/Glad"
 	include "Pistachio/vendor/imgui"
+	include "Pistachio/vendor/yaml-cpp"
 	include "Pistachio/vendor/box2d"
 group ""
 
@@ -65,7 +67,8 @@ project "Pistachio"
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.stb_image}",
 		"%{IncludeDir.entt}",
-		"%{IncludeDir.box2d}/include"
+		"%{IncludeDir.box2d}/include",
+		"%{IncludeDir.yaml_cpp}"
 	}
 
 	links
@@ -74,6 +77,7 @@ project "Pistachio"
 		"Glad",
 		"ImGui",
 		"Box2D",
+		"yaml-cpp",
 		"opengl32.lib"
 	}
 
@@ -185,7 +189,8 @@ project "Pistachio-Editor"
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.box2d}/include",
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.entt}"
+		"%{IncludeDir.entt}",
+		"%{IncludeDir.yaml_cpp}"
 	}
 
 	links

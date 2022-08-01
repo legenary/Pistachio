@@ -3,6 +3,8 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Pistachio/Scene/SceneSerializer.h"
+
 namespace Pistachio {
 
 	EditorLayer::EditorLayer()
@@ -12,7 +14,7 @@ namespace Pistachio {
 	}
 
 	void EditorLayer::OnAttach() {
-		m_CameraController.SetZoomLevel(4.0f);
+		//m_CameraController.SetZoomLevel(4.0f);
 
 		m_Texture = Texture2D::Create("assets/textures/Checkerboard.png");
 		m_EmojiTexture = Texture2D::Create("assets/textures/emoji.png");
@@ -31,34 +33,42 @@ namespace Pistachio {
 		// Scene
 		m_ActiveScene = CreateRef<Scene>();
 
-		// Generate Entities
-		m_SquareEntity = m_ActiveScene->CreateEntity("Square");
-		m_SquareEntity.AddComponent<SpriteRendererComponent>(glm::vec4{ 1.0f, 0.0f, 0.0f, 1.0f });
-
-		// Camera
-		m_CameraEntity = m_ActiveScene->CreateEntity("Camera Entity");
-		m_CameraEntity.AddComponent<CameraComponent>();
-
-		// Native script for camera
-		class CameraController : public ScriptableEntity {
-		public:
-			void OnCreate() {
-				PTC_CORE_INFO("Create camera controller!");
-			}
-			void OnDestroy() {
-
-			}
-			void OnUpdate(Timestep ts) override {
-				auto& translation = GetComponent<TransformComponent>().Translation;
-				if (Input::IsKeyPressed(PTC_KEY_A)) {
-					translation[0] -= 5 * ts;
-				}
-			}
-		};
-		m_CameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 
 		//Scene hierarchy
 		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+
+		// load saved work
+		SceneSerializer serializer(m_ActiveScene);
+		if (!serializer.Deserialize("assets/scenes/Example.ptc")) {
+			// This is default scene
+			
+			// Square sprite
+			m_SquareEntity = m_ActiveScene->CreateEntity("Square");
+			m_SquareEntity.AddComponent<SpriteRendererComponent>(glm::vec4{ 1.0f, 0.0f, 0.0f, 1.0f });
+
+			// Camera
+			m_CameraEntity = m_ActiveScene->CreateEntity("Camera Entity");
+			m_CameraEntity.AddComponent<CameraComponent>();
+
+			// Native script for camera
+			class CameraController : public ScriptableEntity {
+			public:
+				void OnCreate() {
+					PTC_CORE_INFO("Create camera controller!");
+				}
+				void OnDestroy() {
+
+				}
+				void OnUpdate(Timestep ts) override {
+					auto& translation = GetComponent<TransformComponent>().Translation;
+					if (Input::IsKeyPressed(PTC_KEY_A)) {
+						translation[0] -= 5 * ts;
+					}
+				}
+			};
+			m_CameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
+		}
+
 	}
 
 	void EditorLayer::OnDetach() {
@@ -68,9 +78,9 @@ namespace Pistachio {
 		PTC_PROFILE_FUNCTION();
 
 		// Update
-		if (m_ViewportFocused) {
-			m_CameraController.OnUpdate(ts);
-		}
+		//if (m_ViewportFocused) {
+		//	m_CameraController.OnUpdate(ts);
+		//}
 
 		// Renderer Prep
 		{
@@ -159,7 +169,21 @@ namespace Pistachio {
 		{
 			if (ImGui::BeginMenu("File"))
 			{
-				if (ImGui::MenuItem("Exit")) Application::Get().Close();
+				if (ImGui::MenuItem("Save")) {
+					SceneSerializer serializer(m_ActiveScene);
+					serializer.Serialize("assets/scenes/Example.ptc");
+				}
+				if (ImGui::MenuItem("Load")) {
+					m_ActiveScene->Clear();
+					SceneSerializer serializer(m_ActiveScene);
+					serializer.Deserialize("assets/scenes/Example.ptc");
+				}
+				if (ImGui::MenuItem("Exit & Save")) {
+					// auto-save on exit
+					SceneSerializer serializer(m_ActiveScene);
+					serializer.Serialize("assets/scenes/Example.ptc");
+					Application::Get().Close();
+				}
 				ImGui::EndMenu();
 			}
 			ImGui::EndMenuBar();
@@ -196,7 +220,7 @@ namespace Pistachio {
 				m_Framebuffer->Resize((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
 				m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
 
-				m_CameraController.OnResize(m_ViewportSize.x, m_ViewportSize.y);
+				//m_CameraController.OnResize(m_ViewportSize.x, m_ViewportSize.y);
 				m_ActiveScene->OnViewportResize((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
 			}
 			uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
@@ -210,9 +234,9 @@ namespace Pistachio {
 	}
 
 	void EditorLayer::OnEvent(Event& event) {
-		if (m_ViewportHovered) {
-			m_CameraController.OnEvent(event);
-		}
+		//if (m_ViewportHovered) {
+		//	m_CameraController.OnEvent(event);
+		//}
 	}
 }
 

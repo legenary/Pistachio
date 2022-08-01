@@ -19,9 +19,6 @@
     <Filter Include="src\Pistachio\ImGui">
       <UniqueIdentifier>{AAB07C02-1612-5A10-9F7F-A0C20BE090CF}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Pistachio\Physics">
-      <UniqueIdentifier>{F21E21A7-5E8B-DCA1-277F-74FF93AAFE09}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Pistachio\Renderer">
       <UniqueIdentifier>{26CF1F62-12C9-48B4-FB35-DFC4E7CEAE20}</UniqueIdentifier>
     </Filter>
@@ -96,6 +93,9 @@
     <ClInclude Include="src\Pistachio\Core\Timestep.h">
       <Filter>src\Pistachio\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Pistachio\Core\Utility.h">
+      <Filter>src\Pistachio\Core</Filter>
+    </ClInclude>
     <ClInclude Include="src\Pistachio\Core\Window.h">
       <Filter>src\Pistachio\Core</Filter>
     </ClInclude>
@@ -118,6 +118,9 @@
       <Filter>src\Pistachio\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="src\Pistachio\Renderer\Buffer.h">
+      <Filter>src\Pistachio\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Pistachio\Renderer\Camera.h">
       <Filter>src\Pistachio\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Pistachio\Renderer\FrameBuffer.h">
@@ -156,7 +159,19 @@
     <ClInclude Include="src\Pistachio\Renderer\VertexArray.h">
       <Filter>src\Pistachio\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Pistachio\Scene\Component.h">
+      <Filter>src\Pistachio\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Pistachio\Scene\Entity.h">
+      <Filter>src\Pistachio\Scene</Filter>
+    </ClInclude>
     <ClInclude Include="src\Pistachio\Scene\Scene.h">
+      <Filter>src\Pistachio\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Pistachio\Scene\SceneCamera.h">
+      <Filter>src\Pistachio\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Pistachio\Scene\ScriptableEntity.h">
       <Filter>src\Pistachio\Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h">
@@ -1434,12 +1449,7 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Pistachio\Scene\Component.h" />
-    <ClInclude Include="src\Pistachio\Core\Utility.h" />
-    <ClInclude Include="src\Pistachio\Scene\Entity.h" />
-    <ClInclude Include="src\Pistachio\Renderer\Camera.h" />
-    <ClInclude Include="src\Pistachio\Scene\SceneCamera.h" />
-    <ClInclude Include="src\Pistachio\Scene\ScriptableEntity.h" />
+    <ClInclude Include="src\Pistachio\Scene\SceneSerializer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pistachio\Core\Application.cpp">
@@ -1496,7 +1506,13 @@
     <ClCompile Include="src\Pistachio\Renderer\VertexArray.cpp">
       <Filter>src\Pistachio\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Pistachio\Scene\Entity.cpp">
+      <Filter>src\Pistachio\Scene</Filter>
+    </ClCompile>
     <ClCompile Include="src\Pistachio\Scene\Scene.cpp">
+      <Filter>src\Pistachio\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Pistachio\Scene\SceneCamera.cpp">
       <Filter>src\Pistachio\Scene</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp">
@@ -1532,7 +1548,6 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Pistachio\Scene\Entity.cpp" />
-    <ClCompile Include="src\Pistachio\Scene\SceneCamera.cpp" />
+    <ClCompile Include="src\Pistachio\Scene\SceneSerializer.cpp" />
   </ItemGroup>
 </Project>

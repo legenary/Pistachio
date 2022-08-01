@@ -13,3 +13,6 @@
 [submodule "Pistachio/vendor/box2d"]
 	path = Pistachio/vendor/box2d
 	url = https://github.com/thecherno/box2d
+[submodule "Pistachio/vendor/yaml-cpp"]
+	path = Pistachio/vendor/yaml-cpp
+	url = https://github.com/thecherno/yaml-cpp

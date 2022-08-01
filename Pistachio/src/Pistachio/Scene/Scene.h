@@ -19,6 +19,10 @@ namespace Pistachio {
 		void OnUpdate(Timestep ts);
 		void OnViewportResize(uint32_t width, uint32_t height);
 
+		void Clear() {
+			m_Registry.clear();
+		}
+
 	private:
 		template<typename T>
 		void OnComponentAdded(Entity entity, T& component);
@@ -31,6 +35,7 @@ namespace Pistachio {
 
 		friend class Entity;
 		friend class SceneHierarchyPanel;
+		friend class SceneSerializer;
 	};
 
 }
