@@ -3,6 +3,8 @@
 #include <entt.hpp>
 #include "Pistachio/Core/Timestep.h"
 
+#include "Pistachio/Renderer/EditorCamera.h"
+
 namespace Pistachio {
 
 	class Camera;
@@ -16,7 +18,8 @@ namespace Pistachio {
 		Entity CreateEntity(const std::string& name = std::string());
 		void DestroyEntity(Entity entity);
 
-		void OnUpdate(Timestep ts);
+		void OnUpdateEditor(Timestep ts, EditorCamera& camera);
+		void OnUpdateRuntime(Timestep ts);
 		void OnViewportResize(uint32_t width, uint32_t height);
 
 		void Clear() {
@@ -30,8 +33,8 @@ namespace Pistachio {
 		void OnComponentAdded(Entity entity, T& component);
 
 	private:
-		Camera* mainCamera = nullptr;
-		int32_t m_ViewportWidth = 0, m_ViewportHeight = 0;
+		Camera* runTimeMainCamera = nullptr;
+		int32_t m_ViewportWidth = 1, m_ViewportHeight = 1;
 
 		entt::registry m_Registry;	// registry per scene
 

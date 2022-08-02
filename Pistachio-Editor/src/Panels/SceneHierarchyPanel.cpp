@@ -199,7 +199,7 @@ namespace Pistachio {
 			DrawVec3Control("Scale", component.Scale, 1.0f /*reset value*/);
 		});
 
-		DrawComponent<CameraComponent>("Camera", entity, [&](auto& component) {
+		DrawComponent<CameraComponent>("Camera", entity, [](auto& component) {
 			auto& camera = component.Camera;
 			const char* projectiontypeStrings[] = { "perspective", "orthographic" };
 			const char* currentProjectionTypeString = projectiontypeStrings[(int)(camera.GetProjectionType())];

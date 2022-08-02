@@ -2,6 +2,7 @@
 
 #include "Pistachio.h"
 #include "Panels/SceneHierarchyPanel.h"
+#include "Pistachio/Renderer/EditorCamera.h"
 
 namespace Pistachio {
 
@@ -20,6 +21,7 @@ namespace Pistachio {
 		void CreateDefaultScene();
 
 	private:
+		void ImGuiPrep();
 		bool OnKeyPressed(KeyPressedEvent& e);
 		void SceneSave();
 		void SceneSaveAs();
@@ -35,6 +37,7 @@ namespace Pistachio {
 		OrthographicCameraController m_CameraController;
 		
 		Ref<Scene> m_ActiveScene;
+		EditorCamera m_EditorCamera;
 		Ref<FrameBuffer> m_Framebuffer;
 
 		std::unordered_map<char, Ref<SubTexture2D>> m_TextureMap;

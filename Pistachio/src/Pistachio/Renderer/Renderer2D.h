@@ -5,6 +5,8 @@
 #include "Pistachio/Renderer/Texture.h"
 #include "Pistachio/Renderer/SubTexture2D.h"
 
+#include "Pistachio/Renderer/EditorCamera.h"
+
 namespace Pistachio {
 
 	class Renderer2D {
@@ -13,9 +15,10 @@ namespace Pistachio {
 		static void Shutdown();
 
 		static void BeginScene(const Camera& camera, const glm::mat4& transform);
+		static void BeginScene(const EditorCamera& camera);
 		static void BeginScene(const OrthographicCamera& camera);
 		static void EndScene();
-		static void Flush();
+		static void Flush(); 
 
 		// primitives 
 		static void DrawQuad(const glm::vec4& color, const glm::vec2& position = {0.0f, 0.0f}, const float rotation = 0, const glm::vec2& size = { 1.0f, 1.0f });

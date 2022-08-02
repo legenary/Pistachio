@@ -124,3 +124,17 @@
 #define PTC_KEY_RIGHT_SUPER        347
 #define PTC_KEY_MENU               348
 
+// Mouse Codes
+#define PTC_MOUSE_0					0
+#define PTC_MOUSE_1					1
+#define PTC_MOUSE_2					2
+#define PTC_MOUSE_3					3
+#define PTC_MOUSE_4					4
+#define PTC_MOUSE_5					5
+#define PTC_MOUSE_6					6
+#define PTC_MOUSE_7					7
+
+#define PTC_MOUSE_LEFT				PTC_MOUSE_0
+#define PTC_MOUSE_RIGHT				PTC_MOUSE_1
+#define PTC_MOUSE_MIDDLE			PTC_MOUSE_2
+#define PTC_MOUSE_LAST				PTC_MOUSE_7

@@ -36,6 +36,9 @@ namespace Pistachio {
 		// Scene
 		m_ActiveScene = CreateRef<Scene>();
 
+		// Editor Camera
+		m_EditorCamera = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
+
 		//Scene hierarchy
 		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 
@@ -52,31 +55,25 @@ namespace Pistachio {
 	void EditorLayer::OnUpdate(Timestep ts) {
 		PTC_PROFILE_FUNCTION();
 
-		// Update
-		//if (m_ViewportFocused) {
-		//	m_CameraController.OnUpdate(ts);
-		//}
+		// Update camera controller
+		if (m_ViewportFocused) {
+			m_EditorCamera.OnUpdate(ts);
+			//m_CameraController.OnUpdate(ts);
+		}
 
 		// Renderer Prep
 		{
 			PTC_PROFILE_SCOPE("Renderer Prep");
-			m_Framebuffer->Bind();
+			m_Framebuffer->Bind(); 
 			RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 			RenderCommand::Clear();
 		}
-		
 	
-		// sprite sheet test
+		// Rendering
 		{
-			//Renderer2D::BeginScene(m_CameraController.GetCamera());
-			//Renderer2D::DrawQuad(m_Texture, { -50.0f, -50.0f, -0.5f }, glm::radians(0.0f), { 100.0f, 100.0f }, 50.0f);
-			//Renderer2D::DrawQuad(m_TextureMap['W'], { 0.0f, 0.0f, 1.0f }, glm::radians(0.0f), { 1.0f, 1.0f });
-			//Renderer2D::DrawQuad(m_TextureMap['D'], { 0.0f, -1.0f, 1.0f }, glm::radians(0.0f), { 1.0f, 1.0f });
-			//Renderer2D::DrawQuad(m_TextureMap['G'], { -1.0f, -1.0f, 1.0f }, glm::radians(0.0f), { 1.0f, 1.0f });
-			//Renderer2D::DrawQuad({1.0f, 1.0f, 0.0f, 1.0f}, { -1.0f, 2.0f, 1.0f }, glm::radians(30.0f), { 1.0f, 1.0f });
+			PTC_PROFILE_SCOPE("Renderering");
 			// Draw scene
-			m_ActiveScene->OnUpdate(ts);
-
+			m_ActiveScene->OnUpdateEditor(ts, m_EditorCamera);
 
 			//Renderer2D::EndScene();
 			m_Framebuffer->Unbind();
@@ -85,10 +82,7 @@ namespace Pistachio {
 
 	}
 
-	void EditorLayer::OnImGuiRender() {
-		PTC_PROFILE_FUNCTION();
-
-
+	void EditorLayer::ImGuiPrep() {
 		static bool DockspaceOpen = true;
 		static bool opt_fullscreen = true;
 		static bool opt_padding = false;
@@ -116,11 +110,7 @@ namespace Pistachio {
 		if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
 			window_flags |= ImGuiWindowFlags_NoBackground;
 
-		// Important: note that we proceed even if Begin() returns false (aka window is collapsed).
-		// This is because we want to keep our DockSpace() active. If a DockSpace() is inactive,
-		// all active windows docked into it will lose their parent and become undocked.
-		// We cannot preserve the docking relationship between an active window and an inactive docking, otherwise
-		// any change of dockspace/settings would lead to windows being stuck in limbo and never being visible.
+		// 
 		if (!opt_padding)
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 		ImGui::Begin("DockSpace Demo", &DockspaceOpen, window_flags);
@@ -136,7 +126,14 @@ namespace Pistachio {
 			ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
 			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 		}
+	}
 
+	void EditorLayer::OnImGuiRender() {
+		PTC_PROFILE_FUNCTION();
+
+		ImGuiPrep();
+
+		// Menu bar
 		if (ImGui::BeginMenuBar()) {
 			if (ImGui::BeginMenu("File")) {
 				if (ImGui::MenuItem("New (Default scene)", "Ctrl+N"))
@@ -154,24 +151,10 @@ namespace Pistachio {
 			ImGui::EndMenuBar();
 		}
 
+		// Scene Hierarchy Panel
 		m_SceneHierarchyPanel.OnImGuiRender();
 
-		//{
-		//	ImGui::Begin("Settings");
-		//	if (m_SquareEntity) {
-		//		ImGui::Text("%s", m_SquareEntity.GetComponent<TagComponent>().Tag.c_str());
-		//		auto& color = m_SquareEntity.GetComponent<SpriteRendererComponent>().Color;
-		//		ImGui::ColorEdit4("SquareColor", glm::value_ptr(color));
-		//		ImGui::Separator();
-		//	}
-		//	//auto& camera = m_CameraEntity.GetComponent<CameraComponent>().Camera;
-		//	//glm::float32 cs = camera.GetOrthographicSize();
-		//	//if (ImGui::DragFloat("camera size", &cs)) {
-		//	//	camera.SetOrthographicSize(cs);
-		//	//}
-		//	ImGui::End();
-		//}
-
+		// Viewport
 		{
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 			ImGui::Begin("Viewport");
@@ -187,14 +170,14 @@ namespace Pistachio {
 
 				//m_CameraController.OnResize(m_ViewportSize.x, m_ViewportSize.y);
 				m_ActiveScene->OnViewportResize((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
+				m_EditorCamera.SetViewportSize(viewportPanelSize.x, viewportPanelSize.y);
 			}
 			uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
 			ImGui::Image((void*)textureID, viewportPanelSize, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 
 			// Gizmos
 			Entity selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
-			auto primaryCameraEntity = m_ActiveScene->GetPrimaryCameraEntity();
-			if (selectedEntity && primaryCameraEntity && m_GizmoType != -1) {
+			if (selectedEntity && m_GizmoType != -1) {
 				
 				ImGuizmo::SetOrthographic(false);
 				ImGuizmo::SetDrawlist();
@@ -202,10 +185,9 @@ namespace Pistachio {
 				float windowHeight = (float)ImGui::GetWindowHeight();
 				ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
 
-				// Get primary camera from the scene
-				const auto& camera = primaryCameraEntity.GetComponent<CameraComponent>().Camera;
-				const glm::mat4& cameraProjection = camera.GetProjectionMatrix();
-				glm::mat4 cameraView = glm::inverse(primaryCameraEntity.GetComponent<TransformComponent>().GetTransform());
+				// Get view and projection from editor camera
+				glm::mat4 cameraView = m_EditorCamera.GetViewMatrix();
+				glm::mat4 cameraProjection = m_EditorCamera.GetProjectionMatrix();
 
 				// Entity transform
 				auto& transComp = selectedEntity.GetComponent<TransformComponent>();
@@ -242,6 +224,7 @@ namespace Pistachio {
 		//if (m_ViewportHovered) {
 		//	m_CameraController.OnEvent(event);
 		//}
+		m_EditorCamera.OnEvent(event);
 
 		EventDispatcher dispatcher(event);
 		dispatcher.Dispatch<KeyPressedEvent>(PTC_BIND_EVENT_FN(EditorLayer::OnKeyPressed));

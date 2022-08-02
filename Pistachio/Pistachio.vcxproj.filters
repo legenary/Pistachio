@@ -1464,6 +1464,7 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
+    <ClInclude Include="src\Pistachio\Renderer\EditorCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pistachio\Core\Application.cpp">
@@ -1572,5 +1573,6 @@
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
     <ClCompile Include="src\Pistachio\Core\Utility.cpp" />
+    <ClCompile Include="src\Pistachio\Renderer\EditorCamera.cpp" />
   </ItemGroup>
 </Project>
