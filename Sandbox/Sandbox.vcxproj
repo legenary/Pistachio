@@ -79,7 +79,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>PTC_PLATFORM_WINDOWS;PTC_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Pistachio\vendor\spdlog\include;..\Pistachio\src;..\Pistachio\vendor\imgui;..\Pistachio\vendor\box2d\include;..\Pistachio\vendor\glm;..\Pistachio\vendor\entt\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Pistachio\vendor\spdlog\include;..\Pistachio\src;..\Pistachio\vendor\imgui;..\Pistachio\vendor\box2d\include;..\Pistachio\vendor\glm;..\Pistachio\vendor\entt\include;..\Pistachio\vendor\ImGuizmo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -95,7 +95,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>PTC_PLATFORM_WINDOWS;PTC_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Pistachio\vendor\spdlog\include;..\Pistachio\src;..\Pistachio\vendor\imgui;..\Pistachio\vendor\box2d\include;..\Pistachio\vendor\glm;..\Pistachio\vendor\entt\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Pistachio\vendor\spdlog\include;..\Pistachio\src;..\Pistachio\vendor\imgui;..\Pistachio\vendor\box2d\include;..\Pistachio\vendor\glm;..\Pistachio\vendor\entt\include;..\Pistachio\vendor\ImGuizmo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -115,7 +115,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>PTC_PLATFORM_WINDOWS;PTC_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Pistachio\vendor\spdlog\include;..\Pistachio\src;..\Pistachio\vendor\imgui;..\Pistachio\vendor\box2d\include;..\Pistachio\vendor\glm;..\Pistachio\vendor\entt\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Pistachio\vendor\spdlog\include;..\Pistachio\src;..\Pistachio\vendor\imgui;..\Pistachio\vendor\box2d\include;..\Pistachio\vendor\glm;..\Pistachio\vendor\entt\include;..\Pistachio\vendor\ImGuizmo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>

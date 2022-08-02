@@ -41,6 +41,8 @@ namespace Pistachio {
 
 		SceneHierarchyPanel m_SceneHierarchyPanel;
 		std::string m_cachedSavePath;
+
+		int m_GizmoType = -1;
 	};
 
 }

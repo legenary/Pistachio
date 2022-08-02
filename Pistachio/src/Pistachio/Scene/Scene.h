@@ -23,6 +23,8 @@ namespace Pistachio {
 			m_Registry.clear();
 		}
 
+		Entity GetPrimaryCameraEntity();
+
 	private:
 		template<typename T>
 		void OnComponentAdded(Entity entity, T& component);

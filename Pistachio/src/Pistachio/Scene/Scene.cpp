@@ -105,14 +105,12 @@ namespace Pistachio {
 		}
 
 		if (mainCamera) {
-
 			Renderer2D::BeginScene(*mainCamera, transform);
 
 			// retrive entities that has multiple components
 			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
 			for (auto entity : group) {
 				auto [trans, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-			
 				Renderer2D::DrawQuad(sprite.Color, trans.GetTransform());
 
 			}
@@ -136,9 +134,20 @@ namespace Pistachio {
 		}
 	}
 
+	Entity Scene::GetPrimaryCameraEntity() {
+		auto view = m_Registry.view<CameraComponent>();
+		for (auto entity : view) {
+			const auto& camera = view.get<CameraComponent>(entity);
+			if (camera.Primary) {
+				return Entity{ entity, this };
+			}
+		}
+		return {};
+	}
+
 	template<typename T>
 	void Scene::OnComponentAdded(Entity entity, T& component) {
-		static_assert(false);
+		//static_assert(false);
 	}
 	template<>
 	void Scene::OnComponentAdded<TagComponent>(Entity entity, TagComponent& component) {}
@@ -146,8 +155,7 @@ namespace Pistachio {
 	void Scene::OnComponentAdded<TransformComponent>(Entity entity, TransformComponent& component) {}
 	template<>
 	void Scene::OnComponentAdded<CameraComponent>(Entity entity, CameraComponent& component) {
-		component.Camera.SetViewportSize(m_ViewportWidth, m_ViewportHeight);
-		//entity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
+		//component.Camera.SetViewportSize(m_ViewportWidth, m_ViewportHeight);
 	}
 	template<>
 	void Scene::OnComponentAdded<SpriteRendererComponent>(Entity entity, SpriteRendererComponent& component) {}

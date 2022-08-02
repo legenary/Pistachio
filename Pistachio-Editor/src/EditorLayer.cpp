@@ -6,7 +6,9 @@
 #include "Pistachio/Utils/PlatformUtils.h"
 #include "Pistachio/Scene/SceneSerializer.h"
 #include "Pistachio/Core/Input.h"
+#include "Pistachio/Core/Utility.h"
 
+#include <ImGuizmo.h>
 
 namespace Pistachio {
 
@@ -34,13 +36,14 @@ namespace Pistachio {
 		// Scene
 		m_ActiveScene = CreateRef<Scene>();
 
-
 		//Scene hierarchy
 		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 
-		// load default scene
-		//SceneSerializer serializer(m_ActiveScene);
-		//CreateDefaultScene();
+		// load my work
+		SceneSerializer serializer(m_ActiveScene);
+		serializer.Deserialize("assets/scenes/test.ptc");
+		m_cachedSavePath = "assets/scenes/test.ptc";
+
 	}
 
 	void EditorLayer::OnDetach() {
@@ -94,8 +97,7 @@ namespace Pistachio {
 		// We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into,
 		// because it would be confusing to have two docking targets within each others.
 		ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
-		if (opt_fullscreen)
-		{
+		if (opt_fullscreen) {
 			const ImGuiViewport* viewport = ImGui::GetMainViewport();
 			ImGui::SetNextWindowPos(viewport->WorkPos);
 			ImGui::SetNextWindowSize(viewport->WorkSize);
@@ -105,8 +107,7 @@ namespace Pistachio {
 			window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
 			window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 		}
-		else
-		{
+		else {
 			dockspace_flags &= ~ImGuiDockNodeFlags_PassthruCentralNode;
 		}
 
@@ -131,17 +132,14 @@ namespace Pistachio {
 
 		// Submit the DockSpace
 		ImGuiIO& io = ImGui::GetIO();
-		if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
-		{
+		if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable) {
 			ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
 			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 		}
 
-		if (ImGui::BeginMenuBar())
-		{
-			if (ImGui::BeginMenu("File"))
-			{
-				if (ImGui::MenuItem("New", "Ctrl+N"))
+		if (ImGui::BeginMenuBar()) {
+			if (ImGui::BeginMenu("File")) {
+				if (ImGui::MenuItem("New (Default scene)", "Ctrl+N"))
 					SceneNew();
 				if (ImGui::MenuItem("Open...", "Ctrl+O"))
 					SceneOpen();
@@ -192,6 +190,46 @@ namespace Pistachio {
 			}
 			uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
 			ImGui::Image((void*)textureID, viewportPanelSize, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+
+			// Gizmos
+			Entity selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
+			auto primaryCameraEntity = m_ActiveScene->GetPrimaryCameraEntity();
+			if (selectedEntity && primaryCameraEntity && m_GizmoType != -1) {
+				
+				ImGuizmo::SetOrthographic(false);
+				ImGuizmo::SetDrawlist();
+				float windowWidth = (float)ImGui::GetWindowWidth();
+				float windowHeight = (float)ImGui::GetWindowHeight();
+				ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+
+				// Get primary camera from the scene
+				const auto& camera = primaryCameraEntity.GetComponent<CameraComponent>().Camera;
+				const glm::mat4& cameraProjection = camera.GetProjectionMatrix();
+				glm::mat4 cameraView = glm::inverse(primaryCameraEntity.GetComponent<TransformComponent>().GetTransform());
+
+				// Entity transform
+				auto& transComp = selectedEntity.GetComponent<TransformComponent>();
+				glm::mat4 transform = transComp.GetTransform();
+
+				// Snapping
+				bool snap = Input::IsKeyPressed(PTC_KEY_LEFT_CONTROL);
+				float snapValue = (m_GizmoType == ImGuizmo::OPERATION::ROTATE) ? 15.0f : 0.5f;
+				float snapValues[3] = { snapValue, snapValue, snapValue };
+
+				ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection),
+					(ImGuizmo::OPERATION)m_GizmoType, ImGuizmo::LOCAL, glm::value_ptr(transform),
+					nullptr, snap ? snapValues : nullptr);
+
+				if (ImGuizmo::IsUsing()) {
+					glm::vec3 t, r, s;
+					DecomposeTransform(transform, t, r, s);
+					transComp.Translation = t;
+					transComp.Rotation += (r - transComp.Rotation);
+					transComp.Scale = s;
+				}
+			}
+
+
 			ImGui::End();
 			ImGui::PopStyleVar();
 		}
@@ -235,6 +273,25 @@ namespace Pistachio {
 					SceneNew();
 				break;
 			}
+			
+			// Gizmos
+			case PTC_KEY_Q: {
+				m_GizmoType = -1;
+				break;
+			}
+			case PTC_KEY_W: {
+				m_GizmoType = ImGuizmo::OPERATION::TRANSLATE;
+				break;
+			}
+			case PTC_KEY_E: {
+				m_GizmoType = ImGuizmo::OPERATION::ROTATE;
+				break;
+			}
+			case PTC_KEY_R: {
+				m_GizmoType = ImGuizmo::OPERATION::SCALE;
+				break;
+			}
+
 		}
 	}
 	void EditorLayer::SceneSave() {

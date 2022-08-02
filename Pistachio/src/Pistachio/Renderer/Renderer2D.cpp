@@ -111,9 +111,8 @@ namespace Pistachio {
 
 	void Renderer2D::BeginScene(const Camera& camera, const glm::mat4& transform) {
 		PTC_PROFILE_FUNCTION();
-
 		glm::mat4 viewProj = camera.GetProjectionMatrix() * glm::inverse(transform);
-
+		
 		s_Data.TheShaderLibrary.Get("Texture")->Bind();
 		s_Data.TheShaderLibrary.Get("Texture")
 			->SetMat4("u_ViewProjection", viewProj);

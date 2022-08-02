@@ -21,6 +21,7 @@ IncludeDir["stb_image"] = "Pistachio/vendor/stb_image"
 IncludeDir["entt"] = "Pistachio/vendor/entt/include"
 IncludeDir["box2d"] = "Pistachio/vendor/box2d"
 IncludeDir["yaml_cpp"] = "Pistachio/vendor/yaml-cpp/include"
+IncludeDir["ImGuizmo"] = "Pistachio/vendor/ImGuizmo"
 
 group "Dependencies"
 	include "Pistachio/vendor/GLFW"
@@ -41,7 +42,7 @@ project "Pistachio"
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
 	pchheader "ptcpch.h"
-	pchsource "Pistachio/src/ptcpch.cpp"
+	pchsource "%{prj.name}/src/ptcpch.cpp"
 
 	files
 	{
@@ -50,11 +51,14 @@ project "Pistachio"
 		"%{prj.name}/vendor/stb_image/**.h",
 		"%{prj.name}/vendor/stb_image/**.cpp",
 		"%{prj.name}/vendor/glm/glm/**.hpp",
-		"%{prj.name}/vendor/glm/glm/**.inl"
+		"%{prj.name}/vendor/glm/glm/**.inl",
+		"%{prj.name}/vendor/ImGuizmo/ImGuizmo.h",
+		"%{prj.name}/vendor/ImGuizmo/ImGuizmo.cpp"
 	}
 
 	defines{
-		"_CRT_SECRURE_NO_WARNINGS"
+		"_CRT_SECRURE_NO_WARNINGS",
+		"GLFW_INCLUDE_NONE"
 	}
 
 	includedirs
@@ -68,7 +72,8 @@ project "Pistachio"
 		"%{IncludeDir.stb_image}",
 		"%{IncludeDir.entt}",
 		"%{IncludeDir.box2d}/include",
-		"%{IncludeDir.yaml_cpp}"
+		"%{IncludeDir.yaml_cpp}",
+		"%{IncludeDir.ImGuizmo}"
 	}
 
 	links
@@ -81,17 +86,16 @@ project "Pistachio"
 		"opengl32.lib"
 	}
 
+	filter "files:**/ImGuizmo/**.cpp"
+	flags { "NoPCH" }
+
 	filter "system:windows"
 		--staticruntime "On"
 		systemversion "latest"
-		
 		defines
 		{
-			"PTC_PLATFORM_WINDOWS",
-			"PTC_BUILD_DLL",
-			"GLFW_INCLUDE_NONE"
+			"PTC_PLATFORM_WINDOWS"
 		}
-
 
 	filter "configurations:Debug"
 		defines "PTC_DEBUG"
@@ -107,6 +111,8 @@ project "Pistachio"
 		defines "PTC_DIST"
 		runtime "Release"
 		optimize "on"
+
+
 
 
 
@@ -133,7 +139,8 @@ project "Sandbox"
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.box2d}/include",
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.entt}"
+		"%{IncludeDir.entt}",
+		"%{IncludeDir.ImGuizmo}"
 	}
 
 	links
@@ -190,7 +197,8 @@ project "Pistachio-Editor"
 		"%{IncludeDir.box2d}/include",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.entt}",
-		"%{IncludeDir.yaml_cpp}"
+		"%{IncludeDir.yaml_cpp}",
+		"%{IncludeDir.ImGuizmo}"
 	}
 
 	links
