@@ -32,6 +32,7 @@ namespace Pistachio {
 		glm::vec2 m_ViewportSize;
 		bool m_ViewportFocused = false;
 		bool m_ViewportHovered = false;
+		glm::vec2 m_ViewportBounds[2];
 	
 		Ref<Texture2D> m_Texture, m_EmojiTexture, m_SpriteSheet;
 		OrthographicCameraController m_CameraController;

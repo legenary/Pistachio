@@ -29,6 +29,7 @@ namespace Pistachio {
 
 		// framebuffer
 		FrameBufferSpecification fbSpec;
+		fbSpec.Attachments = { FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RED_INTEGER, FramebufferTextureFormat::Depth };
 		fbSpec.Width = 1280;
 		fbSpec.Height = 720;
 		m_Framebuffer = FrameBuffer::Create(fbSpec);
@@ -74,6 +75,19 @@ namespace Pistachio {
 			PTC_PROFILE_SCOPE("Renderering");
 			// Draw scene
 			m_ActiveScene->OnUpdateEditor(ts, m_EditorCamera);
+
+			auto [mx, my] = ImGui::GetMousePos();
+			mx -= m_ViewportBounds[0].x;
+			my -= m_ViewportBounds[0].y;
+			glm::vec2 viewportSize = m_ViewportBounds[1] - m_ViewportBounds[0];
+			my = viewportSize.y - my;
+			int mouseX = (int)mx;
+			int mouseY = (int)my;
+			if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y) {
+				// read pixel value back from GPU
+				int pixelVal = m_Framebuffer->ReadPixel(1, mouseX, mouseY);
+				PTC_CORE_WARN("pixel value = {0}", pixelVal);
+			}
 
 			//Renderer2D::EndScene();
 			m_Framebuffer->Unbind();
@@ -158,6 +172,7 @@ namespace Pistachio {
 		{
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 			ImGui::Begin("Viewport");
+			auto viewportOffset = ImGui::GetCursorPos();	// includes the tab bar
 			m_ViewportFocused = ImGui::IsWindowFocused();
 			m_ViewportHovered = ImGui::IsWindowHovered();
 			
@@ -174,6 +189,16 @@ namespace Pistachio {
 			}
 			uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
 			ImGui::Image((void*)textureID, viewportPanelSize, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+
+			// calculate viewport bounds for mouse picking (relative to desktop)
+			auto windowSize = ImGui::GetWindowSize();
+			ImVec2 minBound = ImGui::GetWindowPos();
+			minBound.x += viewportOffset.x;
+			minBound.y += viewportOffset.y;
+			ImVec2 maxBound = { minBound.x + windowSize.x, minBound.y + windowSize.y };
+			m_ViewportBounds[0] = { minBound.x, minBound.y };
+			m_ViewportBounds[1] = { maxBound.x, maxBound.y };
+
 
 			// Gizmos
 			Entity selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
