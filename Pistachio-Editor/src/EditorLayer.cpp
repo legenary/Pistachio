@@ -43,11 +43,6 @@ namespace Pistachio {
 		//Scene hierarchy
 		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 
-		// load my work
-		SceneSerializer serializer(m_ActiveScene);
-		serializer.Deserialize("assets/scenes/test.ptc");
-		m_cachedSavePath = "assets/scenes/test.ptc";
-
 	}
 
 	void EditorLayer::OnDetach() {
@@ -68,8 +63,11 @@ namespace Pistachio {
 			m_Framebuffer->Bind(); 
 			RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 			RenderCommand::Clear();
+
+			// clear Entity ID attachment to -1
+			m_Framebuffer->ClearAttachment(1, -1);
 		}
-	
+		
 		// Rendering
 		{
 			PTC_PROFILE_SCOPE("Renderering");
@@ -86,7 +84,7 @@ namespace Pistachio {
 			if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y) {
 				// read pixel value back from GPU
 				int pixelVal = m_Framebuffer->ReadPixel(1, mouseX, mouseY);
-				PTC_CORE_WARN("pixel value = {0}", pixelVal);
+				PTC_CORE_WARN("mx {0} mx {1} pixel value {2}", mouseX, mouseY, pixelVal);
 			}
 
 			//Renderer2D::EndScene();
@@ -107,8 +105,8 @@ namespace Pistachio {
 		ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
 		if (opt_fullscreen) {
 			const ImGuiViewport* viewport = ImGui::GetMainViewport();
-			ImGui::SetNextWindowPos(viewport->WorkPos);
-			ImGui::SetNextWindowSize(viewport->WorkSize);
+			ImGui::SetNextWindowPos(viewport->Pos);
+			ImGui::SetNextWindowSize(viewport->Size);
 			ImGui::SetNextWindowViewport(viewport->ID);
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
@@ -172,7 +170,7 @@ namespace Pistachio {
 		{
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 			ImGui::Begin("Viewport");
-			auto viewportOffset = ImGui::GetCursorPos();	// includes the tab bar
+			
 			m_ViewportFocused = ImGui::IsWindowFocused();
 			m_ViewportHovered = ImGui::IsWindowHovered();
 			
@@ -191,13 +189,11 @@ namespace Pistachio {
 			ImGui::Image((void*)textureID, viewportPanelSize, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 
 			// calculate viewport bounds for mouse picking (relative to desktop)
-			auto windowSize = ImGui::GetWindowSize();
-			ImVec2 minBound = ImGui::GetWindowPos();
-			minBound.x += viewportOffset.x;
-			minBound.y += viewportOffset.y;
-			ImVec2 maxBound = { minBound.x + windowSize.x, minBound.y + windowSize.y };
-			m_ViewportBounds[0] = { minBound.x, minBound.y };
-			m_ViewportBounds[1] = { maxBound.x, maxBound.y };
+			auto viewportMinRegion = ImGui::GetWindowContentRegionMin();
+			auto viewportMaxRegion = ImGui::GetWindowContentRegionMax();
+			auto viewportOffset = ImGui::GetWindowPos();
+			m_ViewportBounds[0] = { viewportMinRegion.x + viewportOffset.x, viewportMinRegion.y + viewportOffset.y };
+			m_ViewportBounds[1] = { viewportMaxRegion.x + viewportOffset.x, viewportMaxRegion.y + viewportOffset.y };
 
 
 			// Gizmos
@@ -320,49 +316,23 @@ namespace Pistachio {
 		}
 	}
 	void EditorLayer::SceneNew() {
-		m_SceneHierarchyPanel.Clear();
-		CreateDefaultScene();
+		m_ActiveScene = CreateRef<Scene>();
+		m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 		m_cachedSavePath = {};
 	}
 	void EditorLayer::SceneOpen() {
 		std::string filepath = FileDialogs::OpenFile("Pistachio Scene (*.ptc)\0*.ptc\0");
 		if (!filepath.empty()) {
-			m_SceneHierarchyPanel.Clear();
+			m_ActiveScene = CreateRef<Scene>();
+			m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+			m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 			SceneSerializer serializer(m_ActiveScene);
 			serializer.Deserialize(filepath);
 			m_cachedSavePath = filepath;
 		}
 	}
 
-	void EditorLayer::CreateDefaultScene() {
-		// This is default scene
-
-		// Square sprite
-		Entity squareEntity = m_ActiveScene->CreateEntity("Square");
-		squareEntity.AddComponent<SpriteRendererComponent>(glm::vec4{ 1.0f, 0.0f, 0.0f, 1.0f });
-
-		// Camera
-		Entity cameraEntity = m_ActiveScene->CreateEntity("Camera Entity");
-		cameraEntity.AddComponent<CameraComponent>();
-
-		// Native script for camera
-		class CameraController : public ScriptableEntity {
-		public:
-			void OnCreate() {
-				PTC_CORE_INFO("Create camera controller!");
-			}
-			void OnDestroy() {
-
-			}
-			void OnUpdate(Timestep ts) override {
-				auto& translation = GetComponent<TransformComponent>().Translation;
-				if (Input::IsKeyPressed(PTC_KEY_A)) {
-					translation[0] -= 5 * ts;
-				}
-			}
-		};
-		cameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
-	}
 
 }
 

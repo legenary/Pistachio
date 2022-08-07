@@ -13,6 +13,7 @@ namespace Pistachio {
 	 
 	void SceneHierarchyPanel::SetContext(const Ref<Scene>& scene) {
 		m_Context = scene;
+		m_SelectionContext = {};
 	}
 
 	void SceneHierarchyPanel::OnImGuiRender() {
@@ -261,8 +262,4 @@ namespace Pistachio {
 		});
 	}
 
-	void SceneHierarchyPanel::Clear() {
-		m_Context->Clear();
-		m_SelectionContext = {};
-	}
 }

@@ -19,6 +19,8 @@ namespace Pistachio {
 		virtual void Resize(uint32_t width, uint32_t height) override;
 		virtual int ReadPixel(uint32_t attachmentIndex, int x, int y) override;
 
+		virtual void ClearAttachment(uint32_t attachmentIndex, int value) override;
+
 		virtual uint32_t GetColorAttachmentRendererID(uint32_t index) const override { PTC_CORE_ASSERT(index < m_ColorAttachments.size(), "Exceeds maximum color attachment 4."); return m_ColorAttachments[index]; }
 		virtual uint32_t GetDepthAttachmentRendererID() const override { return m_DepthAttachment; }
 

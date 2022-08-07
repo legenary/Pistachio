@@ -18,7 +18,6 @@ namespace Pistachio {
 		virtual void OnImGuiRender() override;
 		virtual void OnEvent(Event& event) override;
 
-		void CreateDefaultScene();
 
 	private:
 		void ImGuiPrep();

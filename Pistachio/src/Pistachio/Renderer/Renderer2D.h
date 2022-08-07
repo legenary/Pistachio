@@ -9,6 +9,7 @@
 
 namespace Pistachio {
 
+	class SpriteRendererComponent;
 	class Renderer2D {
 	public:
 		static void Init();
@@ -28,10 +29,11 @@ namespace Pistachio {
 		static void DrawQuad(const Ref<SubTexture2D>& subtex, const glm::vec2& position = { 0.0f, 0.0f }, const float rotation = 0, const glm::vec2& size = { 1.0f, 1.0f }, const float tilingFactor = 1.0f);
 		static void DrawQuad(const Ref<SubTexture2D>& subtex, const glm::vec3& position = { 0.0f, 0.0f, 0.0f }, const float rotation = 0, const glm::vec2& size = { 1.0f, 1.0f }, const float tilingFactor = 1.0f);
 	
-		static void DrawQuad(const glm::vec4& color, const glm::mat4& transform);
-		static void DrawQuad(const Ref<Texture2D>& tex, const glm::mat4& transform, const float tilingFactor = 1.0f);
-		static void DrawQuad(const Ref<SubTexture2D>& subtex, const glm::mat4& transform, const float tilingFactor = 1.0f);
+		static void DrawQuad(const glm::vec4& color, const glm::mat4& transform, int entityID = 0);
+		static void DrawQuad(const Ref<Texture2D>& tex, const glm::mat4& transform, const float tilingFactor = 1.0f, int entityID = 0);
+		static void DrawQuad(const Ref<SubTexture2D>& subtex, const glm::mat4& transform, const float tilingFactor = 1.0f, int entityID = 0);
 
+		static void DrawSprite(SpriteRendererComponent& src, const glm::mat4& transform, int entityID);
 	};
 
 }

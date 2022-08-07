@@ -58,6 +58,17 @@ namespace Pistachio {
 			}
 			glFramebufferTexture2D(GL_FRAMEBUFFER, attachmentType, TextureTarget(multisampled), id, 0);
 		}
+
+		static GLenum PistachioTextureFormatToGL(FramebufferTextureFormat format) {
+			switch (format)
+			{
+			case FramebufferTextureFormat::RGBA8: return GL_RGBA8;
+			case FramebufferTextureFormat::RED_INTEGER: return GL_RED_INTEGER;
+			}
+			PTC_CORE_ASSERT(false, "HazelTextureFormatToGL: unkown format");
+			return 0;
+		}
+
 	}
 
 	OpenGLFrameBuffer::OpenGLFrameBuffer(const FrameBufferSpecification& spec)
@@ -75,12 +86,13 @@ namespace Pistachio {
 		Invalidate();
 	}
 
-	OpenGLFrameBuffer::~OpenGLFrameBuffer() {
+
+	OpenGLFrameBuffer::~OpenGLFrameBuffer()
+	{
 		glDeleteFramebuffers(1, &m_RendererID);
 		glDeleteTextures(m_ColorAttachments.size(), m_ColorAttachments.data());
 		glDeleteTextures(1, &m_DepthAttachment);
 	}
-
 
 	void OpenGLFrameBuffer::Invalidate() {
 		if (m_RendererID) {
@@ -171,5 +183,13 @@ namespace Pistachio {
 		int pixelData;
 		glReadPixels(x, y, 1, 1, GL_RED_INTEGER, GL_INT, &pixelData);
 		return pixelData;
+	}
+
+	void OpenGLFrameBuffer::ClearAttachment(uint32_t attachmentIndex, int value) {
+		PTC_CORE_ASSERT(attachmentIndex < m_ColorAttachments.size(), "Exceeds maximum color attachment 4.");
+
+		auto& spec = m_ColorAttachmentSpecs[attachmentIndex];
+		glClearTexImage(m_ColorAttachments[attachmentIndex], 0,
+			Utils::PistachioTextureFormatToGL(spec.TextureFormat), GL_INT, &value);
 	}
 }

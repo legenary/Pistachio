@@ -12,7 +12,6 @@ namespace Pistachio {
 		void SetContext(const Ref<Scene>& scene);
 
 		void OnImGuiRender();
-		void Clear();
 
 		Entity GetSelectedEntity() const { return m_SelectionContext; }
 

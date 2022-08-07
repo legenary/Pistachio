@@ -22,10 +22,6 @@ namespace Pistachio {
 		void OnUpdateRuntime(Timestep ts);
 		void OnViewportResize(uint32_t width, uint32_t height);
 
-		void Clear() {
-			m_Registry.clear();
-		}
-
 		Entity GetPrimaryCameraEntity();
 
 	private:

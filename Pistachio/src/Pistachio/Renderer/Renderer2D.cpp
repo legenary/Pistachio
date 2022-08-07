@@ -10,6 +10,8 @@
 
 #include "RenderCommand.h"
 
+#include "Pistachio/Scene/Component.h"
+
 
 namespace Pistachio {
 
@@ -20,6 +22,8 @@ namespace Pistachio {
 		float TexIndex;
 		float TilingFactor;
 		// TODO: maskid
+
+		int EntityID;
 	};
 
 
@@ -64,7 +68,8 @@ namespace Pistachio {
 			{ ShaderDataType::Float4, "a_Color"},
 			{ ShaderDataType::Float2, "a_TexCoord" },
 			{ ShaderDataType::Float, "a_TexIndex"},
-			{ ShaderDataType::Float, "a_TilingFactor"}
+			{ ShaderDataType::Float, "a_TilingFactor"},
+			{ ShaderDataType::Int, "a_EntityID"}
 		};
 		s_Data.QuadVertexBuffer->SetLayout(QuadLayout);
 		s_Data.QuadVertexArray->AddVertexBuffer(s_Data.QuadVertexBuffer);
@@ -198,7 +203,7 @@ namespace Pistachio {
 		DrawQuad(subtex, TRS2Transform(position, { 0.0f, 0.0f, rotation }, { size, 1.0f }), tilingFactor);
 	}
 
-	void Renderer2D::DrawQuad(const glm::vec4& color, const glm::mat4& transform) {
+	void Renderer2D::DrawQuad(const glm::vec4& color, const glm::mat4& transform, int entityID) {
 		constexpr size_t quadVertexCount = 4;
 		const float texIndex = 0.0f;	// whiteTexture
 		constexpr glm::vec2 textureCoords[4] = { {0.0f, 0.0f}, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
@@ -210,13 +215,14 @@ namespace Pistachio {
 			s_Data.QuadVertexBufferPtr->TexCoord = textureCoords[i];
 			s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
 			s_Data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
+			s_Data.QuadVertexBufferPtr->EntityID = entityID;
 			s_Data.QuadVertexBufferPtr++;
 		}
 		s_Data.QuadIndexCount += 6;
 		s_Data.QuadCount++;
 	}
 
-	void Renderer2D::DrawQuad(const Ref<Texture2D>& tex, const glm::mat4& transform, const float tilingFactor)
+	void Renderer2D::DrawQuad(const Ref<Texture2D>& tex, const glm::mat4& transform, const float tilingFactor, int entityID)
 	{
 		constexpr size_t quadVertexCount = 4;
 		constexpr glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -242,6 +248,7 @@ namespace Pistachio {
 			s_Data.QuadVertexBufferPtr->TexCoord = textureCoords[i];
 			s_Data.QuadVertexBufferPtr->TexIndex = textureIndex;
 			s_Data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
+			s_Data.QuadVertexBufferPtr->EntityID = entityID;
 			s_Data.QuadVertexBufferPtr++;
 		}
 
@@ -249,7 +256,7 @@ namespace Pistachio {
 		s_Data.QuadCount++;
 	}
 
-	void Renderer2D::DrawQuad(const Ref<SubTexture2D>& subtex, const glm::mat4& transform, const float tilingFactor) {
+	void Renderer2D::DrawQuad(const Ref<SubTexture2D>& subtex, const glm::mat4& transform, const float tilingFactor, int entityID) {
 		constexpr size_t quadVertexCount = 4;
 		constexpr glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
 		const glm::vec2* textureCoords = subtex->GetTexCoord();
@@ -276,6 +283,7 @@ namespace Pistachio {
 			s_Data.QuadVertexBufferPtr->TexCoord = textureCoords[i];
 			s_Data.QuadVertexBufferPtr->TexIndex = textureIndex;
 			s_Data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
+			s_Data.QuadVertexBufferPtr->EntityID = entityID;
 			s_Data.QuadVertexBufferPtr++;
 		}
 
@@ -283,5 +291,7 @@ namespace Pistachio {
 		s_Data.QuadCount++;
 	}
 
-
+	void Renderer2D::DrawSprite(SpriteRendererComponent& src, const glm::mat4& transform, int entityID) {
+		DrawQuad(src.Color, transform, entityID);
+	}
 }
