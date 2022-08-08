@@ -22,6 +22,7 @@ namespace Pistachio {
 	private:
 		void ImGuiPrep();
 		bool OnKeyPressed(KeyPressedEvent& e);
+		bool OnMouseButtonPressed(MouseButtonPressedEvent& e);
 		void SceneSave();
 		void SceneSaveAs();
 		void SceneNew();
@@ -37,6 +38,7 @@ namespace Pistachio {
 		OrthographicCameraController m_CameraController;
 		
 		Ref<Scene> m_ActiveScene;
+		Entity m_HoveredEntity;
 		EditorCamera m_EditorCamera;
 		Ref<FrameBuffer> m_Framebuffer;
 
@@ -45,7 +47,7 @@ namespace Pistachio {
 		SceneHierarchyPanel m_SceneHierarchyPanel;
 		std::string m_cachedSavePath;
 
-		int m_GizmoType = -1;
+		int m_GizmoType = ImGuizmo::OPERATION::TRANSLATE;
 	};
 
 }

@@ -10,6 +10,7 @@
 #include "Pistachio/Core/Log.h"
 #include "Pistachio/ImGui/ImGuiLayer.h"
 #include "Pistachio/Core/Timestep.h"
+#include "Pistachio/Core/Utility.h"
 
 // renderer
 #include "Pistachio/Renderer/Renderer.h"
@@ -31,6 +32,7 @@
 #include "Pistachio/Scene/Entity.h"
 #include "Pistachio/Scene/ScriptableEntity.h"
 #include "Pistachio/Scene/Component.h"
+#include "Pistachio/Scene/SceneSerializer.h"
 
 
 #include "Pistachio/Debug/Instrumentor.h"

@@ -33,7 +33,7 @@ namespace Pistachio {
 		int32_t m_ViewportWidth = 1, m_ViewportHeight = 1;
 
 		entt::registry m_Registry;	// registry per scene
-
+		
 		friend class Entity;
 		friend class SceneHierarchyPanel;
 		friend class SceneSerializer;

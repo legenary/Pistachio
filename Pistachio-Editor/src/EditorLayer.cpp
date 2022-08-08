@@ -1,12 +1,9 @@
 #include "EditorLayer.h"
-#include "imgui.h"
+#include <imgui.h>
 
 #include <glm/gtc/type_ptr.hpp>
 
 #include "Pistachio/Utils/PlatformUtils.h"
-#include "Pistachio/Scene/SceneSerializer.h"
-#include "Pistachio/Core/Input.h"
-#include "Pistachio/Core/Utility.h"
 
 #include <ImGuizmo.h>
 
@@ -85,6 +82,7 @@ namespace Pistachio {
 				// read pixel value back from GPU
 				int pixelVal = m_Framebuffer->ReadPixel(1, mouseX, mouseY);
 				PTC_CORE_WARN("mx {0} mx {1} pixel value {2}", mouseX, mouseY, pixelVal);
+				m_HoveredEntity = (pixelVal == -1) ? Entity() : Entity((entt::entity)pixelVal, m_ActiveScene.get());
 			}
 
 			//Renderer2D::EndScene();
@@ -223,7 +221,8 @@ namespace Pistachio {
 					(ImGuizmo::OPERATION)m_GizmoType, ImGuizmo::LOCAL, glm::value_ptr(transform),
 					nullptr, snap ? snapValues : nullptr);
 
-				if (ImGuizmo::IsUsing()) {
+				// if using gizmo while not in camera mode
+				if (ImGuizmo::IsUsing() && !Input::IsKeyPressed(PTC_KEY_LEFT_ALT)) {
 					glm::vec3 t, r, s;
 					DecomposeTransform(transform, t, r, s);
 					transComp.Translation = t;
@@ -249,6 +248,7 @@ namespace Pistachio {
 
 		EventDispatcher dispatcher(event);
 		dispatcher.Dispatch<KeyPressedEvent>(PTC_BIND_EVENT_FN(EditorLayer::OnKeyPressed));
+		dispatcher.Dispatch<MouseButtonPressedEvent>(PTC_BIND_EVENT_FN(EditorLayer::OnMouseButtonPressed));
 	}
 
 	bool EditorLayer::OnKeyPressed(KeyPressedEvent& e) {
@@ -297,7 +297,22 @@ namespace Pistachio {
 			}
 
 		}
+		return false;
 	}
+
+	bool EditorLayer::OnMouseButtonPressed(MouseButtonPressedEvent& e) {
+		if (e.GetMouseButton() == PTC_MOUSE_LEFT) {
+			// if not in camera mode
+			if (!Input::IsKeyPressed(PTC_KEY_LEFT_ALT)) {
+				// mouse picking
+				if (m_ViewportHovered && !ImGuizmo::IsOver()) {
+					m_SceneHierarchyPanel.SetSelectedEntity(m_HoveredEntity);
+				}
+			}
+		}
+		return false;
+	}
+
 	void EditorLayer::SceneSave() {
 		if (!m_cachedSavePath.empty()) {
 			SceneSerializer serializer(m_ActiveScene);

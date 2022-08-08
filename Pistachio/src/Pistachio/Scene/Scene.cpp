@@ -56,7 +56,7 @@ namespace Pistachio {
 		////m_Registry.on_destroy...
 		////m_Registry.on_update...
 		//m_Registry.on_construct<TransformComponent>().connect<&OnTransformConstruct>();
-
+		
 	}
 
 	Scene::~Scene() {
