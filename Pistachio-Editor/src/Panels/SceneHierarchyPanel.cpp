@@ -50,6 +50,8 @@ namespace Pistachio {
 				}
 				if (ImGui::MenuItem("Sprite Renderer")) {
 					m_SelectionContext.AddComponent<SpriteRendererComponent>();
+					m_SelectionContext.AddComponent<RigidBody2DComponent>();
+					m_SelectionContext.AddComponent<BoxCollider2DComponent>();
 					ImGui::CloseCurrentPopup();
 				}
 				ImGui::EndPopup();
@@ -261,9 +263,40 @@ namespace Pistachio {
 			}
 		});
 
-		DrawComponent<SpriteRendererComponent>("SpriteRenderer", entity, [](auto& component) {
+
+		DrawComponent<SpriteRendererComponent>("Sprite", entity, [&](auto& component) {
 			ImGui::ColorEdit4("Color", glm::value_ptr(component.Color));
+			ImGui::Checkbox("Physics", &component.Physics);
 		});
+
+		if (entity.HasComponent<SpriteRendererComponent>() && entity.GetComponent<SpriteRendererComponent>().Physics) {
+			DrawComponent<RigidBody2DComponent>("Rigid Body Physics", entity, [](auto& component) {
+				const char* rigidBodyTypeStrings[] = { "Static", "Kinematic", "Dynamic" };
+				const char* currentRigidBodyTypeString = rigidBodyTypeStrings[(int)(component.Type)];
+				if (ImGui::BeginCombo("Type", currentRigidBodyTypeString)) {
+					for (int i = 0; i < 3; i++) {
+						bool isSelected = currentRigidBodyTypeString == rigidBodyTypeStrings[i];
+						if (ImGui::Selectable(rigidBodyTypeStrings[i], isSelected)) {
+							currentRigidBodyTypeString = rigidBodyTypeStrings[i];
+							component.Type = (RigidBody2DComponent::BodyType)i;
+						}
+						if (isSelected)
+							ImGui::SetItemDefaultFocus();
+					}
+					ImGui::EndCombo();
+				}
+			});
+			DrawComponent<BoxCollider2DComponent>("BoxCollider2DComponent", entity, [](auto& component) {
+				ImGui::DragFloat2("Offset Pos", glm::value_ptr(component.OffsetPos));
+				ImGui::DragFloat("Offset Ang", &component.OffsetAngle);
+				ImGui::DragFloat2("Size", glm::value_ptr(component.Size));
+				ImGui::DragFloat("Density", &component.Density);
+				ImGui::DragFloat("Friction", &component.Friction);
+				ImGui::DragFloat("Restitution", &component.Restitution);
+				ImGui::DragFloat("RestitutionThreshold", &component.RestitutionThreshold);
+			});
+		}
+		
 	}
 
 }

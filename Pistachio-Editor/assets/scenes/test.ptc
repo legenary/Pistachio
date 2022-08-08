@@ -2,22 +2,25 @@ Scene: Untitled
 Entities:
   - Entity: 12312
     TagComponent:
-      Tag: square3
+      Tag: Floor
     TransformComponent:
-      Translation: [1.75679302, 0, 0]
+      Translation: [-0.0295144916, -1.73691463, 0]
       Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
+      Scale: [7.53611898, 0.115845107, 1]
     SpriteRendererComponent:
       Color: [1, 1, 1, 1]
-  - Entity: 12312
-    TagComponent:
-      Tag: Square2
-    TransformComponent:
-      Translation: [-1.35889888, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-    SpriteRendererComponent:
-      Color: [1, 1, 1, 1]
+      Physics: true
+    RigidBody2DComponent:
+      Type: 0
+      FixedRotation: false
+    BoxCollider2DComponent:
+      OffsetPos: [0, 0]
+      OffsetAngle: 0
+      Size: [0.5, 0.5]
+      Density: 1
+      Friction: 0.5
+      Restitution: 0
+      RestitutionThreshold: 0.5
   - Entity: 12312
     TagComponent:
       Tag: Scene Camera
@@ -36,3 +39,45 @@ Entities:
         OrthographicSize: 10
         OrthographicNear: -1
         OrthographicFar: 1
+  - Entity: 12312
+    TagComponent:
+      Tag: Square2
+    TransformComponent:
+      Translation: [-1.76898301, -1.16400361, 0]
+      Rotation: [0, 0, 1.57079625]
+      Scale: [0.999978125, 0.999978125, 1]
+    SpriteRendererComponent:
+      Color: [1, 1, 1, 1]
+      Physics: true
+    RigidBody2DComponent:
+      Type: 2
+      FixedRotation: false
+    BoxCollider2DComponent:
+      OffsetPos: [0, 0]
+      OffsetAngle: 0
+      Size: [0.5, 0.5]
+      Density: 1
+      Friction: 0.5
+      Restitution: 0
+      RestitutionThreshold: 0.5
+  - Entity: 12312
+    TagComponent:
+      Tag: square3
+    TransformComponent:
+      Translation: [2.1748879, -1.16399276, 0]
+      Rotation: [0, 0, 6.32081836e-08]
+      Scale: [0.99999994, 0.99999994, 1]
+    SpriteRendererComponent:
+      Color: [1, 1, 1, 1]
+      Physics: true
+    RigidBody2DComponent:
+      Type: 2
+      FixedRotation: false
+    BoxCollider2DComponent:
+      OffsetPos: [0, 0]
+      OffsetAngle: 0
+      Size: [0.5, 0.5]
+      Density: 1
+      Friction: 0.5
+      Restitution: 0
+      RestitutionThreshold: 0.5

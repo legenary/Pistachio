@@ -8,6 +8,24 @@
 namespace YAML {
 
 	template<>
+	struct convert<glm::vec2> {
+		static Node encode(const glm::vec2& rhs) {
+			Node node;
+			node.push_back(rhs.x);
+			node.push_back(rhs.y);
+			return node;
+		}
+
+		static bool decode(const Node& node, glm::vec2& rhs) {
+			if (!node.IsSequence() || node.size() != 2)
+				return false;
+			rhs.x = node[0].as<float>();
+			rhs.y = node[1].as<float>();
+			return true;
+		}
+	};
+
+	template<>
 	struct convert<glm::vec3> {
 		static Node encode(const glm::vec3& rhs) {
 			Node node;
@@ -48,6 +66,12 @@ namespace YAML {
 			return true;
 		}
 	};
+	
+	Emitter& operator<<(YAML::Emitter& out, const glm::vec2& v) {
+		out << YAML::Flow;
+		out << YAML::BeginSeq << v.x << v.y << YAML::EndSeq;
+		return out;
+	}
 
 	Emitter& operator<<(YAML::Emitter& out, const glm::vec3& v) {
 		out << YAML::Flow;
@@ -119,7 +143,32 @@ namespace Pistachio {
 			out << YAML::Key << "SpriteRendererComponent";
 			out << YAML::BeginMap;	// Sprite Renderer Component
 			out << YAML::Key << "Color" << YAML::Value << srComp.Color;
+			out << YAML::Key << "Physics" << YAML::Value << srComp.Physics;
 			out << YAML::EndMap;	// Sprite Renderer Component
+		}
+
+		if (entity.HasComponent<RigidBody2DComponent>()) {
+			auto& rb2dComp = entity.GetComponent<RigidBody2DComponent>();
+			out << YAML::Key << "RigidBody2DComponent";
+			out << YAML::BeginMap;	// Rigid Body 2D Component
+			out << YAML::Key << "Type" << YAML::Value << (int)rb2dComp.Type;
+			out << YAML::Key << "FixedRotation" << YAML::Value << rb2dComp.FixedRotation;
+			out << YAML::EndMap;	// Rigid Body 2D Component
+		}
+
+		if (entity.HasComponent<BoxCollider2DComponent>()) {
+			auto& bc2dComp = entity.GetComponent<BoxCollider2DComponent>();
+			out << YAML::Key << "BoxCollider2DComponent";
+			out << YAML::BeginMap;	// Box Collider 2D Component
+			out << YAML::Key << "OffsetPos" << YAML::Value << bc2dComp.OffsetPos;
+			out << YAML::Key << "OffsetAngle" << YAML::Value << bc2dComp.OffsetAngle;
+			out << YAML::Key << "Size" << YAML::Value << bc2dComp.Size;
+			out << YAML::Key << "Density" << YAML::Value << bc2dComp.Density;
+			out << YAML::Key << "Friction" << YAML::Value << bc2dComp.Friction;
+			out << YAML::Key << "Restitution" << YAML::Value << bc2dComp.Restitution;
+			out << YAML::Key << "RestitutionThreshold" << YAML::Value << bc2dComp.RestitutionThreshold;
+			
+			out << YAML::EndMap;	// Box Collider 2D Component
 		}
 
 		out << YAML::EndMap;	// Entity
@@ -201,6 +250,26 @@ namespace Pistachio {
 				if (spriteComp) {
 					auto& comp = deserializedEntity.AddComponent<SpriteRendererComponent>();
 					comp.Color = spriteComp["Color"].as<glm::vec4>();
+					comp.Physics = spriteComp["Physics"].as<bool>();
+				}
+
+				auto rb2dComp = entity["RigidBody2DComponent"];
+				if (rb2dComp) {
+					auto& comp = deserializedEntity.AddComponent<RigidBody2DComponent>();
+					comp.Type = (RigidBody2DComponent::BodyType)(rb2dComp["Type"].as<int>());
+					comp.FixedRotation = rb2dComp["FixedRotation"].as<bool>();
+				}
+
+				auto bc2dComp = entity["BoxCollider2DComponent"];
+				if (bc2dComp) {
+					auto& comp = deserializedEntity.AddComponent<BoxCollider2DComponent>();
+					comp.OffsetPos = bc2dComp["OffsetPos"].as<glm::vec2>();
+					comp.OffsetAngle = bc2dComp["OffsetAngle"].as<float>();
+					comp.Size = bc2dComp["Size"].as<glm::vec2>();
+					comp.Density = bc2dComp["Density"].as<float>();
+					comp.Friction = bc2dComp["Friction"].as<float>();
+					comp.Restitution = bc2dComp["Restitution"].as<float>();
+					comp.RestitutionThreshold = bc2dComp["RestitutionThreshold"].as<float>();
 				}
 			}
 		}

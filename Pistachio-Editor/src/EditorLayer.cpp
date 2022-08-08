@@ -31,8 +31,8 @@ namespace Pistachio {
 		// framebuffer
 		FrameBufferSpecification fbSpec;
 		fbSpec.Attachments = { FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RED_INTEGER, FramebufferTextureFormat::Depth };
-		fbSpec.Width = 1280;
-		fbSpec.Height = 720;
+		//fbSpec.Width = 1;
+		//fbSpec.Height = 1;
 		m_Framebuffer = FrameBuffer::Create(fbSpec);
 
 		// Scene
@@ -100,7 +100,6 @@ namespace Pistachio {
 			//Renderer2D::EndScene();
 			m_Framebuffer->Unbind();
 		}
-
 
 	}
 
@@ -175,6 +174,17 @@ namespace Pistachio {
 
 		// Scene Hierarchy Panel (including Properties Panel)
 		m_SceneHierarchyPanel.OnImGuiRender();
+
+		// Stats
+		{
+			ImGui::Begin("Stats");
+			std::string name = "None";
+			if (m_HoveredEntity)
+				name = m_HoveredEntity.GetComponent<TagComponent>().Tag;
+			ImGui::Text("Hovered Entity: %s", name.c_str());
+
+			ImGui::End();
+		}
 
 		// Viewport
 		{

@@ -41,6 +41,7 @@ namespace Pistachio {
 	
 	struct SpriteRendererComponent {
 		glm::vec4 Color{ 1.0f, 1.0f, 1.0f, 1.0f };
+		bool Physics = false;
 		// TODO: Ref<MaterialInstance>
 
 		SpriteRendererComponent() = default;
@@ -72,4 +73,36 @@ namespace Pistachio {
 		}
 	};
 
+	struct RigidBody2DComponent {
+		enum class BodyType {	// order same as box2d
+			Static = 0,
+			Kinametic = 1,
+			Dynamic = 2
+		};
+		BodyType Type = BodyType::Static;
+		bool FixedRotation = false;
+
+		// storage for runtime
+		void* RuntimeBody = nullptr;
+
+		RigidBody2DComponent() = default;
+		RigidBody2DComponent(const RigidBody2DComponent&) = default;
+	};
+
+	struct BoxCollider2DComponent {
+		glm::vec2 OffsetPos = { 0.0f, 0.0f };	// from transform position
+		float OffsetAngle = 0;					// from transform position
+		glm::vec2 Size = { 0.5f, 0.5f };
+
+		float Density = 1.0f;
+		float Friction = 0.5f;
+		float Restitution = 0.0f;
+		float RestitutionThreshold = 0.5f;
+
+		// storage for runtime
+		void* RuntimeFixture = nullptr;
+
+		BoxCollider2DComponent() = default;
+		BoxCollider2DComponent(const BoxCollider2DComponent&) = default;
+	};
 }

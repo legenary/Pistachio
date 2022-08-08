@@ -5,6 +5,8 @@
 
 #include "Pistachio/Renderer/EditorCamera.h"
 
+class b2World;
+
 namespace Pistachio {
 
 	class Camera;
@@ -20,6 +22,8 @@ namespace Pistachio {
 
 		void OnUpdateEditor(Timestep ts, EditorCamera& camera);
 		void OnUpdateRuntime(Timestep ts, EditorCamera& camera);
+		void OnStartRuntime();
+		void OnStopRuntime();
 		void OnViewportResize(uint32_t width, uint32_t height);
 
 		Entity GetPrimaryCameraEntity();
@@ -27,6 +31,8 @@ namespace Pistachio {
 	private:
 		template<typename T>
 		void OnComponentAdded(Entity entity, T& component);
+		template<typename T>
+		void OnComponentRemoved(Entity entity);
 
 	private:
 		Camera* runTimeMainCamera = nullptr;
@@ -37,6 +43,9 @@ namespace Pistachio {
 		friend class Entity;
 		friend class SceneHierarchyPanel;
 		friend class SceneSerializer;
+
+		// physics
+		b2World* m_PhysicsWorld = nullptr;
 	};
 
 }

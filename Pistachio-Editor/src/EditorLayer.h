@@ -29,8 +29,8 @@ namespace Pistachio {
 		void SceneOpen();
 
 		void UI_Toolbar();
-		void OnScenePlay() { m_SceneState = SceneState::Play; }
-		void OnSceneStop() { m_SceneState = SceneState::Edit; }
+		void OnScenePlay() { m_ActiveScene->OnStartRuntime(); m_SceneState = SceneState::Play; }
+		void OnSceneStop() { m_SceneState = SceneState::Edit; m_ActiveScene->OnStopRuntime(); }
 
 	private:
 		glm::vec2 m_ViewportSize;

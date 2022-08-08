@@ -36,7 +36,7 @@ namespace Pistachio {
 	};
 
 	struct FrameBufferSpecification {
-		uint32_t Width, Height;
+		uint32_t Width = 1, Height = 1;
 		FramebufferAttachmentSpecification Attachments;
 		uint32_t Samples = 1;
 

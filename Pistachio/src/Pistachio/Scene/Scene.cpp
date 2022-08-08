@@ -7,6 +7,11 @@
 #include "Pistachio.h"
 #include <glm/glm.hpp>
 
+#include <box2d/b2_world.h>
+#include <box2d/b2_body.h>
+#include <box2d/b2_fixture.h>
+#include <box2d/b2_polygon_shape.h>
+
 namespace Pistachio {
 
 	//static void OnTransformConstruct() {}
@@ -88,10 +93,50 @@ namespace Pistachio {
 		Renderer2D::EndScene();
 	}
 
+	void Scene::OnStartRuntime() {
+		m_PhysicsWorld = new b2World({ 0.0f, -9.8f });
+		auto view = m_Registry.view<RigidBody2DComponent>();
+		for (auto e : view) {
+			Entity entity = { e, this };
+			if (!entity.HasComponent<SpriteRendererComponent>() || !entity.GetComponent<SpriteRendererComponent>().Physics)
+				continue;
+
+			auto& transformComp = entity.GetComponent<TransformComponent>();
+			auto& rb2dComp = entity.GetComponent<RigidBody2DComponent>();
+
+			b2BodyDef bodyDef;
+			bodyDef.type = (b2BodyType)rb2dComp.Type;
+			bodyDef.position.Set(transformComp.Translation.x, transformComp.Translation.y);
+			bodyDef.angle = transformComp.Rotation.z;
+			bodyDef.fixedRotation = rb2dComp.FixedRotation;
+			b2Body* body = m_PhysicsWorld->CreateBody(&bodyDef);
+			rb2dComp.RuntimeBody = body;
+
+			if (entity.HasComponent<BoxCollider2DComponent>()) {
+				auto& bc2d = entity.GetComponent<BoxCollider2DComponent>();
+				b2PolygonShape boxShape;
+				boxShape.SetAsBox(transformComp.Scale.x * bc2d.Size.x, transformComp.Scale.y * bc2d.Size.y,
+					{bc2d.OffsetPos.x, bc2d.OffsetPos.y}, bc2d.OffsetAngle);
+			
+				b2FixtureDef fixtureDef;
+				fixtureDef.shape = &boxShape;
+				fixtureDef.density = bc2d.Density;
+				fixtureDef.friction = bc2d.Friction;
+				fixtureDef.restitution = bc2d.Restitution;
+				fixtureDef.restitutionThreshold = bc2d.RestitutionThreshold;
+				body->CreateFixture(&fixtureDef);
+			}
+		}
+	}
+
+	void Scene::OnStopRuntime() {
+		delete m_PhysicsWorld;
+		m_PhysicsWorld = nullptr;
+	}
 
 	void Scene::OnUpdateRuntime(Timestep ts, EditorCamera& editorCamera) {
 
-		// Update Scripts
+		// Update scripts
 		{
 			m_Registry.view<NativeScriptComponent>().each([=](auto entity, auto& nsc) {
 				// TODO: move to scene::OnScenePlay
@@ -105,7 +150,29 @@ namespace Pistachio {
 			// TODO: add nsc.Instance->OnDestroy to scene::OnSceneStop
 		}
 
-		// Render sprites
+		// Update physics
+		{
+			const uint32_t velocityIterations = 6;
+			const uint32_t positionIterations = 6;
+			m_PhysicsWorld->Step(ts, velocityIterations, positionIterations);
+
+			auto view = m_Registry.view<RigidBody2DComponent>();
+			for (auto e : view) {
+				Entity entity = { e, this };
+				if (!entity.HasComponent<SpriteRendererComponent>() || !entity.GetComponent<SpriteRendererComponent>().Physics)
+					continue;
+				auto& transComp = entity.GetComponent<TransformComponent>();
+				auto& rb2dComp = entity.GetComponent<RigidBody2DComponent>();
+				b2Body* body = (b2Body*)rb2dComp.RuntimeBody;
+				const auto& position = body->GetPosition();
+				transComp.Translation.x = position.x;
+				transComp.Translation.y = position.y;
+				transComp.Rotation.z = body->GetAngle();
+			}
+		}
+		
+
+		// Update rendering data
 		runTimeMainCamera = nullptr;
 		glm::mat4 transform;
 		auto group = m_Registry.group<CameraComponent>(entt::get<TransformComponent>);
@@ -182,5 +249,32 @@ namespace Pistachio {
 	void Scene::OnComponentAdded<SpriteRendererComponent>(Entity entity, SpriteRendererComponent& component) {}
 	template<>
 	void Scene::OnComponentAdded<NativeScriptComponent>(Entity entity, NativeScriptComponent& component) {}
+	template<>
+	void Scene::OnComponentAdded<RigidBody2DComponent>(Entity entity, RigidBody2DComponent& component) {}
+	template<>
+	void Scene::OnComponentAdded<BoxCollider2DComponent>(Entity entity, BoxCollider2DComponent& component) {}
+
+
+	template<typename T>
+	void Scene::OnComponentRemoved(Entity entity) {
+		//static_assert(false);
+	}
+	template<>
+	void Scene::OnComponentRemoved<TagComponent>(Entity entity) {}
+	template<>
+	void Scene::OnComponentRemoved<TransformComponent>(Entity entity) {}
+	template<>
+	void Scene::OnComponentRemoved<CameraComponent>(Entity entityt) {}
+	template<>
+	void Scene::OnComponentRemoved<SpriteRendererComponent>(Entity entity) {
+		entity.RemoveComponent<RigidBody2DComponent>();
+		entity.RemoveComponent<BoxCollider2DComponent>();
+	}
+	template<>
+	void Scene::OnComponentRemoved<NativeScriptComponent>(Entity entity) {}
+	template<>
+	void Scene::OnComponentRemoved<RigidBody2DComponent>(Entity entity) {}
+	template<>
+	void Scene::OnComponentRemoved<BoxCollider2DComponent>(Entity entity) {}
 
 }
