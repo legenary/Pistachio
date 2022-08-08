@@ -209,9 +209,9 @@ namespace Pistachio {
 			const char* projectiontypeStrings[] = { "perspective", "orthographic" };
 			const char* currentProjectionTypeString = projectiontypeStrings[(int)(camera.GetProjectionType())];
 
-			ImGui::BeginDisabled();
+			//ImGui::BeginDisabled();
 			ImGui::Checkbox("Primary", &component.Primary);
-			ImGui::EndDisabled();
+			//ImGui::EndDisabled();
 
 			if (ImGui::BeginCombo("Type", currentProjectionTypeString)) {
 				for (int i = 0; i < 2; i++) {

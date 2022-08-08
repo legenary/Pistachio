@@ -130,7 +130,7 @@ namespace Pistachio {
 		out << YAML::BeginMap;
 		std::string name = "Untitled";
 		out << YAML::Key << "Scene" << YAML::Value << name;
-		PTC_CORE_TRACE("Serializing scene '{0}'", name);
+		PTC_CORE_TRACE("Serializing scene '{0}'...", name);
 		out << YAML::Key << "Entities" << YAML::Value << YAML::BeginSeq;
 		m_Scene->m_Registry.each([&](auto entityID) {
 			Entity entity = { entityID, m_Scene.get() };
@@ -161,7 +161,7 @@ namespace Pistachio {
 			return false;
 
 		std::string sceneName = data["Scene"].as<std::string>();
-		PTC_CORE_TRACE("Deserializing scene '{0}'", sceneName);
+		PTC_CORE_TRACE("Deserializing scene '{0}'...", sceneName);
 
 		YAML::Node entities = data["Entities"];
 		if (entities) {

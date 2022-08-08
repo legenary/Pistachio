@@ -24,6 +24,10 @@ namespace Pistachio {
 		m_TextureMap['D'] = SubTexture2D::CreateFromCoords(m_SpriteSheet, {6, 11});
 		m_TextureMap['G'] = SubTexture2D::CreateFromCoords(m_SpriteSheet, {1, 11});
 
+		// Button images
+		m_IconPlay = Texture2D::Create("assets/textures/PlayButton.png");
+		m_IconStop = Texture2D::Create("assets/textures/StopButton.png");
+
 		// framebuffer
 		FrameBufferSpecification fbSpec;
 		fbSpec.Attachments = { FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RED_INTEGER, FramebufferTextureFormat::Depth };
@@ -36,6 +40,7 @@ namespace Pistachio {
 
 		// Editor Camera
 		m_EditorCamera = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
+		m_GizmoType = ImGuizmo::OPERATION::TRANSLATE;
 
 		//Scene hierarchy
 		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
@@ -48,17 +53,12 @@ namespace Pistachio {
 	void EditorLayer::OnUpdate(Timestep ts) {
 		PTC_PROFILE_FUNCTION();
 
-		// Update camera controller
-		if (m_ViewportFocused) {
-			m_EditorCamera.OnUpdate(ts);
-			//m_CameraController.OnUpdate(ts);
-		}
 
 		// Renderer Prep
 		{
 			PTC_PROFILE_SCOPE("Renderer Prep");
 			m_Framebuffer->Bind(); 
-			RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
+			RenderCommand::SetClearColor({ 0.15f, 0.15f, 0.15f, 1.0f });
 			RenderCommand::Clear();
 
 			// clear Entity ID attachment to -1
@@ -67,23 +67,35 @@ namespace Pistachio {
 		
 		// Rendering
 		{
-			PTC_PROFILE_SCOPE("Renderering");
-			// Draw scene
-			m_ActiveScene->OnUpdateEditor(ts, m_EditorCamera);
+			// Editor camera
+			if (m_SceneState == SceneState::Edit) {
+				PTC_PROFILE_SCOPE("Renderering: editor camera");
+				// camera manupilation
+				if (m_ViewportFocused) {
+					m_EditorCamera.OnUpdate(ts);
+				}
+				m_ActiveScene->OnUpdateEditor(ts, m_EditorCamera);
 
-			auto [mx, my] = ImGui::GetMousePos();
-			mx -= m_ViewportBounds[0].x;
-			my -= m_ViewportBounds[0].y;
-			glm::vec2 viewportSize = m_ViewportBounds[1] - m_ViewportBounds[0];
-			my = viewportSize.y - my;
-			int mouseX = (int)mx;
-			int mouseY = (int)my;
-			if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y) {
-				// read pixel value back from GPU
-				int pixelVal = m_Framebuffer->ReadPixel(1, mouseX, mouseY);
-				PTC_CORE_WARN("mx {0} mx {1} pixel value {2}", mouseX, mouseY, pixelVal);
-				m_HoveredEntity = (pixelVal == -1) ? Entity() : Entity((entt::entity)pixelVal, m_ActiveScene.get());
+				// mouse picking
+				auto [mx, my] = ImGui::GetMousePos();
+				mx -= m_ViewportBounds[0].x;
+				my -= m_ViewportBounds[0].y;
+				glm::vec2 viewportSize = m_ViewportBounds[1] - m_ViewportBounds[0];
+				my = viewportSize.y - my;
+				int mouseX = (int)mx;
+				int mouseY = (int)my;
+				if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y) {
+					// read pixel value back from GPU
+					int pixelVal = m_Framebuffer->ReadPixel(1, mouseX, mouseY);
+					m_HoveredEntity = (pixelVal == -1) ? Entity() : Entity((entt::entity)pixelVal, m_ActiveScene.get());
+				}
 			}
+			// runtime camera
+			else if (m_SceneState == SceneState::Play) {
+				PTC_PROFILE_SCOPE("Renderering: runtime camera");
+				m_ActiveScene->OnUpdateRuntime(ts, m_EditorCamera);
+			}
+
 
 			//Renderer2D::EndScene();
 			m_Framebuffer->Unbind();
@@ -161,7 +173,7 @@ namespace Pistachio {
 			ImGui::EndMenuBar();
 		}
 
-		// Scene Hierarchy Panel
+		// Scene Hierarchy Panel (including Properties Panel)
 		m_SceneHierarchyPanel.OnImGuiRender();
 
 		// Viewport
@@ -186,48 +198,49 @@ namespace Pistachio {
 			uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
 			ImGui::Image((void*)textureID, viewportPanelSize, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 
-			// calculate viewport bounds for mouse picking (relative to desktop)
-			auto viewportMinRegion = ImGui::GetWindowContentRegionMin();
-			auto viewportMaxRegion = ImGui::GetWindowContentRegionMax();
-			auto viewportOffset = ImGui::GetWindowPos();
-			m_ViewportBounds[0] = { viewportMinRegion.x + viewportOffset.x, viewportMinRegion.y + viewportOffset.y };
-			m_ViewportBounds[1] = { viewportMaxRegion.x + viewportOffset.x, viewportMaxRegion.y + viewportOffset.y };
+			if (m_SceneState == SceneState::Edit) {
+				// calculate viewport bounds for mouse picking (relative to desktop)
+				auto viewportMinRegion = ImGui::GetWindowContentRegionMin();
+				auto viewportMaxRegion = ImGui::GetWindowContentRegionMax();
+				auto viewportOffset = ImGui::GetWindowPos();
+				m_ViewportBounds[0] = { viewportMinRegion.x + viewportOffset.x, viewportMinRegion.y + viewportOffset.y };
+				m_ViewportBounds[1] = { viewportMaxRegion.x + viewportOffset.x, viewportMaxRegion.y + viewportOffset.y };
 
-
-			// Gizmos
-			Entity selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
-			if (selectedEntity && m_GizmoType != -1) {
+				// Gizmos
+				Entity selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
+				if (selectedEntity && m_GizmoType != -1) {
 				
-				ImGuizmo::SetOrthographic(false);
-				ImGuizmo::SetDrawlist();
-				float windowWidth = (float)ImGui::GetWindowWidth();
-				float windowHeight = (float)ImGui::GetWindowHeight();
-				ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+					ImGuizmo::SetOrthographic(false);
+					ImGuizmo::SetDrawlist();
+					float windowWidth = (float)ImGui::GetWindowWidth();
+					float windowHeight = (float)ImGui::GetWindowHeight();
+					ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
 
-				// Get view and projection from editor camera
-				glm::mat4 cameraView = m_EditorCamera.GetViewMatrix();
-				glm::mat4 cameraProjection = m_EditorCamera.GetProjectionMatrix();
+					// Get view and projection from editor camera
+					glm::mat4 cameraView = m_EditorCamera.GetViewMatrix();
+					glm::mat4 cameraProjection = m_EditorCamera.GetProjectionMatrix();
 
-				// Entity transform
-				auto& transComp = selectedEntity.GetComponent<TransformComponent>();
-				glm::mat4 transform = transComp.GetTransform();
+					// Entity transform
+					auto& transComp = selectedEntity.GetComponent<TransformComponent>();
+					glm::mat4 transform = transComp.GetTransform();
 
-				// Snapping
-				bool snap = Input::IsKeyPressed(PTC_KEY_LEFT_CONTROL);
-				float snapValue = (m_GizmoType == ImGuizmo::OPERATION::ROTATE) ? 15.0f : 0.5f;
-				float snapValues[3] = { snapValue, snapValue, snapValue };
+					// Snapping
+					bool snap = Input::IsKeyPressed(PTC_KEY_LEFT_CONTROL);
+					float snapValue = (m_GizmoType == ImGuizmo::OPERATION::ROTATE) ? 15.0f : 0.5f;
+					float snapValues[3] = { snapValue, snapValue, snapValue };
 
-				ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection),
-					(ImGuizmo::OPERATION)m_GizmoType, ImGuizmo::LOCAL, glm::value_ptr(transform),
-					nullptr, snap ? snapValues : nullptr);
+					ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection),
+						(ImGuizmo::OPERATION)m_GizmoType, ImGuizmo::LOCAL, glm::value_ptr(transform),
+						nullptr, snap ? snapValues : nullptr);
 
-				// if using gizmo while not in camera mode
-				if (ImGuizmo::IsUsing() && !Input::IsKeyPressed(PTC_KEY_LEFT_ALT)) {
-					glm::vec3 t, r, s;
-					DecomposeTransform(transform, t, r, s);
-					transComp.Translation = t;
-					transComp.Rotation += (r - transComp.Rotation);
-					transComp.Scale = s;
+					// if using gizmo while not in camera mode
+					if (ImGuizmo::IsUsing() && !Input::IsKeyPressed(PTC_KEY_LEFT_ALT)) {
+						glm::vec3 t, r, s;
+						DecomposeTransform(transform, t, r, s);
+						transComp.Translation = t;
+						transComp.Rotation += (r - transComp.Rotation);
+						transComp.Scale = s;
+					}
 				}
 			}
 
@@ -235,6 +248,9 @@ namespace Pistachio {
 			ImGui::End();
 			ImGui::PopStyleVar();
 		}
+		
+		// Play button...
+		UI_Toolbar();
 
 		ImGui::End();
 			
@@ -306,6 +322,7 @@ namespace Pistachio {
 			if (!Input::IsKeyPressed(PTC_KEY_LEFT_ALT)) {
 				// mouse picking
 				if (m_ViewportHovered && !ImGuizmo::IsOver()) {
+					PTC_CORE_WARN("Hovered Entity: {0}", m_HoveredEntity? (int)(uint32_t)m_HoveredEntity : -1);
 					m_SceneHierarchyPanel.SetSelectedEntity(m_HoveredEntity);
 				}
 			}
@@ -348,6 +365,25 @@ namespace Pistachio {
 		}
 	}
 
-
+	void EditorLayer::UI_Toolbar() {
+		ImGui::Begin("##Toolbar", nullptr,
+			ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+		
+		//float size = ImGui::GetWindowHeight() - 4.0f; // toolbar height
+		Ref<Texture2D> icon = m_SceneState == SceneState::Edit ? m_IconPlay : m_IconStop;
+		ImGui::SameLine(ImGui::GetWindowContentRegionMax().x * 0.5);
+		if (ImGui::ImageButton((ImTextureID)icon->GetRendererID(), ImVec2{ 30, 30 }, ImVec2{0, 0}, ImVec2{1, 1}, 0)) {
+			if (m_SceneState == SceneState::Edit) {
+				PTC_CORE_INFO("Play mode...");
+				OnScenePlay();
+			}
+			else if (m_SceneState == SceneState::Play) {
+				PTC_CORE_INFO("Back to edit mode...");
+				OnSceneStop();
+			}
+				
+		}
+		ImGui::End();
+	}
 }
 

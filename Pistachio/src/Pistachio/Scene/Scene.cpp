@@ -74,8 +74,8 @@ namespace Pistachio {
 		m_Registry.destroy(entity);
 	}
 
-	void Scene::OnUpdateEditor(Timestep ts, EditorCamera& camera) {
-		Renderer2D::BeginScene(camera);
+	void Scene::OnUpdateEditor(Timestep ts, EditorCamera& editorCamera) {
+		Renderer2D::BeginScene(editorCamera);
 
 		// retrive entities that has multiple components
 		auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
@@ -89,50 +89,57 @@ namespace Pistachio {
 	}
 
 
-	//void Scene::OnUpdateRuntime(Timestep ts) {
+	void Scene::OnUpdateRuntime(Timestep ts, EditorCamera& editorCamera) {
 
-	//	// Update Scripts
-	//	{
-	//		m_Registry.view<NativeScriptComponent>().each([=](auto entity, auto& nsc) {
-	//			// TODO: move to scene::OnScenePlay
-	//			if (!nsc.Instance) {
-	//				nsc.Instance = nsc.InstantiateScript();
-	//				nsc.Instance->m_Entity = Entity{ entity, this };
-	//				nsc.Instance->OnCreate();
-	//			}
-	//			nsc.Instance->OnUpdate(ts);
-	//		});
-	//		// TODO: add nsc.Instance->OnDestroy to scene::OnSceneStop
-	//	}
+		// Update Scripts
+		{
+			m_Registry.view<NativeScriptComponent>().each([=](auto entity, auto& nsc) {
+				// TODO: move to scene::OnScenePlay
+				if (!nsc.Instance) {
+					nsc.Instance = nsc.InstantiateScript();
+					nsc.Instance->m_Entity = Entity{ entity, this };
+					nsc.Instance->OnCreate();
+				}
+				nsc.Instance->OnUpdate(ts);
+			});
+			// TODO: add nsc.Instance->OnDestroy to scene::OnSceneStop
+		}
 
-	//	// Render sprites
-	//	runTimeMainCamera = nullptr;
-	//	glm::mat4 transform;
-	//	auto group = m_Registry.group<CameraComponent>(entt::get<TransformComponent>);
-	//	for (auto entity : group) {
-	//		auto [cameraComp, transComp] = group.get<CameraComponent, TransformComponent>(entity);
-	//		if (cameraComp.Primary) {
-	//			runTimeMainCamera = &(cameraComp.Camera);
-	//			transform = transComp.GetTransform();
-	//			break;
-	//		}
-	//	}
+		// Render sprites
+		runTimeMainCamera = nullptr;
+		glm::mat4 transform;
+		auto group = m_Registry.group<CameraComponent>(entt::get<TransformComponent>);
+		for (auto entity : group) {
+			auto [cameraComp, transComp] = group.get<CameraComponent, TransformComponent>(entity);
+			if (cameraComp.Primary) {
+				runTimeMainCamera = &(cameraComp.Camera);
+				transform = transComp.GetTransform();
+				break;
+			}
+		}
 
-	//	if (runTimeMainCamera) {
-	//		Renderer2D::BeginScene(*runTimeMainCamera, transform);
+		if (runTimeMainCamera) {
+			Renderer2D::BeginScene(*runTimeMainCamera, transform);
+			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
+			for (auto entity : group) {
+				auto [trans, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+				Renderer2D::DrawSprite(sprite, trans.GetTransform(), (int)(uint32_t)entity);
 
-	//		// retrive entities that has multiple components
-	//		auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
-	//		for (auto entity : group) {
-	//			auto [trans, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-	//			Renderer2D::DrawQuad(sprite.Color, trans.GetTransform());
+			}
+			Renderer2D::EndScene();
+		}
+		else { // if no primary camera, use editor camera location
+			Renderer2D::BeginScene(editorCamera);
+			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
+			for (auto entity : group) {
+				auto [trans, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+				Renderer2D::DrawSprite(sprite, trans.GetTransform(), (int)(uint32_t)entity);
 
-	//		}
-	//		Renderer2D::EndScene();
+			}
+			Renderer2D::EndScene();
+		}
 
-	//	}
-
-	//}
+	}
 
 	void Scene::OnViewportResize(uint32_t width, uint32_t height) {
 		m_ViewportWidth = width;

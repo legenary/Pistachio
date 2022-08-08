@@ -28,6 +28,10 @@ namespace Pistachio {
 		void SceneNew();
 		void SceneOpen();
 
+		void UI_Toolbar();
+		void OnScenePlay() { m_SceneState = SceneState::Play; }
+		void OnSceneStop() { m_SceneState = SceneState::Edit; }
+
 	private:
 		glm::vec2 m_ViewportSize;
 		bool m_ViewportFocused = false;
@@ -47,8 +51,16 @@ namespace Pistachio {
 		SceneHierarchyPanel m_SceneHierarchyPanel;
 		std::string m_cachedSavePath;
 
-		int m_GizmoType = ImGuizmo::OPERATION::TRANSLATE;
+		int m_GizmoType;
+
+		enum class SceneState {
+			Edit = 0, Play = 1
+		};
+		SceneState m_SceneState = SceneState::Edit;
+		Ref<Texture2D> m_IconPlay, m_IconStop;
 	};
+
+	
 
 }
 
