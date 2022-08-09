@@ -34,7 +34,8 @@ Any event (mouse, keyboard, window event, etc.) in the application window is pro
 
 ### Profiling
 A simple profiler is achieved by an instrumentation timer and information was logged to .json file. Below shows the profiling of a session on different time scales. The code was attributed to [this file](https://gist.github.com/TheCherno/31f135eea6ee729ab5f26a6908eb3a5e).
-![alt text](link "Profiling")
+
+<img src="docs/images/profiling.jpg">
 
 ### Serialization
 Once we started to work with a scene, a proper serialization/deserialization of the scene data is needed. In this project, we used [YAML](https://yaml.org/) for data serialization. The user is able to save a scene by "Ctrl + S", and open a saved scene by "Ctrl + O".
