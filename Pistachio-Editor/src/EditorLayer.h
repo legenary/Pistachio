@@ -27,10 +27,12 @@ namespace Pistachio {
 		void SceneSaveAs();
 		void SceneNew();
 		void SceneOpen();
+		void SceneInternalSave();
+		void SceneInternalLoad();
 
 		void UI_Toolbar();
-		void OnScenePlay() { m_ActiveScene->OnStartRuntime(); m_SceneState = SceneState::Play; }
-		void OnSceneStop() { m_SceneState = SceneState::Edit; m_ActiveScene->OnStopRuntime(); }
+		void OnScenePlay();
+		void OnSceneStop();
 
 	private:
 		glm::vec2 m_ViewportSize;
@@ -49,7 +51,8 @@ namespace Pistachio {
 		std::unordered_map<char, Ref<SubTexture2D>> m_TextureMap;
 
 		SceneHierarchyPanel m_SceneHierarchyPanel;
-		std::string m_cachedSavePath;
+		std::string m_CachedSavePath;
+		const std::string m_CachedPath = "assets/scenes/cached.ptc";
 
 		int m_GizmoType;
 

@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Scene.h"
+#include <stack>
+#include <yaml-cpp/yaml.h>
 
 namespace Pistachio {
 
@@ -17,7 +19,7 @@ namespace Pistachio {
 
 	private:
 		Ref<Scene> m_Scene;
-
+		std::stack<YAML::detail::iterator_value> m_EntityNodes;
 	};
 
 }

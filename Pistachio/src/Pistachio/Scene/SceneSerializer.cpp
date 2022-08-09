@@ -3,7 +3,6 @@
 
 #include "Entity.h"
 #include "Component.h"
-#include <yaml-cpp/yaml.h>
 
 namespace YAML {
 
@@ -215,6 +214,12 @@ namespace Pistachio {
 		YAML::Node entities = data["Entities"];
 		if (entities) {
 			for (auto entity : entities) {
+				m_EntityNodes.push(entity);
+			}
+			while(!m_EntityNodes.empty()) {
+				auto entity = m_EntityNodes.top();
+				m_EntityNodes.pop();
+
 				uint64_t uuid = entity["Entity"].as<uint64_t>();
 				
 				auto tagComp = entity["TagComponent"];

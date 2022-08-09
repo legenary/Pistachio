@@ -28,11 +28,14 @@ namespace Pistachio {
 
 		Entity GetPrimaryCameraEntity();
 
+		void Clear() { m_Registry.clear(); }
+
 	private:
 		template<typename T>
 		void OnComponentAdded(Entity entity, T& component);
 		template<typename T>
 		void OnComponentRemoved(Entity entity);
+
 
 	private:
 		Camera* runTimeMainCamera = nullptr;

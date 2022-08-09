@@ -4,8 +4,8 @@ Entities:
     TagComponent:
       Tag: square3
     TransformComponent:
-      Translation: [2.1748879, -1.16399276, 0]
-      Rotation: [0, 0, 6.32081836e-08]
+      Translation: [1.19440246, -0.133319244, 0]
+      Rotation: [0, 0, 0.760448456]
       Scale: [0.99999994, 0.99999994, 1]
     SpriteRendererComponent:
       Color: [1, 1, 1, 1]
@@ -25,9 +25,9 @@ Entities:
     TagComponent:
       Tag: Square2
     TransformComponent:
-      Translation: [-1.76898301, -1.16400361, 0]
-      Rotation: [0, 0, 1.57079625]
-      Scale: [0.999978125, 0.999978125, 1]
+      Translation: [-1.88375509, -0.1013145, 0]
+      Rotation: [0, 0, 2.45216274]
+      Scale: [0.999978006, 0.999978006, 1]
     SpriteRendererComponent:
       Color: [1, 1, 1, 1]
       Physics: true
@@ -46,18 +46,18 @@ Entities:
     TagComponent:
       Tag: Scene Camera
     TransformComponent:
-      Translation: [0, 0, 7.76999998]
+      Translation: [0, 0, 0.870000005]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
     CameraComponent:
       Primary: true
       FixedAspectRatio: false
       Camera:
-        ProjectionType: 0
+        ProjectionType: 1
         PerspectiveFOV: 0.785398185
         PerspectiveNear: 0.00999999978
         PerspectiveFar: 1000
-        OrthographicSize: 10
+        OrthographicSize: 7
         OrthographicNear: -1
         OrthographicFar: 1
   - Entity: 12312

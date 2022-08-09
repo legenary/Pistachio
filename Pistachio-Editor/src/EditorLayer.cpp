@@ -341,9 +341,9 @@ namespace Pistachio {
 	}
 
 	void EditorLayer::SceneSave() {
-		if (!m_cachedSavePath.empty()) {
+		if (!m_CachedSavePath.empty()) {
 			SceneSerializer serializer(m_ActiveScene);
-			serializer.Serialize(m_cachedSavePath);
+			serializer.Serialize(m_CachedSavePath);
 		}
 		else {
 			SceneSaveAs();
@@ -354,14 +354,14 @@ namespace Pistachio {
 		if (!filepath.empty()) {
 			SceneSerializer serializer(m_ActiveScene);
 			serializer.Serialize(filepath);
-			m_cachedSavePath = filepath;
+			m_CachedSavePath = filepath;
 		}
 	}
 	void EditorLayer::SceneNew() {
 		m_ActiveScene = CreateRef<Scene>();
 		m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
-		m_cachedSavePath = {};
+		m_CachedSavePath = {};
 	}
 	void EditorLayer::SceneOpen() {
 		std::string filepath = FileDialogs::OpenFile("Pistachio Scene (*.ptc)\0*.ptc\0");
@@ -371,9 +371,23 @@ namespace Pistachio {
 			m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 			SceneSerializer serializer(m_ActiveScene);
 			serializer.Deserialize(filepath);
-			m_cachedSavePath = filepath;
+			m_CachedSavePath = filepath;
 		}
 	}
+
+	void EditorLayer::SceneInternalSave() {
+		SceneSerializer serializer(m_ActiveScene);
+		serializer.Serialize(m_CachedPath);
+	}
+
+	void EditorLayer::SceneInternalLoad() {
+		m_ActiveScene = CreateRef<Scene>();
+		m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+		SceneSerializer serializer(m_ActiveScene);
+		serializer.Deserialize(m_CachedPath);
+	}
+
 
 	void EditorLayer::UI_Toolbar() {
 		ImGui::Begin("##Toolbar", nullptr,
@@ -395,5 +409,18 @@ namespace Pistachio {
 		}
 		ImGui::End();
 	}
+
+	void EditorLayer::OnScenePlay() {
+		SceneInternalSave();
+		m_ActiveScene->OnStartRuntime(); 
+		m_SceneState = SceneState::Play;
+	}
+
+	void EditorLayer::OnSceneStop() {
+		SceneInternalLoad();
+		m_SceneState = SceneState::Edit;
+		m_ActiveScene->OnStopRuntime();
+	}
+	
 }
 
