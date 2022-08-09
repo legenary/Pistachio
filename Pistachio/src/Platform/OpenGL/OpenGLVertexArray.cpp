@@ -56,7 +56,6 @@ namespace Pistachio {
 
 		const auto& layout = vertexBuffer->GetLayout();
 		for (const auto& element : layout) {
-			PTC_CORE_INFO("Stride: {0}", layout.GetStride());
 			switch (element.Type) {
 				case ShaderDataType::Float:
 				case ShaderDataType::Float2:

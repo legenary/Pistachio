@@ -161,6 +161,7 @@
     <ClInclude Include="src\Pistachio\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\Pistachio\Renderer\Buffer.h" />
     <ClInclude Include="src\Pistachio\Renderer\Camera.h" />
+    <ClInclude Include="src\Pistachio\Renderer\EditorCamera.h" />
     <ClInclude Include="src\Pistachio\Renderer\FrameBuffer.h" />
     <ClInclude Include="src\Pistachio\Renderer\GraphicsContext.h" />
     <ClInclude Include="src\Pistachio\Renderer\OrthographicCamera.h" />
@@ -174,7 +175,6 @@
     <ClInclude Include="src\Pistachio\Renderer\Texture.h" />
     <ClInclude Include="src\Pistachio\Renderer\VertexArray.h" />
     <ClInclude Include="src\Pistachio\Scene\Component.h" />
-    <ClInclude Include="src\Pistachio\Renderer\EditorCamera.h" />
     <ClInclude Include="src\Pistachio\Scene\Entity.h" />
     <ClInclude Include="src\Pistachio\Scene\Scene.h" />
     <ClInclude Include="src\Pistachio\Scene\SceneCamera.h" />
@@ -617,6 +617,7 @@
     <ClCompile Include="src\Pistachio\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\Pistachio\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\Pistachio\Renderer\Buffer.cpp" />
+    <ClCompile Include="src\Pistachio\Renderer\EditorCamera.cpp" />
     <ClCompile Include="src\Pistachio\Renderer\FrameBuffer.cpp" />
     <ClCompile Include="src\Pistachio\Renderer\OrthographicCamera.cpp" />
     <ClCompile Include="src\Pistachio\Renderer\OrthographicCameraController.cpp" />
@@ -628,7 +629,6 @@
     <ClCompile Include="src\Pistachio\Renderer\SubTexture2D.cpp" />
     <ClCompile Include="src\Pistachio\Renderer\Texture.cpp" />
     <ClCompile Include="src\Pistachio\Renderer\VertexArray.cpp" />
-    <ClCompile Include="src\Pistachio\Renderer\EditorCamera.cpp" />
     <ClCompile Include="src\Pistachio\Scene\Entity.cpp" />
     <ClCompile Include="src\Pistachio\Scene\Scene.cpp" />
     <ClCompile Include="src\Pistachio\Scene\SceneCamera.cpp" />
@@ -637,9 +637,9 @@
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLFrameBuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.cpp" />
-    <ClCompile Include="src\Platform\OpenGL\OpenGLShader.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLTexture.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArray.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGlShader.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsPlatformUtils.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />

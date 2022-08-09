@@ -19,6 +19,16 @@ namespace Pistachio {
 		PTC_CORE_ASSERT(!s_Instance, "Application already exist!");
 		s_Instance = this;
 
+		PTC_CORE_INFO("Welcome to the logging system!");
+		PTC_CORE_TRACE("This is a trace message.");
+		PTC_CORE_TRACE("This is a warning message.");
+		PTC_CORE_ERROR("This is an error message.");
+
+		PTC_INFO("This is a info message from application.");
+		PTC_TRACE("This is a trace message from application.");
+		PTC_TRACE("This is a warning message from application.");
+		PTC_ERROR("This is an error message from application.");
+
 		m_Window = Window::Create(WindowProps(name));
 		m_Window->SetEventCallback(PTC_BIND_EVENT_FN(Application::OnEvent));
 

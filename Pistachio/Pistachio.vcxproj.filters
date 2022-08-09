@@ -129,6 +129,9 @@
     <ClInclude Include="src\Pistachio\Renderer\Camera.h">
       <Filter>src\Pistachio\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Pistachio\Renderer\EditorCamera.h">
+      <Filter>src\Pistachio\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Pistachio\Renderer\FrameBuffer.h">
       <Filter>src\Pistachio\Renderer</Filter>
     </ClInclude>
@@ -1464,7 +1467,6 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Pistachio\Renderer\EditorCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pistachio\Core\Application.cpp">
@@ -1479,6 +1481,9 @@
     <ClCompile Include="src\Pistachio\Core\Log.cpp">
       <Filter>src\Pistachio\Core</Filter>
     </ClCompile>
+    <ClCompile Include="src\Pistachio\Core\Utility.cpp">
+      <Filter>src\Pistachio\Core</Filter>
+    </ClCompile>
     <ClCompile Include="src\Pistachio\ImGui\ImGuiBuild.cpp">
       <Filter>src\Pistachio\ImGui</Filter>
     </ClCompile>
@@ -1486,6 +1491,9 @@
       <Filter>src\Pistachio\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="src\Pistachio\Renderer\Buffer.cpp">
+      <Filter>src\Pistachio\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Pistachio\Renderer\EditorCamera.cpp">
       <Filter>src\Pistachio\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Pistachio\Renderer\FrameBuffer.cpp">
@@ -1545,13 +1553,13 @@
     <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\OpenGL\OpenGLShader.cpp">
-      <Filter>src\Platform\OpenGL</Filter>
-    </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLTexture.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArray.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGlShader.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp">
@@ -1572,7 +1580,5 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Pistachio\Core\Utility.cpp" />
-    <ClCompile Include="src\Pistachio\Renderer\EditorCamera.cpp" />
   </ItemGroup>
 </Project>
