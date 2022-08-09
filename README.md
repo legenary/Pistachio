@@ -71,7 +71,7 @@ This is the panel to show a list of entities currently we have in a scene. The h
 ### Properties panel
 This panel displays the detailed information about the component of the currently selected entity. The user can rename the entity by editing the tag. The user can change the property value by dragging or typing the value, or by selecting properties from a drop down menu. New components can also be added by clicking "Add Component +" button. Existing components can be removed from the entity by clicking "..." button on the right. All changes should be reflected immediately in the viewport.
 
-<img src="docs/images/Properties.JPG">
+<img src="docs/images/Properties2.JPG">
 
 ### Transform gizmos
 Transform gizmos are achieved by using [ImGuizmo](https://github.com/CedricGuillemet/ImGuizmo). Like every 3D creative software, the user is able to freely change the transform (translation, rotation, scale) of a selected object by an easy-to-use gizmo, so should they be able to in Pistachio! When selecting an entity, use "W", "Q", or "E" to invode translation, rotation, and scale, respectively. The change in the transform will be immediately reflected in the viewport, as well as the properties panel.
