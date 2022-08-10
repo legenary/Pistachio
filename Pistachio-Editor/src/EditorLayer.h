@@ -44,6 +44,7 @@ namespace Pistachio {
 		OrthographicCameraController m_CameraController;
 		
 		Ref<Scene> m_ActiveScene;
+		//Ref<Scene> m_SavedScene;
 		Entity m_HoveredEntity;
 		EditorCamera m_EditorCamera;
 		Ref<FrameBuffer> m_Framebuffer;
@@ -52,7 +53,7 @@ namespace Pistachio {
 
 		SceneHierarchyPanel m_SceneHierarchyPanel;
 		std::string m_CachedSavePath;
-		const std::string m_CachedPath = "assets/scenes/cached.ptc";
+		//const std::string m_CachedPath = "assets/scenes/cached.ptc";
 
 		int m_GizmoType;
 

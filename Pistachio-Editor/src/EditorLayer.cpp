@@ -376,16 +376,20 @@ namespace Pistachio {
 	}
 
 	void EditorLayer::SceneInternalSave() {
-		SceneSerializer serializer(m_ActiveScene);
-		serializer.Serialize(m_CachedPath);
+		//m_SavedScene = CreateRef<Scene>(*(m_ActiveScene.get()));
+
+		//SceneSerializer serializer(m_ActiveScene);
+		//serializer.Serialize(m_CachedPath);
 	}
 
 	void EditorLayer::SceneInternalLoad() {
-		m_ActiveScene = CreateRef<Scene>();
-		m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
-		SceneSerializer serializer(m_ActiveScene);
-		serializer.Deserialize(m_CachedPath);
+		//m_ActiveScene = CreateRef<Scene>(*(m_SavedScene.get()));
+
+		//m_ActiveScene = CreateRef<Scene>();
+		//m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+		//m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+		//SceneSerializer serializer(m_ActiveScene);
+		//serializer.Deserialize(m_CachedPath);
 	}
 
 

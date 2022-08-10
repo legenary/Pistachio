@@ -79,6 +79,7 @@ namespace Pistachio {
 			Kinametic = 1,
 			Dynamic = 2
 		};
+
 		BodyType Type = BodyType::Static;
 		bool FixedRotation = false;
 

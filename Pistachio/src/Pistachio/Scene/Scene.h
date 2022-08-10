@@ -16,6 +16,30 @@ namespace Pistachio {
 	public:
 		Scene();
 		~Scene();
+		//Scene& operator=(Scene other) {
+		//	if (this != &other) {
+		//		this->m_Registry = entt::registry();
+		//		this->m_Registry.assign(other.m_Registry.data(),
+		//			other.m_Registry.data() + other.m_Registry.size(),
+		//			other.m_Registry.released());
+
+		//		this->m_PhysicsWorld = nullptr;
+		//		this->runTimeMainCamera = nullptr;
+		//	}
+		//	return *this;
+		//}
+		Scene(const Scene& other) {
+			m_Registry = entt::registry();
+			m_Registry.assign(other.m_Registry.data(),
+				other.m_Registry.data() + other.m_Registry.size(),
+				other.m_Registry.released());
+
+			m_PhysicsWorld = nullptr;
+			runTimeMainCamera = nullptr;
+		}
+
+
+
 
 		Entity CreateEntity(const std::string& name = std::string());
 		void DestroyEntity(Entity entity);
