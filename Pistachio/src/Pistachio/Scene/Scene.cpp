@@ -67,13 +67,21 @@ namespace Pistachio {
 	Scene::~Scene() {
 	}
 
+	// create entity and generate a randomn UUID
 	Entity Scene::CreateEntity(const std::string& name) {
+		return CreateEntityWithUUID(UUID(), name);
+	}
+
+	Entity Scene::CreateEntityWithUUID(UUID& id, const std::string& name) {
 		Entity e = { m_Registry.create(), this };
+		e.AddComponent<IDComponent>(id);
 		e.AddComponent<TransformComponent>();
 		auto& tag = e.AddComponent<TagComponent>();
 		tag.Tag = name.empty() ? "Unnamed Entity" : name;
 		return e;
 	}
+
+
 
 	void Scene::DestroyEntity(Entity entity) {
 		m_Registry.destroy(entity);
@@ -233,12 +241,17 @@ namespace Pistachio {
 		return {};
 	}
 
+
+	// temporary
+	// template specialization
 	template<typename T>
 	void Scene::OnComponentAdded(Entity entity, T& component) {
 		//static_assert(false);
 	}
 	template<>
 	void Scene::OnComponentAdded<TagComponent>(Entity entity, TagComponent& component) {}
+	template<>
+	void Scene::OnComponentAdded<IDComponent>(Entity entity, IDComponent& component) {}
 	template<>
 	void Scene::OnComponentAdded<TransformComponent>(Entity entity, TransformComponent& component) {}
 	template<>
@@ -261,6 +274,8 @@ namespace Pistachio {
 	}
 	template<>
 	void Scene::OnComponentRemoved<TagComponent>(Entity entity) {}
+	template<>
+	void Scene::OnComponentRemoved<IDComponent>(Entity entity) {}
 	template<>
 	void Scene::OnComponentRemoved<TransformComponent>(Entity entity) {}
 	template<>

@@ -11,6 +11,7 @@ namespace Pistachio {
 
 	class Camera;
 	class Entity;
+	class UUID;
 	class Scene {
 
 	public:
@@ -42,6 +43,7 @@ namespace Pistachio {
 
 
 		Entity CreateEntity(const std::string& name = std::string());
+		Entity CreateEntityWithUUID(UUID& id, const std::string& name = std::string());
 		void DestroyEntity(Entity entity);
 
 		void OnUpdateEditor(Timestep ts, EditorCamera& camera);

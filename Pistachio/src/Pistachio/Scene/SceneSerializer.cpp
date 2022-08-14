@@ -93,8 +93,10 @@ namespace Pistachio {
 	}
 
 	static void SerializeEntity(YAML::Emitter& out, Entity& entity) {
+		PTC_CORE_ASSERT(entity.HasComponent<IDComponent>(), "Entity don't have a UUID");
+
 		out << YAML::BeginMap;	// Entity
-		out << YAML::Key << "Entity" << YAML::Value << "12312"; // TODO: Entity ID
+		out << YAML::Key << "Entity" << YAML::Value << entity.GetUUID(); // TODO: Entity ID UUID
 
 		if (entity.HasComponent<TagComponent>()) {
 			auto& tag = entity.GetComponent<TagComponent>().Tag;
@@ -220,12 +222,12 @@ namespace Pistachio {
 				auto entity = m_EntityNodes.top();
 				m_EntityNodes.pop();
 
-				uint64_t uuid = entity["Entity"].as<uint64_t>();
+				uint64_t id = entity["Entity"].as<uint64_t>();
 				
 				auto tagComp = entity["TagComponent"];
 				std::string name = tagComp["Tag"].as<std::string>();
 				//PTC_CORE_TRACE("Deserializing entity... {0}", name);
-				Entity deserializedEntity = m_Scene->CreateEntity(name);
+				Entity deserializedEntity = m_Scene->CreateEntityWithUUID(UUID(id), name);
 
 				auto transComp = entity["TransformComponent"];
 				if (transComp) {

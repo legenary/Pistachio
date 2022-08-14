@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Pistachio/Scene/SceneCamera.h"
-#include "Pistachio/Scene/ScriptableEntity.h"
+#include "Pistachio/Scene/UUID.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -9,6 +9,15 @@
 #include <glm/gtx/quaternion.hpp>
 
 namespace Pistachio {
+
+	struct IDComponent {
+		UUID ID;
+
+		IDComponent() = default;
+		IDComponent(const IDComponent&) = default;
+		IDComponent(const UUID& uuid)
+			: ID(uuid) {}
+	};
 
 	struct TagComponent {
 		std::string Tag;
@@ -59,6 +68,7 @@ namespace Pistachio {
 		CameraComponent(const CameraComponent&) = default;
 	};
 
+	class ScriptableEntity;
 	struct NativeScriptComponent {
 		ScriptableEntity* Instance = nullptr;
 

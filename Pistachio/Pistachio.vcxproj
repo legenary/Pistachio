@@ -180,6 +180,7 @@
     <ClInclude Include="src\Pistachio\Scene\SceneCamera.h" />
     <ClInclude Include="src\Pistachio\Scene\SceneSerializer.h" />
     <ClInclude Include="src\Pistachio\Scene\ScriptableEntity.h" />
+    <ClInclude Include="src\Pistachio\Scene\UUID.h" />
     <ClInclude Include="src\Pistachio\Utils\PlatformUtils.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
@@ -633,13 +634,14 @@
     <ClCompile Include="src\Pistachio\Scene\Scene.cpp" />
     <ClCompile Include="src\Pistachio\Scene\SceneCamera.cpp" />
     <ClCompile Include="src\Pistachio\Scene\SceneSerializer.cpp" />
+    <ClCompile Include="src\Pistachio\Scene\UUID.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLFrameBuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLShader.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLTexture.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArray.cpp" />
-    <ClCompile Include="src\Platform\OpenGL\OpenGlShader.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsPlatformUtils.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />

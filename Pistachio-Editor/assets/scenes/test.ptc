@@ -1,6 +1,6 @@
 Scene: Untitled
 Entities:
-  - Entity: 12312
+  - Entity: 12386832399569837242
     TagComponent:
       Tag: square3
     TransformComponent:
@@ -21,12 +21,12 @@ Entities:
       Friction: 0.5
       Restitution: 0
       RestitutionThreshold: 0.5
-  - Entity: 12312
+  - Entity: 16247100144091974992
     TagComponent:
       Tag: Square2
     TransformComponent:
       Translation: [-1.76898301, -1.16400361, 0]
-      Rotation: [0, 0, 1.57079625]
+      Rotation: [0, 0, 1.57079637]
       Scale: [0.999978125, 0.999978125, 1]
     SpriteRendererComponent:
       Color: [1, 1, 1, 1]
@@ -42,7 +42,7 @@ Entities:
       Friction: 0.5
       Restitution: 0
       RestitutionThreshold: 0.5
-  - Entity: 12312
+  - Entity: 6402411074698702279
     TagComponent:
       Tag: Scene Camera
     TransformComponent:
@@ -60,7 +60,7 @@ Entities:
         OrthographicSize: 10
         OrthographicNear: -1
         OrthographicFar: 1
-  - Entity: 12312
+  - Entity: 6201238936505384968
     TagComponent:
       Tag: Floor
     TransformComponent:
