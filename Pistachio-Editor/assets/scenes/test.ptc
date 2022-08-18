@@ -29,7 +29,7 @@ Entities:
       Translation: [2.1748879, -0.622070849, 0]
       Rotation: [0, 0, -0.253791451]
       Scale: [1, 1, 1]
-    SpriteRendererComponent:
+    QuadRendererComponent:
       Color: [1, 1, 1, 1]
       Physics: true
     RigidBody2DComponent:
@@ -50,7 +50,7 @@ Entities:
       Translation: [-0.870313883, 1.75166667, 0]
       Rotation: [0, 0, 0.721927643]
       Scale: [0.999975801, 0.999975801, 1]
-    SpriteRendererComponent:
+    QuadRendererComponent:
       Color: [1, 1, 1, 1]
       Physics: true
     RigidBody2DComponent:
@@ -89,7 +89,7 @@ Entities:
       Translation: [-0.0295144916, -1.73691463, 0]
       Rotation: [0, 0, 0]
       Scale: [7.53611898, 0.115845107, 1]
-    SpriteRendererComponent:
+    QuadRendererComponent:
       Color: [1, 1, 1, 1]
       Physics: true
     RigidBody2DComponent:

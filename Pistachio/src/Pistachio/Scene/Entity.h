@@ -45,7 +45,7 @@ namespace Pistachio {
 		bool operator!=(const Entity other) const { return m_EntityHandle != other.m_EntityHandle || m_Scene != other.m_Scene; }
 
 		UUID GetUUID() const { return GetComponent<IDComponent>().ID; }
-		bool PhysicsEnbaled();
+		bool PhysicsEnabled() const;
 
 	private:
 		entt::entity m_EntityHandle{ entt::null };

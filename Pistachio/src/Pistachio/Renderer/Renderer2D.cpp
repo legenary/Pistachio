@@ -72,7 +72,8 @@ namespace Pistachio {
 
 		std::array<Ref<Texture2D>, MaxTextureSlots> TextureSlots;
 		Ref<Texture2D> WhiteTexture;
-		uint32_t TextureSlotIndex = 1; // slot 0 being white texture
+		uint32_t TextureSlotIndex = 1;	// slot start from 1
+										// slot 0 being white texture
 
 		ShaderLibrary TheShaderLibrary;
 	};
@@ -145,11 +146,10 @@ namespace Pistachio {
 			samplers[i] = i;
 		}
 
-
-		auto quadShader = s_Data.TheShaderLibrary.Load("assets/shaders/QuadShader.glsl");
-		quadShader->Bind();
-		quadShader->SetIntArray("u_Texture", samplers, s_Data.MaxTextureSlots);
-
+		//auto quadShader = s_Data.TheShaderLibrary.Load("assets/shaders/QuadShader.glsl");
+		//quadShader->Bind();
+		//quadShader->SetIntArray("u_Texture", samplers, s_Data.MaxTextureSlots);
+		s_Data.TheShaderLibrary.Load("assets/shaders/QuadShader.glsl");
 		s_Data.TheShaderLibrary.Load("assets/shaders/CircleShader.glsl");
 
 		s_Data.TextureSlots[0] = s_Data.WhiteTexture;
@@ -365,7 +365,7 @@ namespace Pistachio {
 		s_Data.QuadCount++;
 	}
 
-	void Renderer2D::DrawSpriteRenderer(SpriteRendererComponent& src, const glm::mat4& transform, int entityID) {
+	void Renderer2D::DrawQuadRenderer(QuadRendererComponent& src, const glm::mat4& transform, int entityID) {
 		DrawQuad(src.Color, transform, entityID);
 	}
 

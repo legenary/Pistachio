@@ -48,14 +48,14 @@ namespace Pistachio {
 		}
 	};
 	
-	struct SpriteRendererComponent {
+	struct QuadRendererComponent {
 		glm::vec4 Color{ 1.0f, 1.0f, 1.0f, 1.0f };
 		bool Physics = false;
 		// TODO: Ref<MaterialInstance>
 
-		SpriteRendererComponent() = default;
-		SpriteRendererComponent(const SpriteRendererComponent&) = default;
-		SpriteRendererComponent(const glm::vec4& c)
+		QuadRendererComponent() = default;
+		QuadRendererComponent(const QuadRendererComponent&) = default;
+		QuadRendererComponent(const glm::vec4& c)
 			: Color(c) {}
 	};
 

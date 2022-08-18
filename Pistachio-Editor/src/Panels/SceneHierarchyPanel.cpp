@@ -48,8 +48,8 @@ namespace Pistachio {
 					m_SelectionContext.AddComponent<CameraComponent>();
 					ImGui::CloseCurrentPopup();
 				}
-				if (ImGui::MenuItem("Sprite Renderer")) {
-					m_SelectionContext.AddComponent<SpriteRendererComponent>();
+				if (ImGui::MenuItem("Quad Renderer")) {
+					m_SelectionContext.AddComponent<QuadRendererComponent>();
 					m_SelectionContext.AddComponent<RigidBody2DComponent>();
 					m_SelectionContext.AddComponent<BoxCollider2DComponent>();
 					ImGui::CloseCurrentPopup();
@@ -270,7 +270,7 @@ namespace Pistachio {
 		});
 
 		bool Physics;
-		DrawComponent<SpriteRendererComponent>("Sprite", entity, [&](auto& component) {
+		DrawComponent<QuadRendererComponent>("Quad", entity, [&](auto& component) {
 			ImGui::ColorEdit4("Color", glm::value_ptr(component.Color));
 			ImGui::Checkbox("Physics", &component.Physics);
 			Physics = component.Physics;
@@ -284,43 +284,46 @@ namespace Pistachio {
 			Physics = component.Physics;
 		});
 
-		if (Physics) {
-			DrawComponent<RigidBody2DComponent>("Rigid Body Physics", entity, [](auto& component) {
-				const char* rigidBodyTypeStrings[] = { "Static", "Kinematic", "Dynamic" };
-				const char* currentRigidBodyTypeString = rigidBodyTypeStrings[(int)(component.Type)];
-				if (ImGui::BeginCombo("Type", currentRigidBodyTypeString)) {
-					for (int i = 0; i < 3; i++) {
-						bool isSelected = currentRigidBodyTypeString == rigidBodyTypeStrings[i];
-						if (ImGui::Selectable(rigidBodyTypeStrings[i], isSelected)) {
-							currentRigidBodyTypeString = rigidBodyTypeStrings[i];
-							component.Type = (RigidBody2DComponent::BodyType)i;
-						}
-						if (isSelected)
-							ImGui::SetItemDefaultFocus();
+		if (!Physics) {
+			ImGui::BeginDisabled();
+		}
+		DrawComponent<RigidBody2DComponent>("Rigid Body Physics", entity, [](auto& component) {
+			const char* rigidBodyTypeStrings[] = { "Static", "Kinematic", "Dynamic" };
+			const char* currentRigidBodyTypeString = rigidBodyTypeStrings[(int)(component.Type)];
+			if (ImGui::BeginCombo("Type", currentRigidBodyTypeString)) {
+				for (int i = 0; i < 3; i++) {
+					bool isSelected = currentRigidBodyTypeString == rigidBodyTypeStrings[i];
+					if (ImGui::Selectable(rigidBodyTypeStrings[i], isSelected)) {
+						currentRigidBodyTypeString = rigidBodyTypeStrings[i];
+						component.Type = (RigidBody2DComponent::BodyType)i;
 					}
-					ImGui::EndCombo();
+					if (isSelected)
+						ImGui::SetItemDefaultFocus();
 				}
-			});
+				ImGui::EndCombo();
+			}
+		});
 
-			DrawComponent<BoxCollider2DComponent>("BoxCollider2DComponent", entity, [](auto& component) {
-				ImGui::DragFloat2("Offset Pos", glm::value_ptr(component.OffsetPos));
-				ImGui::DragFloat("Offset Ang", &component.OffsetAngle);
-				ImGui::DragFloat2("Size", glm::value_ptr(component.Size));
-				ImGui::DragFloat("Density", &component.Density);
-				ImGui::DragFloat("Friction", &component.Friction);
-				ImGui::DragFloat("Restitution", &component.Restitution);
-				ImGui::DragFloat("RestitutionThreshold", &component.RestitutionThreshold);
-			});
+		DrawComponent<BoxCollider2DComponent>("BoxCollider2DComponent", entity, [](auto& component) {
+			ImGui::DragFloat2("Offset Pos", glm::value_ptr(component.OffsetPos));
+			ImGui::DragFloat("Offset Ang", &component.OffsetAngle);
+			ImGui::DragFloat2("Size", glm::value_ptr(component.Size));
+			ImGui::DragFloat("Density", &component.Density);
+			ImGui::DragFloat("Friction", &component.Friction);
+			ImGui::DragFloat("Restitution", &component.Restitution);
+			ImGui::DragFloat("RestitutionThreshold", &component.RestitutionThreshold);
+		});
 			
-			DrawComponent<CircleCollider2DComponent>("BoxCollider2DComponent", entity, [](auto& component) {
-				ImGui::DragFloat2("Offset Pos", glm::value_ptr(component.OffsetPos));
-				ImGui::DragFloat("Radius", &component.Radius);
-				ImGui::DragFloat("Density", &component.Density);
-				ImGui::DragFloat("Friction", &component.Friction);
-				ImGui::DragFloat("Restitution", &component.Restitution);
-				ImGui::DragFloat("RestitutionThreshold", &component.RestitutionThreshold);
-			});
-
+		DrawComponent<CircleCollider2DComponent>("BoxCollider2DComponent", entity, [](auto& component) {
+			ImGui::DragFloat2("Offset Pos", glm::value_ptr(component.OffsetPos));
+			ImGui::DragFloat("Radius", &component.Radius);
+			ImGui::DragFloat("Density", &component.Density);
+			ImGui::DragFloat("Friction", &component.Friction);
+			ImGui::DragFloat("Restitution", &component.Restitution);
+			ImGui::DragFloat("RestitutionThreshold", &component.RestitutionThreshold);
+		});
+		if (!Physics) {
+			ImGui::EndDisabled();
 		}
 		
 	}

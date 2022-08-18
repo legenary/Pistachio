@@ -9,7 +9,7 @@
 
 namespace Pistachio {
 
-	class SpriteRendererComponent;
+	class QuadRendererComponent;
 	class CircleRendererComponent;
 	class Renderer2D {
 	public:
@@ -35,7 +35,7 @@ namespace Pistachio {
 		static void DrawQuad(const Ref<Texture2D>& tex, const glm::mat4& transform, const float tilingFactor = 1.0f, int entityID = 0);
 		static void DrawQuad(const Ref<SubTexture2D>& subtex, const glm::mat4& transform, const float tilingFactor = 1.0f, int entityID = 0);
 
-		static void DrawSpriteRenderer(SpriteRendererComponent& src, const glm::mat4& transform, int entityID);
+		static void DrawQuadRenderer(QuadRendererComponent& src, const glm::mat4& transform, int entityID);
 		
 		// Circle
 		static void DrawCircle(const glm::vec4& color, const glm::mat4& transform, float thickness = 1.0f, float fade = 0.0025, int entityID = 0);

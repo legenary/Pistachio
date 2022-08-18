@@ -139,13 +139,13 @@ namespace Pistachio {
 			out << YAML::EndMap;	// Camera Component
 		}
 
-		if (entity.HasComponent<SpriteRendererComponent>()) {
-			auto& srComp = entity.GetComponent<SpriteRendererComponent>();
-			out << YAML::Key << "SpriteRendererComponent";
-			out << YAML::BeginMap;	// Sprite Renderer Component
-			out << YAML::Key << "Color" << YAML::Value << srComp.Color;
-			out << YAML::Key << "Physics" << YAML::Value << srComp.Physics;
-			out << YAML::EndMap;	// Sprite Renderer Component
+		if (entity.HasComponent<QuadRendererComponent>()) {
+			auto& qrComp = entity.GetComponent<QuadRendererComponent>();
+			out << YAML::Key << "QuadRendererComponent";
+			out << YAML::BeginMap;	// Quad Renderer Component
+			out << YAML::Key << "Color" << YAML::Value << qrComp.Color;
+			out << YAML::Key << "Physics" << YAML::Value << qrComp.Physics;
+			out << YAML::EndMap;	// Quad Renderer Component
 		}
 
 		if (entity.HasComponent<RigidBody2DComponent>()) {
@@ -278,11 +278,11 @@ namespace Pistachio {
 					comp.Camera.SetOrthographicFarClip(cameraProps["OrthographicFar"].as<float>());
 				}
 
-				auto spriteComp = entity["SpriteRendererComponent"];
-				if (spriteComp) {
-					auto& comp = deserializedEntity.AddComponent<SpriteRendererComponent>();
-					comp.Color = spriteComp["Color"].as<glm::vec4>();
-					comp.Physics = spriteComp["Physics"].as<bool>();
+				auto quadComp = entity["QuadRendererComponent"];
+				if (quadComp) {
+					auto& comp = deserializedEntity.AddComponent<QuadRendererComponent>();
+					comp.Color = quadComp["Color"].as<glm::vec4>();
+					comp.Physics = quadComp["Physics"].as<bool>();
 				}
 
 				auto rb2dComp = entity["RigidBody2DComponent"];
