@@ -14,11 +14,11 @@ namespace Pistachio {
 		void OnImGuiRender();
 
 		Entity GetSelectedEntity() const { return m_SelectionContext; }
-		void SetSelectedEntity(Entity entity);
+		void SetSelectedEntity(Entity& entity);
 
 	private:
-		void DrawEntityNode(Entity entity);
-		void DrawComponents(Entity entity);
+		void DrawEntityNode(Entity& entity);
+		void DrawComponents(Entity& entity);
 
 		template<typename T, typename F>
 		bool DrawComponent(const std::string& name, Entity& entity, F&& func);

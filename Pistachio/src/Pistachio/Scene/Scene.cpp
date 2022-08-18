@@ -11,10 +11,9 @@
 #include <box2d/b2_body.h>
 #include <box2d/b2_fixture.h>
 #include <box2d/b2_polygon_shape.h>
+#include <box2d/b2_circle_shape.h>
 
 namespace Pistachio {
-
-	//static void OnTransformConstruct() {}
 
 	Scene::Scene() {
 		//// example code
@@ -81,8 +80,6 @@ namespace Pistachio {
 		return e;
 	}
 
-
-
 	void Scene::DestroyEntity(Entity entity) {
 		m_Registry.destroy(entity);
 	}
@@ -91,12 +88,18 @@ namespace Pistachio {
 		Renderer2D::BeginScene(editorCamera);
 
 		// retrive entities that has multiple components
-		auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
-		for (auto entity : group) {
-			auto [trans, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+		auto group1 = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
+		for (auto entity : group1) {
+			auto [trans, sprite] = group1.get<TransformComponent, SpriteRendererComponent>(entity);
 			//Renderer2D::DrawQuad(sprite.Color, trans.GetTransform());
-			Renderer2D::DrawSprite(sprite, trans.GetTransform(), (int)(uint32_t)(entity));
-
+			Renderer2D::DrawSpriteRenderer(sprite, trans.GetTransform(), (int)(uint32_t)(entity));
+		}
+		// retrive entities that has multiple components
+		auto group2 = m_Registry.view<TransformComponent, CircleRendererComponent>();
+		for (auto entity : group2) {
+			auto [trans, circle] = group2.get<TransformComponent, CircleRendererComponent>(entity);
+			//Renderer2D::DrawQuad(sprite.Color, trans.GetTransform());
+			Renderer2D::DrawCircleRenderer(circle, trans.GetTransform(), (int)(uint32_t)(entity));
 		}
 		Renderer2D::EndScene();
 	}
@@ -106,7 +109,7 @@ namespace Pistachio {
 		auto view = m_Registry.view<RigidBody2DComponent>();
 		for (auto e : view) {
 			Entity entity = { e, this };
-			if (!entity.HasComponent<SpriteRendererComponent>() || !entity.GetComponent<SpriteRendererComponent>().Physics)
+			if (!entity.PhysicsEnbaled())
 				continue;
 
 			auto& transformComp = entity.GetComponent<TransformComponent>();
@@ -132,6 +135,20 @@ namespace Pistachio {
 				fixtureDef.friction = bc2d.Friction;
 				fixtureDef.restitution = bc2d.Restitution;
 				fixtureDef.restitutionThreshold = bc2d.RestitutionThreshold;
+				body->CreateFixture(&fixtureDef);
+			}
+			else if (entity.HasComponent<CircleCollider2DComponent>()) {
+				auto& cc2d = entity.GetComponent<CircleCollider2DComponent>();
+				b2CircleShape circleShape;
+				circleShape.m_radius = transformComp.Scale.x * cc2d.Radius;
+				circleShape.m_p.Set(cc2d.OffsetPos.x, cc2d.OffsetPos.y);
+
+				b2FixtureDef fixtureDef;
+				fixtureDef.shape = &circleShape;
+				fixtureDef.density = cc2d.Density;
+				fixtureDef.friction = cc2d.Friction;
+				fixtureDef.restitution = cc2d.Restitution;
+				fixtureDef.restitutionThreshold = cc2d.RestitutionThreshold;
 				body->CreateFixture(&fixtureDef);
 			}
 		}
@@ -167,15 +184,17 @@ namespace Pistachio {
 			auto view = m_Registry.view<RigidBody2DComponent>();
 			for (auto e : view) {
 				Entity entity = { e, this };
-				if (!entity.HasComponent<SpriteRendererComponent>() || !entity.GetComponent<SpriteRendererComponent>().Physics)
-					continue;
-				auto& transComp = entity.GetComponent<TransformComponent>();
-				auto& rb2dComp = entity.GetComponent<RigidBody2DComponent>();
-				b2Body* body = (b2Body*)rb2dComp.RuntimeBody;
-				const auto& position = body->GetPosition();
-				transComp.Translation.x = position.x;
-				transComp.Translation.y = position.y;
-				transComp.Rotation.z = body->GetAngle();
+				if (entity.PhysicsEnbaled()) {
+				//if (entity.HasComponent<SpriteRendererComponent>() &&
+				//	entity.GetComponent<SpriteRendererComponent>().Physics) {
+					auto& transComp = entity.GetComponent<TransformComponent>();
+					auto& rb2dComp = entity.GetComponent<RigidBody2DComponent>();
+					b2Body* body = (b2Body*)rb2dComp.RuntimeBody;
+					const auto& position = body->GetPosition();
+					transComp.Translation.x = position.x;
+					transComp.Translation.y = position.y;
+					transComp.Rotation.z = body->GetAngle();
+				}
 			}
 		}
 		
@@ -195,21 +214,29 @@ namespace Pistachio {
 
 		if (runTimeMainCamera) {
 			Renderer2D::BeginScene(*runTimeMainCamera, transform);
-			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
-			for (auto entity : group) {
-				auto [trans, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-				Renderer2D::DrawSprite(sprite, trans.GetTransform(), (int)(uint32_t)entity);
-
+			auto group1 = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
+			for (auto entity : group1) {
+				auto [trans, sprite] = group1.get<TransformComponent, SpriteRendererComponent>(entity);
+				Renderer2D::DrawSpriteRenderer(sprite, trans.GetTransform(), (int)(uint32_t)entity);
+			}
+			auto group2 = m_Registry.view<TransformComponent, CircleRendererComponent>();
+			for (auto entity : group2) {
+				auto [trans, sprite] = group2.get<TransformComponent, CircleRendererComponent>(entity);
+				Renderer2D::DrawCircleRenderer(sprite, trans.GetTransform(), (int)(uint32_t)entity);
 			}
 			Renderer2D::EndScene();
 		}
 		else { // if no primary camera, use editor camera location
 			Renderer2D::BeginScene(editorCamera);
-			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
-			for (auto entity : group) {
-				auto [trans, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-				Renderer2D::DrawSprite(sprite, trans.GetTransform(), (int)(uint32_t)entity);
-
+			auto group1 = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
+			for (auto entity : group1) {
+				auto [trans, sprite] = group1.get<TransformComponent, SpriteRendererComponent>(entity);
+				Renderer2D::DrawSpriteRenderer(sprite, trans.GetTransform(), (int)(uint32_t)entity);
+			}
+			auto group2 = m_Registry.view<TransformComponent, CircleRendererComponent>();
+			for (auto entity : group2) {
+				auto [trans, sprite] = group2.get<TransformComponent, CircleRendererComponent>(entity);
+				Renderer2D::DrawCircleRenderer(sprite, trans.GetTransform(), (int)(uint32_t)entity);
 			}
 			Renderer2D::EndScene();
 		}
@@ -261,11 +288,15 @@ namespace Pistachio {
 	template<>
 	void Scene::OnComponentAdded<SpriteRendererComponent>(Entity entity, SpriteRendererComponent& component) {}
 	template<>
+	void Scene::OnComponentAdded<CircleRendererComponent>(Entity entity, CircleRendererComponent& component) {}
+	template<>
 	void Scene::OnComponentAdded<NativeScriptComponent>(Entity entity, NativeScriptComponent& component) {}
 	template<>
 	void Scene::OnComponentAdded<RigidBody2DComponent>(Entity entity, RigidBody2DComponent& component) {}
 	template<>
 	void Scene::OnComponentAdded<BoxCollider2DComponent>(Entity entity, BoxCollider2DComponent& component) {}
+	template<>
+	void Scene::OnComponentAdded<CircleCollider2DComponent>(Entity entity, CircleCollider2DComponent& component) {}
 
 
 	template<typename T>
@@ -286,10 +317,17 @@ namespace Pistachio {
 		entity.RemoveComponent<BoxCollider2DComponent>();
 	}
 	template<>
+	void Scene::OnComponentRemoved<CircleRendererComponent>(Entity entity) {
+		entity.RemoveComponent<RigidBody2DComponent>();
+		entity.RemoveComponent<CircleCollider2DComponent>();
+	}
+	template<>
 	void Scene::OnComponentRemoved<NativeScriptComponent>(Entity entity) {}
 	template<>
 	void Scene::OnComponentRemoved<RigidBody2DComponent>(Entity entity) {}
 	template<>
 	void Scene::OnComponentRemoved<BoxCollider2DComponent>(Entity entity) {}
+	template<>
+	void Scene::OnComponentRemoved<CircleCollider2DComponent>(Entity entity) {}
 
 }

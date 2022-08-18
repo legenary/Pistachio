@@ -376,15 +376,13 @@ namespace Pistachio {
 	}
 
 	void EditorLayer::SceneInternalSave() {
-		//m_SavedScene = CreateRef<Scene>(*(m_ActiveScene.get()));
-
 		SceneSerializer serializer(m_ActiveScene);
 		serializer.Serialize(m_CachedPath);
 	}
 
 	void EditorLayer::SceneInternalLoad() {
-		//m_ActiveScene = CreateRef<Scene>(*(m_SavedScene.get()));
-
+		// temporary: serialization to realise scene reverting
+		// TODO: scene copying
 		m_ActiveScene = CreateRef<Scene>();
 		m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
@@ -416,7 +414,7 @@ namespace Pistachio {
 
 	void EditorLayer::OnScenePlay() {
 		SceneInternalSave();
-		m_ActiveScene->OnStartRuntime(); 
+		m_ActiveScene->OnStartRuntime();
 		m_SceneState = SceneState::Play;
 	}
 

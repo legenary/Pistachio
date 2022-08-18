@@ -54,17 +54,23 @@ namespace Pistachio {
 					m_SelectionContext.AddComponent<BoxCollider2DComponent>();
 					ImGui::CloseCurrentPopup();
 				}
+				if (ImGui::MenuItem("Circle Renderer")) {
+					m_SelectionContext.AddComponent<CircleRendererComponent>();
+					m_SelectionContext.AddComponent<RigidBody2DComponent>();
+					m_SelectionContext.AddComponent<CircleCollider2DComponent>();
+					ImGui::CloseCurrentPopup();
+				}
 				ImGui::EndPopup();
 			}
 		}
 		ImGui::End();
 	}
 
-	void SceneHierarchyPanel::SetSelectedEntity(Entity entity) {
+	void SceneHierarchyPanel::SetSelectedEntity(Entity& entity) {
 		m_SelectionContext = entity;
 	}
 
-	void SceneHierarchyPanel::DrawEntityNode(Entity entity) {
+	void SceneHierarchyPanel::DrawEntityNode(Entity& entity) {
 		auto& tag = entity.GetComponent<TagComponent>().Tag;
 
 		ImGuiTreeNodeFlags flags = 
@@ -188,7 +194,7 @@ namespace Pistachio {
 		return true;
 	}
 
-	void SceneHierarchyPanel::DrawComponents(Entity entity) {
+	void SceneHierarchyPanel::DrawComponents(Entity& entity) {
 
 		auto& tag = entity.GetComponent<TagComponent>().Tag;
 		char buffer[256];
@@ -263,13 +269,22 @@ namespace Pistachio {
 			}
 		});
 
-
+		bool Physics;
 		DrawComponent<SpriteRendererComponent>("Sprite", entity, [&](auto& component) {
 			ImGui::ColorEdit4("Color", glm::value_ptr(component.Color));
 			ImGui::Checkbox("Physics", &component.Physics);
+			Physics = component.Physics;
 		});
 
-		if (entity.HasComponent<SpriteRendererComponent>() && entity.GetComponent<SpriteRendererComponent>().Physics) {
+		DrawComponent<CircleRendererComponent>("Circle", entity, [&](auto& component) {
+			ImGui::ColorEdit4("Color", glm::value_ptr(component.Color));
+			ImGui::DragFloat("Thickness", &component.Thickness, 0.025f, 0.0f, 1.0f);
+			ImGui::DragFloat("Fade", &component.Fade, 0.00025f, 0.0f, 1.0f);
+			ImGui::Checkbox("Physics", &component.Physics);
+			Physics = component.Physics;
+		});
+
+		if (Physics) {
 			DrawComponent<RigidBody2DComponent>("Rigid Body Physics", entity, [](auto& component) {
 				const char* rigidBodyTypeStrings[] = { "Static", "Kinematic", "Dynamic" };
 				const char* currentRigidBodyTypeString = rigidBodyTypeStrings[(int)(component.Type)];
@@ -286,6 +301,7 @@ namespace Pistachio {
 					ImGui::EndCombo();
 				}
 			});
+
 			DrawComponent<BoxCollider2DComponent>("BoxCollider2DComponent", entity, [](auto& component) {
 				ImGui::DragFloat2("Offset Pos", glm::value_ptr(component.OffsetPos));
 				ImGui::DragFloat("Offset Ang", &component.OffsetAngle);
@@ -295,6 +311,16 @@ namespace Pistachio {
 				ImGui::DragFloat("Restitution", &component.Restitution);
 				ImGui::DragFloat("RestitutionThreshold", &component.RestitutionThreshold);
 			});
+			
+			DrawComponent<CircleCollider2DComponent>("BoxCollider2DComponent", entity, [](auto& component) {
+				ImGui::DragFloat2("Offset Pos", glm::value_ptr(component.OffsetPos));
+				ImGui::DragFloat("Radius", &component.Radius);
+				ImGui::DragFloat("Density", &component.Density);
+				ImGui::DragFloat("Friction", &component.Friction);
+				ImGui::DragFloat("Restitution", &component.Restitution);
+				ImGui::DragFloat("RestitutionThreshold", &component.RestitutionThreshold);
+			});
+
 		}
 		
 	}

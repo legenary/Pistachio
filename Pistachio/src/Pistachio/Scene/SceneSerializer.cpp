@@ -172,6 +172,31 @@ namespace Pistachio {
 			out << YAML::EndMap;	// Box Collider 2D Component
 		}
 
+		if (entity.HasComponent<CircleRendererComponent>()) {
+			auto& crComp = entity.GetComponent<CircleRendererComponent>();
+			out << YAML::Key << "CircleRendererComponent";
+			out << YAML::BeginMap;	// Circle Renderer Component
+			out << YAML::Key << "Color" << YAML::Value << crComp.Color;
+			out << YAML::Key << "Thickness" << YAML::Value << crComp.Thickness;
+			out << YAML::Key << "Fade" << YAML::Value << crComp.Fade;
+			out << YAML::Key << "Physics" << YAML::Value << crComp.Physics;
+			out << YAML::EndMap;	// Circle Renderer Component
+		}
+
+		if (entity.HasComponent<CircleCollider2DComponent>()) {
+			auto& cc2dComp = entity.GetComponent<CircleCollider2DComponent>();
+			out << YAML::Key << "CircleCollider2DComponent";
+			out << YAML::BeginMap;	// Circle Collider 2D Component
+			out << YAML::Key << "OffsetPos" << YAML::Value << cc2dComp.OffsetPos;
+			out << YAML::Key << "Radius" << YAML::Value << cc2dComp.Radius;
+			out << YAML::Key << "Density" << YAML::Value << cc2dComp.Density;
+			out << YAML::Key << "Friction" << YAML::Value << cc2dComp.Friction;
+			out << YAML::Key << "Restitution" << YAML::Value << cc2dComp.Restitution;
+			out << YAML::Key << "RestitutionThreshold" << YAML::Value << cc2dComp.RestitutionThreshold;
+
+			out << YAML::EndMap;	// Circle Collider 2D Component
+		}
+
 		out << YAML::EndMap;	// Entity
 	}
 
@@ -277,6 +302,26 @@ namespace Pistachio {
 					comp.Friction = bc2dComp["Friction"].as<float>();
 					comp.Restitution = bc2dComp["Restitution"].as<float>();
 					comp.RestitutionThreshold = bc2dComp["RestitutionThreshold"].as<float>();
+				}
+
+				auto circleComp = entity["CircleRendererComponent"];
+				if (circleComp) {
+					auto& comp = deserializedEntity.AddComponent<CircleRendererComponent>();
+					comp.Color = circleComp["Color"].as<glm::vec4>();
+					comp.Thickness = circleComp["Thickness"].as<float>();
+					comp.Fade = circleComp["Fade"].as<float>();
+					comp.Physics = circleComp["Physics"].as<bool>();
+				}
+
+				auto cc2dComp = entity["CircleCollider2DComponent"];
+				if (cc2dComp) {
+					auto& comp = deserializedEntity.AddComponent<CircleCollider2DComponent>();
+					comp.OffsetPos = cc2dComp["OffsetPos"].as<glm::vec2>();
+					comp.Radius = cc2dComp["Radius"].as<float>();
+					comp.Density = cc2dComp["Density"].as<float>();
+					comp.Friction = cc2dComp["Friction"].as<float>();
+					comp.Restitution = cc2dComp["Restitution"].as<float>();
+					comp.RestitutionThreshold = cc2dComp["RestitutionThreshold"].as<float>();
 				}
 			}
 		}

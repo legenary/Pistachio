@@ -59,6 +59,20 @@ namespace Pistachio {
 			: Color(c) {}
 	};
 
+	struct CircleRendererComponent {
+		glm::vec4 Color{ 1.0f, 1.0f, 1.0f, 1.0f };
+		float Thickness = 1.0f;
+		float Fade = 0.005f;
+		bool Physics = false;
+		// TODO: Ref<MaterialInstance>
+
+		CircleRendererComponent() = default;
+		CircleRendererComponent(const CircleRendererComponent&) = default;
+		CircleRendererComponent(const glm::vec4& c)
+			: Color(c) {}
+	};
+
+
 	struct CameraComponent {
 		SceneCamera Camera;
 		bool Primary = true;	// TODO: think about moving to scene
@@ -115,5 +129,21 @@ namespace Pistachio {
 
 		BoxCollider2DComponent() = default;
 		BoxCollider2DComponent(const BoxCollider2DComponent&) = default;
+	};
+
+	struct CircleCollider2DComponent {
+		glm::vec2 OffsetPos = { 0.0f, 0.0f };	// from transform position
+		float Radius = 0.5f;
+
+		float Density = 1.0f;
+		float Friction = 0.5f;
+		float Restitution = 0.0f;
+		float RestitutionThreshold = 0.5f;
+
+		// storage for runtime
+		void* RuntimeFixture = nullptr;
+
+		CircleCollider2DComponent() = default;
+		CircleCollider2DComponent(const CircleCollider2DComponent&) = default;
 	};
 }
