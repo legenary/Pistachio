@@ -113,6 +113,7 @@ namespace Pistachio {
 			out << YAML::Key << "Translation" << YAML::Value << transComp.Translation;
 			out << YAML::Key << "Rotation" << YAML::Value << transComp.Rotation;
 			out << YAML::Key << "Scale" << YAML::Value << transComp.Scale;
+			out << YAML::Key << "FixedXYRatio" << YAML::Value << transComp.FixedXYRatio;
 			out << YAML::EndMap;	// Transform Component
 		}
 
@@ -260,6 +261,7 @@ namespace Pistachio {
 					comp.Translation = transComp["Translation"].as<glm::vec3>();
 					comp.Rotation = transComp["Rotation"].as<glm::vec3>();
 					comp.Scale = transComp["Scale"].as<glm::vec3>();
+					comp.FixedXYRatio = transComp["FixedXYRatio"].as<bool>();
 				}
 
 				auto camComp = entity["CameraComponent"];

@@ -102,7 +102,7 @@ namespace Pistachio {
 		}
 	}
 
-	static void DrawVec3Control(const std::string& label, glm::vec3& values, float resetValue = 0.0f, float columnWidth = 100.0f) {
+	static void DrawVec3Control(const std::string& label, glm::vec3& values, bool fixedXYRatio = false, float resetValue = 0.0f, float columnWidth = 100.0f) {
 		ImGui::PushID(label.c_str());
 		
 		ImGui::Columns(2);
@@ -123,7 +123,11 @@ namespace Pistachio {
 			values.x = resetValue;
 		ImGui::PopStyleColor(3);
 		ImGui::SameLine();
-		ImGui::DragFloat("##X", &values.x, 0.1f, 0.0f, 0.0f, "%.2f");
+		if (ImGui::DragFloat("##X", &values.x, 0.1f, 0.0f, 0.0f, "%.2f")) {
+			if (fixedXYRatio) {
+				values.y = values.x;
+			}
+		}
 		ImGui::PopItemWidth();
 		ImGui::SameLine();
 
@@ -135,7 +139,11 @@ namespace Pistachio {
 			values.y = resetValue;
 		ImGui::PopStyleColor(3);
 		ImGui::SameLine();
-		ImGui::DragFloat("##Y", &values.y, 0.1f, 0.0f, 0.0f, "%.2f");
+		if (ImGui::DragFloat("##Y", &values.y, 0.1f, 0.0f, 0.0f, "%.2f")) {
+			if (fixedXYRatio) {
+				values.x = values.y;
+			}
+		}
 		ImGui::PopItemWidth();
 		ImGui::SameLine();
 
@@ -204,12 +212,13 @@ namespace Pistachio {
 			tag = std::string(buffer);
 		}
 
-		DrawComponent<TransformComponent>("Transform", entity, [](auto& component) {
+		DrawComponent<TransformComponent>("Transform", entity, [&](auto& component) {
 			DrawVec3Control("Translation", component.Translation);
 			glm::vec3 rot = glm::degrees(component.Rotation);
 			DrawVec3Control("Rotation", rot);
 			component.Rotation = glm::radians(rot);
-			DrawVec3Control("Scale", component.Scale, 1.0f /*reset value*/);
+			DrawVec3Control("Scale", component.Scale,
+				entity.GetComponent<TransformComponent>().FixedXYRatio, 1.0f /*reset value*/);
 		});
 
 		DrawComponent<CameraComponent>("Camera", entity, [](auto& component) {

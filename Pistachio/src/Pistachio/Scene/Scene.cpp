@@ -140,7 +140,7 @@ namespace Pistachio {
 			else if (entity.HasComponent<CircleCollider2DComponent>()) {
 				auto& cc2d = entity.GetComponent<CircleCollider2DComponent>();
 				b2CircleShape circleShape;
-				circleShape.m_radius = transformComp.Scale.x * cc2d.Radius;
+				circleShape.m_radius = transformComp.Scale.x * cc2d.Radius;	// circle is guaranteed to have fixed XY ratio 1:1
 				circleShape.m_p.Set(cc2d.OffsetPos.x, cc2d.OffsetPos.y);
 
 				b2FixtureDef fixtureDef;
@@ -286,7 +286,9 @@ namespace Pistachio {
 	template<>
 	void Scene::OnComponentAdded<QuadRendererComponent>(Entity entity, QuadRendererComponent& component) {}
 	template<>
-	void Scene::OnComponentAdded<CircleRendererComponent>(Entity entity, CircleRendererComponent& component) {}
+	void Scene::OnComponentAdded<CircleRendererComponent>(Entity entity, CircleRendererComponent& component) {
+		entity.GetComponent<TransformComponent>().FixedXYRatio = true;
+	}
 	template<>
 	void Scene::OnComponentAdded<NativeScriptComponent>(Entity entity, NativeScriptComponent& component) {}
 	template<>
@@ -316,6 +318,7 @@ namespace Pistachio {
 	}
 	template<>
 	void Scene::OnComponentRemoved<CircleRendererComponent>(Entity entity) {
+		entity.GetComponent<TransformComponent>().FixedXYRatio = false;
 		entity.RemoveComponent<RigidBody2DComponent>();
 		entity.RemoveComponent<CircleCollider2DComponent>();
 	}
