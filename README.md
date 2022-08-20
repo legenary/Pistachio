@@ -2,7 +2,7 @@
 Pistachio Engine is self-learning project based on [the Hazel Engine by the Cherno](https://github.com/thecherno/hazel). It focuses on game engine architecture in various aspects including core, input, UI, rendering, physics, and entity component system (ECS).
 
 ## Overview
-Placeholder gif
+https://user-images.githubusercontent.com/38062004/185762611-a74e4169-ecbb-41b1-b267-bd94385c11d8.mp4
 
 ## Main features
 1. **Core**: logging system (spdlog), math (glm), assert system, event system/event dispatcher, layerstacks, input polling, profiling, serialization
@@ -84,8 +84,6 @@ To realize mouse picking object in the viewport, the entity ID was also delivere
 
 ## Physics (Box2D)
 We use [Box2D](https://github.com/erincatto/box2d) to simulate physics at runtime. To execute runtime simulation, use the "scene play" button above the vviewport. During runtime simulation, entities with a "primary" camera component will be used for rendering, if no such entity exists, the editor camera will used for rendering. In simulation mode, clicking stop button will end simualtion, and the scene data from before the simualtion will be restored.
-
-placeholder gif
 
 ## Entity component system (Entt)
 Under the hood, the entity component system is used to manage the data in the scene.
